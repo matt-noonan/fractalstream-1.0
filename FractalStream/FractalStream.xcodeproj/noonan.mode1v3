@@ -277,9 +277,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>11</integer>
-									<integer>3</integer>
-									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -333,7 +330,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>6821716A0D9AD342006D25E7</string>
+										<string>68BFD41F0D9D73AE00325B56</string>
 										<key>history</key>
 										<array>
 											<string>680F37980CA06F0200F1F52E</string>
@@ -383,7 +380,7 @@
 											<string>6821712C0D9AD262006D25E7</string>
 											<string>6821712D0D9AD262006D25E7</string>
 											<string>6821712E0D9AD262006D25E7</string>
-											<string>6821712F0D9AD262006D25E7</string>
+											<string>6821716A0D9AD342006D25E7</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -436,95 +433,12 @@
 											<string>687AF0670D75E60100998D23</string>
 											<string>6845530B0D7CC11F0071CED1</string>
 											<string>682170AF0D9AB15F006D25E7</string>
-											<string>682170B00D9AB15F006D25E7</string>
-											<string>682170B10D9AB15F006D25E7</string>
-											<string>682170B20D9AB15F006D25E7</string>
-											<string>682170B70D9AB313006D25E7</string>
-											<string>682170B80D9AB313006D25E7</string>
-											<string>682170BF0D9AB3CA006D25E7</string>
-											<string>682170C90D9AB59B006D25E7</string>
-											<string>682170D40D9ABA8A006D25E7</string>
 											<string>682170D50D9ABA8A006D25E7</string>
-											<string>682170D60D9ABA8A006D25E7</string>
 											<string>682170D70D9ABA8A006D25E7</string>
-											<string>682170D80D9ABA8A006D25E7</string>
-											<string>682170D90D9ABA8A006D25E7</string>
-											<string>682170DA0D9ABA8A006D25E7</string>
-											<string>682170DB0D9ABA8A006D25E7</string>
-											<string>682170DC0D9ABA8A006D25E7</string>
-											<string>682170DD0D9ABA8A006D25E7</string>
-											<string>682170E50D9ABB33006D25E7</string>
 											<string>682170E60D9ABB33006D25E7</string>
-											<string>682170E70D9ABB33006D25E7</string>
-											<string>682170E80D9ABB33006D25E7</string>
-											<string>682170EE0D9ABB7E006D25E7</string>
-											<string>682170F40D9ABBA4006D25E7</string>
-											<string>682170F50D9ABBA4006D25E7</string>
-											<string>682170FD0D9AC38A006D25E7</string>
-											<string>682170FE0D9AC38A006D25E7</string>
-											<string>682170FF0D9AC38A006D25E7</string>
-											<string>682171000D9AC38A006D25E7</string>
-											<string>682171010D9AC38A006D25E7</string>
-											<string>682171020D9AC38A006D25E7</string>
-											<string>682171030D9AC38A006D25E7</string>
-											<string>682171040D9AC38A006D25E7</string>
-											<string>682171080D9AC410006D25E7</string>
-											<string>682171100D9AC63C006D25E7</string>
-											<string>682171110D9AC63C006D25E7</string>
-											<string>682171120D9AC63C006D25E7</string>
-											<string>682171170D9AC697006D25E7</string>
-											<string>6821711F0D9ACB5C006D25E7</string>
-											<string>682171200D9ACB5C006D25E7</string>
-											<string>682171210D9ACB5C006D25E7</string>
-											<string>682171300D9AD262006D25E7</string>
-											<string>682171310D9AD262006D25E7</string>
-											<string>682171320D9AD262006D25E7</string>
 											<string>682171330D9AD262006D25E7</string>
-											<string>682171340D9AD262006D25E7</string>
-											<string>682171350D9AD262006D25E7</string>
-											<string>682171360D9AD262006D25E7</string>
-											<string>682171370D9AD262006D25E7</string>
 											<string>682171380D9AD262006D25E7</string>
-											<string>682171390D9AD262006D25E7</string>
 											<string>6821713A0D9AD262006D25E7</string>
-											<string>6821713B0D9AD262006D25E7</string>
-											<string>6821713C0D9AD262006D25E7</string>
-											<string>6821713D0D9AD262006D25E7</string>
-											<string>6821713E0D9AD262006D25E7</string>
-											<string>6821713F0D9AD262006D25E7</string>
-											<string>682171400D9AD262006D25E7</string>
-											<string>682171410D9AD262006D25E7</string>
-											<string>682171420D9AD262006D25E7</string>
-											<string>682171430D9AD262006D25E7</string>
-											<string>682171440D9AD262006D25E7</string>
-											<string>682171450D9AD262006D25E7</string>
-											<string>682171460D9AD262006D25E7</string>
-											<string>682171470D9AD262006D25E7</string>
-											<string>682171480D9AD262006D25E7</string>
-											<string>682171490D9AD262006D25E7</string>
-											<string>6821714A0D9AD262006D25E7</string>
-											<string>6821714B0D9AD262006D25E7</string>
-											<string>6821714C0D9AD262006D25E7</string>
-											<string>6821714D0D9AD262006D25E7</string>
-											<string>6821714E0D9AD262006D25E7</string>
-											<string>6821714F0D9AD262006D25E7</string>
-											<string>682171500D9AD262006D25E7</string>
-											<string>682171510D9AD262006D25E7</string>
-											<string>682171520D9AD262006D25E7</string>
-											<string>682171530D9AD262006D25E7</string>
-											<string>682171540D9AD262006D25E7</string>
-											<string>682171550D9AD262006D25E7</string>
-											<string>682171560D9AD262006D25E7</string>
-											<string>682171570D9AD262006D25E7</string>
-											<string>682171580D9AD262006D25E7</string>
-											<string>682171590D9AD262006D25E7</string>
-											<string>6821715A0D9AD262006D25E7</string>
-											<string>6821715B0D9AD262006D25E7</string>
-											<string>6821715C0D9AD262006D25E7</string>
-											<string>6821715D0D9AD262006D25E7</string>
-											<string>6821715E0D9AD262006D25E7</string>
-											<string>6821715F0D9AD262006D25E7</string>
-											<string>682171600D9AD262006D25E7</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -582,9 +496,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>6821709D0D9AA809006D25E7</string>
+				<string>68BFD4200D9D73AE00325B56</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>6821709E0D9AA809006D25E7</string>
+				<string>68BFD4210D9D73AE00325B56</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -716,13 +630,7 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>682170A70D9AA809006D25E7</string>
-		<string>682170A80D9AA809006D25E7</string>
-		<string>682170A90D9AA809006D25E7</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>68972ADD0D49B2BC00FBF09B</string>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>/Users/noonan/Math/FractalStream/FractalStream/FractalStream.xcodeproj</string>
+		<string>/Users/noonan/Desktop/FractalStream/FractalStream.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>160 124 1137 754 0 0 1440 878 </string>

@@ -260,8 +260,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 228422239;
-			PBXWorkspaceStateSaveDate = 228422239;
+			PBXPerProjectTemplateStateSaveDate = 228422545;
+			PBXWorkspaceStateSaveDate = 228422545;
 		};
 		perUserProjectItems = {
 			680F37980CA06F0200F1F52E = 680F37980CA06F0200F1F52E /* PBXBookmark */;
@@ -511,6 +511,7 @@
 			68BCB2860A5C710D00DF9D99 = 68BCB2860A5C710D00DF9D99 /* PBXTextBookmark */;
 			68BCB2870A5C710D00DF9D99 = 68BCB2870A5C710D00DF9D99 /* PBXTextBookmark */;
 			68BCB2880A5C710D00DF9D99 = 68BCB2880A5C710D00DF9D99 /* PBXTextBookmark */;
+			68BFD41F0D9D73AE00325B56 /* PBXTextBookmark */ = 68BFD41F0D9D73AE00325B56 /* PBXTextBookmark */;
 			68C1270A0A84277D000EB1A3 = 68C1270A0A84277D000EB1A3 /* PBXTextBookmark */;
 			68C1270B0A84277D000EB1A3 = 68C1270B0A84277D000EB1A3 /* PBXTextBookmark */;
 			68CB724F0A82BC1700BBCA95 = 68CB724F0A82BC1700BBCA95 /* PBXTextBookmark */;
@@ -3109,6 +3110,11 @@
 		name = FSBrowser.m;
 		path = /Users/noonan/Math/FractalStream/FractalStream/FSBrowser.m;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {950, 4060}}";
+			sepNavSelRange = "{5370, 0}";
+			sepNavVisRange = "{5240, 1073}";
+		};
 	};
 	687AF0A50D75F63F00998D23 /* FSViewer.m */ = {
 		isa = PBXFileReference;
@@ -3451,6 +3457,16 @@
 		vrLen = 786;
 		vrLoc = 0;
 	};
+	68BFD41F0D9D73AE00325B56 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 687AF0A10D75F61D00998D23 /* FSBrowser.m */;
+		name = "FSBrowser.m: 160";
+		rLen = 0;
+		rLoc = 5370;
+		rType = 0;
+		vrLen = 1073;
+		vrLoc = 5240;
+	};
 	68C1270A0A84277D000EB1A3 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 01DD1B6A09CB653900A43FB5 /* FSTools.m */;
@@ -3556,6 +3572,7 @@
 		fallbackIsa = XCSourceControlManager;
 		isSCMEnabled = 0;
 		scmConfiguration = {
+			repositoryName = "FractalStream at Google Code";
 		};
 		scmType = "";
 	};
