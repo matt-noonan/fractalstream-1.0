@@ -109,7 +109,7 @@
 	};
 	2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 		activeArchitecture = i386;
-		activeBuildConfigurationName = Deployment;
+		activeBuildConfigurationName = Development;
 		activeExecutable = 68D7AE490A59B1BA0076FC20 /* FractalStream */;
 		activeTarget = 8D15AC270486D014006FF6A4 /* FractalStream */;
 		addToTargets = (
@@ -3197,9 +3197,9 @@
 	};
 	68A35A770D5D79DB00FE5ACA /* FSECompiler.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {827, 742}}";
+			sepNavIntBoundsRect = "{{0, 0}, {827, 798}}";
 			sepNavSelRange = "{1181, 0}";
-			sepNavVisRange = "{19, 772}";
+			sepNavVisRange = "{463, 856}";
 		};
 	};
 	68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */ = {
