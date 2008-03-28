@@ -1,0 +1,143 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {goBackward = id; goForward = id; goHome = id; refresh = id; }; 
+            CLASS = FSBrowser; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                aspectBox = NSTextField; 
+                detailBox = NSButton; 
+                historyView = FSViewer; 
+                iterBox = NSTextField; 
+                p1Box = NSTextField; 
+                p2Box = NSTextField; 
+                p3Box = NSTextField; 
+                preview = FSViewer; 
+                programBox = NSPopUpButton; 
+                radiusBox = NSTextField; 
+                theSession = FSSession; 
+                theTools = FSTools; 
+                theViewer = FSViewer; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {reset = id; submit = id; }; 
+            CLASS = FSColorWidget; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                colorMatrix = NSMatrix; 
+                colorWell = NSColorWell; 
+                magGradient = NSButton; 
+                magShade = NSButton; 
+                phaseGradient = NSButton; 
+                phaseShade = NSButton; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FSColorWidgetCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
+        {
+            ACTIONS = {configureSession = id; endConfiguration = id; }; 
+            CLASS = FSConfigurationSheet; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {configureSheet = FSProgramList; kernelLoader = id; parentWindow = id; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {compile = id; }; 
+            CLASS = FSECompiler; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {compile = id; testProgram = id; }; 
+            CLASS = FSEController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                browser = FSBrowser; 
+                compiler = FSECompiler; 
+                descriptionView = NSTextView; 
+                enclosingView = NSTabView; 
+                panel = NSPanel; 
+                sourceView = NSTextView; 
+                titleField = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {loadKernel = id; }; 
+            CLASS = FSProgramList; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {listView = NSOutlineView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                cloneCurrentNode = id; 
+                deleteCurrentChildren = id; 
+                deleteCurrentNode = id; 
+                goBackward = id; 
+                goForward = id; 
+                selectCurrentParent = id; 
+            }; 
+            CLASS = FSSession; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {historyView = NSOutlineView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FSSessionNode; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                changeTool = id; 
+                goBackward = id; 
+                goForward = id; 
+                registerTrace = id; 
+                resetTrace = id; 
+                setupMenu = id; 
+            }; 
+            CLASS = FSTools; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                coordinates = NSTextField; 
+                periodField = NSTextField; 
+                popupMenu = NSPopUpButton; 
+                stepsBox = NSTextField; 
+                theBrowser = id; 
+                theSession = FSSession; 
+                theTool = id; 
+                viewport = FSViewer; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {render = id; }; 
+            CLASS = FSViewer; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                boxButton = NSButton; 
+                colorPicker = FSColorWidget; 
+                progress = NSProgressIndicator; 
+            }; 
+            SUPERCLASS = NSOpenGLView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = MyDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                browser = FSBrowser; 
+                configSheet = FSTools; 
+                iterationBox = NSTextField; 
+                kernelLoader = FSProgramList; 
+                mainTabView = NSTabView; 
+                radiusBox = NSTextField; 
+                session = FSSession; 
+                toolkit = id; 
+                viewport = FSViewport; 
+            }; 
+            SUPERCLASS = NSDocument; 
+        }, 
+        {CLASS = NSLevelIndicator; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
+    ); 
+    IBVersion = 1; 
+}

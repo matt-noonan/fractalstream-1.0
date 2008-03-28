@@ -1,0 +1,1 @@
+gcc -dynamiclib -o whatever whatever.c
