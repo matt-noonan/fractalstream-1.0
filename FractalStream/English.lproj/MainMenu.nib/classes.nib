@@ -1,0 +1,31 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {compile = id; }; 
+            CLASS = FSECompiler; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {compile = id; testProgram = id; }; 
+            CLASS = FSEController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                compiler = FSECompiler; 
+                descriptionView = NSTextView; 
+                panel = NSPanel; 
+                sourceView = NSTextView; 
+                titleField = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {render = id; }; 
+            CLASS = FSViewer; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOpenGLView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

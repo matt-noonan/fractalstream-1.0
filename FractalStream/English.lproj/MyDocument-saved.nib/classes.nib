@@ -1,0 +1,81 @@
+{
+    IBClasses = (
+        {
+            CLASS = FSBrowser; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                historyView = FSViewer; 
+                preview = FSViewer; 
+                theSession = FSSession; 
+                theTools = FSTools; 
+                theViewer = FSViewer; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {configureSession = id; endConfiguration = id; }; 
+            CLASS = FSConfigurationSheet; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {configureSheet = FSProgramList; kernelLoader = id; parentWindow = id; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {loadKernel = id; }; 
+            CLASS = FSProgramList; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {listView = NSOutlineView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                cloneCurrentNode = id; 
+                deleteCurrentChildren = id; 
+                deleteCurrentNode = id; 
+                goBackward = id; 
+                goForward = id; 
+                selectCurrentParent = id; 
+            }; 
+            CLASS = FSSession; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {historyView = NSOutlineView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FSSessionNode; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changeTool = id; goBackward = id; goForward = id; }; 
+            CLASS = FSTools; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                coordinates = NSTextField; 
+                periodField = NSTextField; 
+                popupMenu = NSPopUpButton; 
+                preview = FSViewport; 
+                theSession = FSSession; 
+                viewport = FSViewport; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {render = id; }; 
+            CLASS = FSViewer; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOpenGLView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = MyDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                configSheet = FSTools; 
+                iterationBox = NSTextField; 
+                kernelLoader = FSProgramList; 
+                radiusBox = NSTextField; 
+                session = FSSession; 
+                toolkit = id; 
+                viewport = FSViewport; 
+            }; 
+            SUPERCLASS = NSDocument; 
+        }
+    ); 
+    IBVersion = 1; 
+}
