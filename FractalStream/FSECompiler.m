@@ -817,7 +817,10 @@
 
 - (void) setOutputFilename: (NSString*) newFilename { filename = [newFilename retain]; }
 
-- (BOOL) isParametric { return (usesC > (useComplexVars? 1 : 2))? YES : NO; }
+- (BOOL) isParametric {
+	NSLog(@"isParametric: useComplexVars is %i, usesC is %i, I eval %i\n", useComplexVars? 1 : 0, usesC, (usesC > (useComplexVars? 1 : 2))? 1 : 0);
+	return (usesC > (useComplexVars? 1 : 2))? YES : NO;
+}
 
 - (NSArray*) parameters {
 	NSMutableArray* p;
