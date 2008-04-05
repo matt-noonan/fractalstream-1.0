@@ -71,6 +71,19 @@
 	if(traces < 8) ++traces;
 }
 
+- (IBAction) configure: (id) sender {
+	switch([popupMenu indexOfSelectedItem]) {
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+				break;
+			default:
+				[[tools objectAtIndex: [popupMenu indexOfSelectedItem] - builtInTools] configure];
+				break;
+	}
+}
+
 - (void) rightMouseDown: (NSEvent*) theEvent {
 	void (*kernel)(int, double*, int, double*, int, double);
 	double x, y, in[9], out[6], p[2];					
@@ -313,7 +326,7 @@
 	NSMutableArray* bundleSearchPaths = [NSMutableArray array];
 	NSBundle* toolBundle;
 	Class pclass;
-	id aTool;
+	id <FSTool> aTool;
 	int i;
 	
 	if(toolsLoaded == NO) {
@@ -351,11 +364,9 @@
 
 	[popupMenu removeAllItems];
 	
-	builtInTools = 4;
+	builtInTools = 2;
 	[popupMenu addItemWithTitle: @"Zoom"];
 	[popupMenu addItemWithTitle: @"Dynamics"];
-	[popupMenu addItemWithTitle: @"Trace"];
-	[popupMenu addItemWithTitle: @"Drawing Test"];
 	toolEnum = [tools objectEnumerator];
 	while(aTool = [toolEnum nextObject]) [popupMenu addItemWithTitle: [aTool menuName]];
 	
@@ -363,7 +374,6 @@
 	[popupMenu selectItemWithTitle: @"Zoom"];
 
 	[[popupMenu itemWithTitle: @"Dynamics"] setKeyEquivalent: @"d"];
-	[[popupMenu itemWithTitle: @"Trace"] setKeyEquivalent: @"t"];
 	[[popupMenu itemWithTitle: @"Zoom"] setKeyEquivalent: @"z"];
 	toolEnum = [tools objectEnumerator];
 	while(aTool = [toolEnum nextObject]) [[popupMenu itemWithTitle: [aTool menuName]] setKeyEquivalent: [aTool keyEquivalent]];
@@ -373,21 +383,19 @@
 
 - (void) updateMenuForParametric: (BOOL) isPar {
 	NSEnumerator* toolEnum;
-	id aTool;
+	id <FSTool> aTool;
 	
 	return;
 	toolEnum = [tools objectEnumerator];
 	if(isPar == YES) {
 		[[popupMenu itemWithTitle: @"Zoom"] setHidden: NO];
 		[[popupMenu itemWithTitle: @"Dynamics"] setHidden: NO];
-		[[popupMenu itemWithTitle: @"Trace"] setHidden: YES];
 		while(aTool = [toolEnum nextObject]) 
 			[[popupMenu itemWithTitle: [aTool menuName]] setHidden: ([aTool is: FSTool_Parametric] == YES)? NO : YES];
 	}
 	if(isPar == NO) {
 		[[popupMenu itemWithTitle: @"Zoom"] setHidden: NO];
 		[[popupMenu itemWithTitle: @"Dynamics"] setHidden: YES];
-		[[popupMenu itemWithTitle: @"Trace"] setHidden: NO];
 		while(aTool = [toolEnum nextObject]) 
 			[[popupMenu itemWithTitle: [aTool menuName]] setHidden: ([aTool is: FSTool_Dynamical] == YES)? NO : YES];
 	}

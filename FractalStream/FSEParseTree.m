@@ -1177,7 +1177,53 @@
 	return r;
 }
  
- 
+
+- (FSEOpStream) linearize {
+	FSEOpStream program;
+	
+	NSLog(@"linearizing...\n");
+	program.ops = 0;
+	program.allocation_size = 1024;
+	program.op = (FSEOp*) malloc(program.allocation_size * sizeof(FSEOp));
+	
+	[self linearizeFrom: FSE_RootNode intoOpStream: &program];
+
+}
+
+- (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program {
+	int here, i, nkids, c;
+	here = h;
+	
+	while(node[here].cloneOf) here = node[here].cloneOf;
+	switch(node[here].type & FSE_Type_Mask) {
+		case FSE_Command:
+			switch(node[here].type & (-1 ^ FSE_Type_Mask)) {
+				case FSE_Block:
+					nkids = node[here].children;
+					c = node[here].firstChild;
+					[self linearizeFrom: c intoOpStream: program];
+					if(nkids > 1) for(i = 0; i < nkids - 1; i++) {
+						c = node[c].nextSibling;
+						[self linearizeFrom: c intoOpStream: program];
+					}
+					break;
+				case FSE_Set:
+				case FSE_Flag:
+				case FSE_Do:
+				case FSE_Report:
+				case FSE_If:
+				case FSE_Iterate:
+				case FSE_Par:
+				case FSE_Dyn:
+				case FSE_Default:
+				case FSE_Clear:
+				case FSE_Repeat:
+				case FSE_Modulo:
+			}
+			break;
+	}
+}
+
 /* Assign temporary variables to all the nodes and combine subtrees when possible. */
 - (NSString*) postprocessReserving: (int) firstTemp {
 	int depth;

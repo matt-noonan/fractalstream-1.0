@@ -11,6 +11,7 @@
 #import "FSCursors.h"
 #import "FSSession.h"
 #import "FSViewer.h"
+#import "FSTool.h"
 
 #ifndef FSTool_Type_Definitions
 #define FSTool_Type_Definitions
@@ -30,11 +31,11 @@
 	IBOutlet NSTextField* periodField;
 	IBOutlet NSTextField* stepsBox;
 	
-	id theTool;
+	id <FSTool> theTool;
 	NSBundle* toolbundle;	
 	NSMutableArray* toolClasses;
 	NSMutableArray* tools;
-	id* tool;
+	id <FSTool> * tool;
 	int currentTool;
 	BOOL toolsLoaded;
 	
@@ -53,6 +54,7 @@
 - (IBAction) resetTrace: (id) sender;
 - (IBAction) registerTrace: (id) sender;
 - (IBAction) setupMenu: (id) sender;
+- (IBAction) configure: (id) sender;
 - (IBAction) goForward: (id) sender;
 - (IBAction) goBackward: (id) sender;
 - (IBAction) changeTool: (id) sender;

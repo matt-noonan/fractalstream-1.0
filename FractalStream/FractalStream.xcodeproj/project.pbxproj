@@ -139,6 +139,7 @@
 		68B730410D37FF2D0021E000 /* FSViewerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewerData.h; sourceTree = "<group>"; };
 		68B732210D3AFEB10021E000 /* FSSession.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FSSession.h; sourceTree = "<group>"; };
 		68B732220D3AFEB10021E000 /* FSSession.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FSSession.m; sourceTree = "<group>"; };
+		68BFD5FD0DA5EF0600325B56 /* FSTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTool.h; sourceTree = "<group>"; };
 		68FAB4FA0D5ADA07004ABF7A /* FSRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRenderer.h; sourceTree = "<group>"; };
 		68FAB4FB0D5ADA07004ABF7A /* FSRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSRenderer.m; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -189,6 +190,7 @@
 		019EAFBD0A26095100E2AC05 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				68BFD5FD0DA5EF0600325B56 /* FSTool.h */,
 				68B730410D37FF2D0021E000 /* FSViewerData.h */,
 				68B0A09A0CEA19E400BCFBFF /* FSToolStruct.h */,
 				68B0A18E0CEA34C500BCFBFF /* FSToolInterface.h */,

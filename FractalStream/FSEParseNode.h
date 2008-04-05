@@ -16,6 +16,28 @@ typedef struct {
 	char name[64];
 } FSEParseNode;
 
+#define FSEOp_Constant	0x00
+#define FSEOp_Register	0x01
+#define FSEOp_Variable	0x02
+#define FSEOp_Parameter	0x03
+#define FSEOp_IntConst	0x04
+
+typedef struct {
+	int type;
+	int lhs;
+	int rhs;
+	int result;
+	double aux[2];
+} FSEOp;
+
+typedef struct {
+	int local_variables;
+	int registers;
+	int ops;
+	int allocation_size;
+	FSEOp* op;
+} FSEOpStream;
+
 #define FSE_RootNode	0
 #define FSE_Nil			0
 

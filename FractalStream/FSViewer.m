@@ -603,6 +603,14 @@
 	while(theObj = [objEnum nextObject]) if([theObj batch] == batch) [displayList removeObject: theObj];
 }
 
+- (void) changeBatch: (int) batch to: (int) newBatch {
+	NSEnumerator* objEnum;
+	FSViewerObject* theObj;
+	
+	objEnum = [displayList objectEnumerator];
+	while(theObj = [objEnum nextObject]) if([theObj batch] == batch) [theObj itemPtr] -> batch = newBatch;
+}
+
 - (void) makeBatch: (int) batch visible: (BOOL) vis {
 	NSEnumerator* objEnum;
 	FSViewerObject* theObj;

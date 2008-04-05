@@ -365,6 +365,8 @@
 			<dict>
 				<key>changeTool</key>
 				<string>id</string>
+				<key>configure</key>
+				<string>id</string>
 				<key>goBackward</key>
 				<string>id</string>
 				<key>goForward</key>
