@@ -32,5 +32,6 @@
 - (int) size;
 - (void) setTempVar: (int) newTempVar;
  - (double) evaluateFrom: (int) here usingVariables: (double*) var hashSet: (NSMutableDictionary*) hashpile;
+- (void) countParentsFrom: (int) h;
 
 @end

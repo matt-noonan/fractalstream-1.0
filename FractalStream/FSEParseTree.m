@@ -32,6 +32,7 @@
 	node[nextNode].type = type;
 	node[nextNode].children = 0;
 	node[nextNode].parent = -1;
+	node[nextNode].nparents = 0;
 	node[nextNode].nextSibling = FSE_Nil;
 	node[nextNode].firstChild = FSE_Nil;
 	node[nextNode].auxi[0] = 0;
@@ -1177,22 +1178,65 @@
 	return r;
 }
  
+- (void) countParentsFrom: (int) h {
+	int here, c, i, nchilds;
+	
+	here = h;
+	while(node[here].cloneOf) here = node[here].cloneOf;
+	++node[here].nparents;
+	nchilds = node[here].children;
+	if(nchilds) {
+		c = node[here].firstChild;
+		[self countParentsFrom: c];
+		if(nchilds > 1) for(i = 0; i < nchilds - 1; i++) {
+			c = node[c].nextSibling;
+			[self countParentsFrom: c];
+		}
+	}
+}
 
-- (FSEOpStream) linearize {
-	FSEOpStream program;
+- (id) linearize { 
+	FSEOpStream p;
+	[self linearizeTo: &p];
+	return self;
+}
+
+- (void) linearizeTo: (FSEOpStream*) program {
 	
 	NSLog(@"linearizing...\n");
-	program.ops = 0;
-	program.allocation_size = 1024;
-	program.op = (FSEOp*) malloc(program.allocation_size * sizeof(FSEOp));
+	program -> ops = 0;
+	program -> allocation_size = 1024;
+	program -> savedops = 0;
+	program -> saved_allocation_size = 1024;
+	program -> registers = 0;
+	program -> op = (FSEOp*) malloc(program -> allocation_size * sizeof(FSEOp));
+	program -> savedop = (FSEOp*) malloc(program -> saved_allocation_size * sizeof(FSEOp));
 	
-	[self linearizeFrom: FSE_RootNode intoOpStream: &program];
+	[self countParentsFrom: FSE_RootNode];
+	node[FSE_RootNode].nparents = 0;
 
+	
+	[self linearizeFrom: FSE_RootNode intoOpStream: program];
+
+}
+
+- (void) addOp: (FSEOp*) op toOpStream: (FSEOpStream*) program {
+	if(program -> ops == program -> allocation_size) {
+		program -> allocation_size += 1024;
+		program -> op = realloc(program -> op, program -> allocation_size * sizeof(FSEOp));
+	}
+	memcpy(&((program -> op)[program -> ops]), op, sizeof(FSEOp));
+	program -> ops++;
 }
 
 - (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program {
 	int here, i, nkids, c;
+	FSEOp op;
 	here = h;
+	
+	op.type = FSE_Command | FSE_InvalidOp;
+	op.lhs = op.rhs = -1;
+	op.result = -1;
 	
 	while(node[here].cloneOf) here = node[here].cloneOf;
 	switch(node[here].type & FSE_Type_Mask) {
@@ -1206,6 +1250,7 @@
 						c = node[c].nextSibling;
 						[self linearizeFrom: c intoOpStream: program];
 					}
+					op.type = FSE_Command | FSE_NoOp;
 					break;
 				case FSE_Set:
 				case FSE_Flag:
@@ -1219,9 +1264,115 @@
 				case FSE_Clear:
 				case FSE_Repeat:
 				case FSE_Modulo:
+					break;
+			}
+			break;
+		case FSE_Var:
+			switch(node[here].type & (-1 ^ FSE_Type_Mask)) {
+				case FSE_Complex:
+				case FSE_Real:
+				case FSE_PosReal:
+				case FSE_Truth:
+				case FSE_C_Const:
+				case FSE_R_Const:
+				case FSE_Ident:
+				case FSE_Join:
+				case FSE_LinkedSubexpression:
+				case FSE_Constant:
+				case FSE_Variable:
+				case FSE_Counter:
+					break;
+			}
+			break;
+		case FSE_Arith:
+			switch(node[here].type & (-1 ^ FSE_Type_Mask)) {
+				case FSE_Add:
+				case FSE_Sub:
+				case FSE_Mul:
+				case FSE_Div:
+					op.type = node[here].type;
+					op.lhs = [self linearizeFrom: node[here].firstChild intoOpStream: program];
+					op.rhs = [self linearizeFrom: node[node[here].firstChild].nextSibling intoOpStream: program];
+					op.result = program -> registers++;
+					break;
+				case FSE_Norm2:
+				case FSE_Neg:
+				case FSE_Inv:
+					op.type = node[here].type;
+					op.lhs = [self linearizeFrom: node[here].firstChild intoOpStream: program];
+					op.result = program -> registers++;
+					break;
+				case FSE_Norm:
+				case FSE_Conj:
+				case FSE_Square:
+				case FSE_Power:
+					op.type = FSE_Command | FSE_InvalidOp;					
+					break;
+			}
+			break;
+		case FSE_Comp:
+			switch(node[here].type & (-1 ^ FSE_Type_Mask)) {
+				case FSE_Equal:
+				case FSE_LT:
+				case FSE_GT:
+				case FSE_LTE:
+				case FSE_GTE:
+				case FSE_NotEqual:
+					op.type = node[here].type;
+					op.lhs = [self linearizeFrom: node[here].firstChild intoOpStream: program];
+					op.rhs = [self linearizeFrom: node[node[here].firstChild].nextSibling intoOpStream: program];
+					break;
+				case FSE_Escapes:
+				case FSE_Vanishes:
+					op.type = node[here].type;
+					op.lhs = [self linearizeFrom: node[here].firstChild intoOpStream: program];
+					break;
+				case FSE_Stops:
+					op.type = FSE_Command | FSE_InvalidOp;
+					break;
+			}
+			break;
+		case FSE_Bool:
+			switch(node[here].type & (-1 ^ FSE_Type_Mask)) {
+				case FSE_Or:
+				case FSE_And:
+				case FSE_Not:
+					break;
+				case FSE_Xor:
+				case FSE_Nor:
+				case FSE_Nand:
+					op.type = FSE_Command | FSE_InvalidOp;
+					break;
+			}
+			break;
+		case FSE_Func:
+			switch(node[here].type & (-1 ^ FSE_Type_Mask)) {
+				case FSE_Exp:
+				case FSE_Cosh:
+				case FSE_Sinh:
+				case FSE_Cos:
+				case FSE_Sin:
+				case FSE_Tan:
+				case FSE_Tanh:
+				case FSE_Log:
+				case FSE_Sqrt:
+				case FSE_Arccos:
+				case FSE_Arcsin:
+				case FSE_Arctan:
+				case FSE_Arg:
+					op.type = node[here].type;
+					op.lhs = [self linearizeFrom: node[here].firstChild intoOpStream: program];
+					op.result = program -> registers++;
+					break;
+				case FSE_Re:
+				case FSE_Im:
+					op.type = FSE_Command | FSE_InvalidOp;
+					break;
 			}
 			break;
 	}
+	[self addOp: &op toOpStream: program];
+	return op.result;
 }
 
 /* Assign temporary variables to all the nodes and combine subtrees when possible. */
@@ -1266,6 +1417,208 @@
 	[self logFrom: currentNode atDepth: 0];
 }
 	
+- (void) logOpStream: (FSEOpStream*) program {
+		NSString* log;
+		int i, clonedepth, c;
+
+		log = [NSString stringWithString: @""];
+		for(i = 0; i < program -> ops; i++) {
+			switch(program -> op[i].type & FSE_Type_Mask) {
+				case FSE_Command:
+					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
+						case FSE_Block:
+						case FSE_Set:
+						case FSE_Iterate:
+						case FSE_Par:
+						case FSE_Dyn:
+						case FSE_Do:
+						case FSE_Report:
+						case FSE_If:
+						case FSE_Flag:
+						case FSE_Default:
+						case FSE_Reset:
+						case FSE_Bumpdown:
+						case FSE_Clear:
+						case FSE_Modulo:
+							log = [log stringByAppendingString: @"<<< invalid FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+						case FSE_NoOp:
+							log = [log stringByAppendingString: @"noop\n"]; break;
+						case FSE_InvalidOp:
+							log = [log stringByAppendingString: @"INVALID\n"]; break;
+						case FSE_LoopLabel:
+							log = [log stringByAppendingString: @"start-loop\n"]; break;
+						case FSE_CompLabel:
+							log = [log stringByAppendingString: @"end-comparison\n"]; break;
+						case FSE_JumpIf:
+							log = [log stringByAppendingString: @"forward-jump-if\n"]; break;
+						case FSE_JumpIfNot:
+							log = [log stringByAppendingString: @"backward-jump-ifn\n"]; break;
+						default:
+							log = [log stringByAppendingString: @"<<< unknown FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+					}
+				break;
+			case FSE_Arith:
+					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
+						case FSE_Add:
+							log = [log stringByAppendingString: @"add %i, %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
+						case FSE_Sub:
+							log = [log stringByAppendingString: @"sub %i, %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
+						case FSE_Mul:
+							log = [log stringByAppendingString: @"mul %i, %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
+						case FSE_Div:
+							log = [log stringByAppendingString: @"div %i, %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
+						case FSE_Norm2:
+							log = [log stringByAppendingString: @"norm2 %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Neg:
+							log = [log stringByAppendingString: @"neg %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Inv:
+							log = [log stringByAppendingString: @"inv %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Square:
+							log = [log stringByAppendingString: @"square %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Conj:
+						case FSE_Norm:
+						case FSE_Power:
+							log = [log stringByAppendingString: @"<<< invalid FSE_Arith %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+						default:
+							log = [log stringByAppendingString: @"<<< unknown FSE_Arith %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+					}
+				break;
+			case FSE_Bool:
+					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
+						case FSE_Or:
+						case FSE_And:
+						case FSE_Xor:
+						case FSE_Nor:
+						case FSE_Nand:
+							log = [log stringByAppendingString: @"<<< invalid FSE_Bool %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+						case FSE_Not:
+							log = [log stringByAppendingString: @"not\n"]; break;
+						default:
+							log = [log stringByAppendingString: @"<<< unknown FSE_Bool %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+					}
+				break;
+			case FSE_Comp:
+					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
+						case FSE_Equal:
+							log = [log stringByAppendingString: @"equal %i, %i\n",
+								program -> op[i].lhs, program -> op[i].rhs]; break;
+						case FSE_LT:
+							log = [log stringByAppendingString: @"lt %i, %i\n",
+								program -> op[i].lhs, program -> op[i].rhs]; break;
+						case FSE_GT:
+							log = [log stringByAppendingString: @"gt %i, %i\n",
+								program -> op[i].lhs, program -> op[i].rhs]; break;
+						case FSE_LTE:
+							log = [log stringByAppendingString: @"lte %i, %i\n",
+								program -> op[i].lhs, program -> op[i].rhs]; break;
+						case FSE_GTE:
+							log = [log stringByAppendingString: @"gte %i, %i\n",
+								program -> op[i].lhs, program -> op[i].rhs]; break;
+						case FSE_NotEqual:
+							log = [log stringByAppendingString: @"not-equal %i, %i\n",
+								program -> op[i].lhs, program -> op[i].rhs]; break;
+						case FSE_Escapes:
+							log = [log stringByAppendingString: @"big %i\n",
+								program -> op[i].lhs]; break;
+						case FSE_Vanishes:
+							log = [log stringByAppendingString: @"tiny %i\n",
+								program -> op[i].lhs]; break;
+						case FSE_Stops:
+							log = [log stringByAppendingString: @"<<< invalid FSE_Comp %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+						default:
+							log = [log stringByAppendingString: @"<<< unknown FSE_Comp %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+					}
+				break;
+			case FSE_Var:
+					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
+						case FSE_Complex:
+						case FSE_Real:
+						case FSE_PosReal:
+						case FSE_Truth:
+						case FSE_C_Const:
+						case FSE_R_Const:
+						case FSE_Ident:
+						case FSE_Join:
+						case FSE_LinkedSubexpression:
+						case FSE_Constant:
+						case FSE_Variable:
+						case FSE_Counter:
+							log = [log stringByAppendingString: @"<<< invalid FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+						default:
+							log = [log stringByAppendingString: @"<<< unknown FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+					}
+				break;
+			case FSE_Func:
+					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
+						case FSE_Exp:
+							log = [log stringByAppendingString: @"exp %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Cosh:
+							log = [log stringByAppendingString: @"cosh %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Sinh:
+							log = [log stringByAppendingString: @"sinh %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Tanh:
+							log = [log stringByAppendingString: @"tanh %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Cos:
+							log = [log stringByAppendingString: @"cos %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Sin:
+							log = [log stringByAppendingString: @"sin %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Tan:
+							log = [log stringByAppendingString: @"tan %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Log:
+							log = [log stringByAppendingString: @"log %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Sqrt:
+							log = [log stringByAppendingString: @"sqrt %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Arccos:
+							log = [log stringByAppendingString: @"arccos %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Arcsin:
+							log = [log stringByAppendingString: @"arcsin %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Arctan:
+							log = [log stringByAppendingString: @"arctan %i -> %i\n",
+								program -> op[i].lhs, program -> op[i].result]; break;
+						case FSE_Arg:
+						case FSE_Re:
+						case FSE_Im:
+							log = [log stringByAppendingString: @"<<< invalid FSE_Func %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+						default:
+							log = [log stringByAppendingString: @"<<< unknown FSE_Func %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+					}
+				break;
+		}
+	}
+	NSLog(@"%@\n", log);
+}
+
 - (void) logFrom: (int) currentNode atDepth: (int) depth {
 		NSString* log;
 		int i, clonedepth, c;
@@ -1275,7 +1628,7 @@
 		while(node[c].cloneOf) { c = node[c].cloneOf; ++clonedepth; }
 		if(clonedepth) { [self logFrom: c atDepth: depth]; return; }
 		
-		log = [[NSString alloc] initWithFormat: @"[%3i]: ", currentNode]; Indent;
+		log = [[NSString alloc] initWithFormat: @"[%3i]<%i>: ", currentNode, node[currentNode].nparents]; Indent;
 		switch(node[currentNode].type & FSE_Type_Mask) {
 			case FSE_Command:
 					switch(node[currentNode].type & (-1 ^ FSE_Type_Mask)) {

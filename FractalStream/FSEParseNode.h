@@ -11,16 +11,18 @@ typedef struct {
 	int cachePass;
 	double hash;
 	int hashed;
+	int nparents;
 	int auxi[2]; /* auxi[0] gets used as index for return variable */
 	double auxf[2];
 	char name[64];
 } FSEParseNode;
 
-#define FSEOp_Constant	0x00
-#define FSEOp_Register	0x01
-#define FSEOp_Variable	0x02
-#define FSEOp_Parameter	0x03
-#define FSEOp_IntConst	0x04
+#define FSEOp_Constant	0x01
+#define FSEOp_Register	0x02
+#define FSEOp_Variable	0x03
+#define FSEOp_Parameter	0x04
+#define FSEOp_IntConst	0x05
+#define FSEOp_Scratch	0x06
 
 typedef struct {
 	int type;
@@ -28,14 +30,16 @@ typedef struct {
 	int rhs;
 	int result;
 	double aux[2];
+	int dependency[2];
 } FSEOp;
 
 typedef struct {
 	int local_variables;
 	int registers;
-	int ops;
-	int allocation_size;
+	int ops, savedops;
+	int allocation_size, saved_allocation_size;
 	FSEOp* op;
+	FSEOp* savedop;
 } FSEOpStream;
 
 #define FSE_RootNode	0
@@ -57,6 +61,12 @@ typedef struct {
 #define FSE_Clear		12
 #define FSE_Repeat		13
 #define FSE_Modulo		14
+#define FSE_NoOp		15
+#define FSE_InvalidOp	16
+#define FSE_LoopLabel	17
+#define FSE_CompLabel	18
+#define FSE_JumpIf		19
+#define FSE_JumpIfNot	20
 
 #define FSE_Type_Mask	0xffffff00
 #define FSE_Arith		0x200

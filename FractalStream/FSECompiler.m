@@ -738,6 +738,7 @@
 	if(error) { NSLog(@"ERROR -----> \"%@\", tree is:\n", error); [tree log]; return; }
 	else NSLog(@"realification completed\n");
 	[tree postprocessReserving: nextvar];
+	[tree linearize];
 	[tree log];
 	
 	NSLog(@"searching for subtree equivalences\n");
