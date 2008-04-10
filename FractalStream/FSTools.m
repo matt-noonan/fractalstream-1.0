@@ -388,16 +388,16 @@
 	return;
 	toolEnum = [tools objectEnumerator];
 	if(isPar == YES) {
-		[[popupMenu itemWithTitle: @"Zoom"] setHidden: NO];
-		[[popupMenu itemWithTitle: @"Dynamics"] setHidden: NO];
+		[[popupMenu itemWithTitle: @"Zoom"] setEnabled: NO];
+		[[popupMenu itemWithTitle: @"Dynamics"] setEnabled: NO];
 		while(aTool = [toolEnum nextObject]) 
-			[[popupMenu itemWithTitle: [aTool menuName]] setHidden: ([aTool is: FSTool_Parametric] == YES)? NO : YES];
+			[[popupMenu itemWithTitle: [aTool menuName]] setEnabled: ([aTool is: FSTool_Parametric] == YES)? NO : YES];
 	}
 	if(isPar == NO) {
-		[[popupMenu itemWithTitle: @"Zoom"] setHidden: NO];
-		[[popupMenu itemWithTitle: @"Dynamics"] setHidden: YES];
+		[[popupMenu itemWithTitle: @"Zoom"] setEnabled: NO];
+		[[popupMenu itemWithTitle: @"Dynamics"] setEnabled: YES];
 		while(aTool = [toolEnum nextObject]) 
-			[[popupMenu itemWithTitle: [aTool menuName]] setHidden: ([aTool is: FSTool_Dynamical] == YES)? NO : YES];
+			[[popupMenu itemWithTitle: [aTool menuName]] setEnabled: ([aTool is: FSTool_Dynamical] == YES)? NO : YES];
 	}
 }
 

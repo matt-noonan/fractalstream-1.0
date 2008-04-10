@@ -46,10 +46,13 @@ typedef struct {
 - (int) addVariable: (NSString*) name;
 - (NSString*) nameOfVariableAtIndex: (int) index;
 - (int) indexOfVariableWithName: (NSString*) name;
+- (int) parameterNumberOfVariableAtIndex: (int) idx;
+- (void) setVariableWithName: (NSString*) name toType: (int) type;
 - (NSArray*) flagArray;
 - (NSString*) errorMessage;
 - (NSRange) errorRange;
 - (NSArray*) parameters;
+- (void) printVariableStack;
 
 - (BOOL) isParametric;
 

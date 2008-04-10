@@ -818,7 +818,7 @@
 	[glLock unlock];
 }
 
--(void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps {
+- (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps {
 	double p[2];
 	double in[512], out[3], x, y;
 	double sx, sy, ex, ey, lx, ly;

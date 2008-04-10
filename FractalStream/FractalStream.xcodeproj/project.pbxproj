@@ -7,11 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		011E2E3609F02528000A8E98 /* FSViewManager.h in Resources */ = {isa = PBXBuildFile; fileRef = 011E2E3409F02528000A8E98 /* FSViewManager.h */; };
-		011E2E3709F02528000A8E98 /* FSViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 011E2E3509F02528000A8E98 /* FSViewManager.m */; };
 		0182416B09C892C500CDFD3F /* julia.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0182416A09C892C500CDFD3F /* julia.icns */; };
-		018241B109C89D6300CDFD3F /* FSViewport.h in Resources */ = {isa = PBXBuildFile; fileRef = 018241AF09C89D6300CDFD3F /* FSViewport.h */; };
-		018241B209C89D6300CDFD3F /* FSViewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 018241B009C89D6300CDFD3F /* FSViewport.m */; };
 		018241CC09C89E9E00CDFD3F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 018241CB09C89E9E00CDFD3F /* OpenGL.framework */; };
 		01DD1B6B09CB653900A43FB5 /* FSTools.h in Resources */ = {isa = PBXBuildFile; fileRef = 01DD1B6909CB653900A43FB5 /* FSTools.h */; };
 		01DD1B6C09CB653900A43FB5 /* FSTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DD1B6A09CB653900A43FB5 /* FSTools.m */; };
@@ -30,19 +26,15 @@
 		687AEF340D75C9CC00998D23 /* FSDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B4FDCFA73011CA2CEA /* FSDocument.nib */; };
 		687AEF350D75C9CC00998D23 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		687AEF360D75C9CC00998D23 /* julia.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0182416A09C892C500CDFD3F /* julia.icns */; };
-		687AEF370D75C9CC00998D23 /* FSViewport.h in Resources */ = {isa = PBXBuildFile; fileRef = 018241AF09C89D6300CDFD3F /* FSViewport.h */; };
 		687AEF3A0D75C9CC00998D23 /* FSTools.h in Resources */ = {isa = PBXBuildFile; fileRef = 01DD1B6909CB653900A43FB5 /* FSTools.h */; };
 		687AEF3B0D75C9CC00998D23 /* FSCursors.h in Resources */ = {isa = PBXBuildFile; fileRef = 01DD1CE309CC945700A43FB5 /* FSCursors.h */; };
 		687AEF3C0D75C9CC00998D23 /* ZoomIn.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 01DD1D7009CC9DE000A43FB5 /* ZoomIn.tiff */; };
-		687AEF3D0D75C9CC00998D23 /* FSViewManager.h in Resources */ = {isa = PBXBuildFile; fileRef = 011E2E3409F02528000A8E98 /* FSViewManager.h */; };
 		687AEF3E0D75C9CC00998D23 /* programList in Resources */ = {isa = PBXBuildFile; fileRef = 680F378B0CA06E3300F1F52E /* programList */; };
 		687AEF3F0D75C9CC00998D23 /* MyDocument-saved.nib in Resources */ = {isa = PBXBuildFile; fileRef = 684E67E30CF958A800BAB5A5 /* MyDocument-saved.nib */; };
 		687AEF410D75C9CC00998D23 /* MyDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* MyDocument.m */; settings = {ATTRIBUTES = (); }; };
 		687AEF420D75C9CC00998D23 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
-		687AEF430D75C9CC00998D23 /* FSViewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 018241B009C89D6300CDFD3F /* FSViewport.m */; };
 		687AEF460D75C9CC00998D23 /* FSTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DD1B6A09CB653900A43FB5 /* FSTools.m */; };
 		687AEF470D75C9CC00998D23 /* FSCursors.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DD1CE409CC945700A43FB5 /* FSCursors.m */; };
-		687AEF480D75C9CC00998D23 /* FSViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 011E2E3509F02528000A8E98 /* FSViewManager.m */; };
 		687AEF490D75C9CC00998D23 /* FSViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 684E65990CF91D8700BAB5A5 /* FSViewer.m */; };
 		687AEF4A0D75C9CC00998D23 /* FSBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 684E67E00CF9560300BAB5A5 /* FSBrowser.m */; };
 		687AEF4B0D75C9CC00998D23 /* FSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 68B732220D3AFEB10021E000 /* FSSession.m */; };
@@ -87,11 +79,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
-		011E2E3409F02528000A8E98 /* FSViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewManager.h; sourceTree = "<group>"; };
-		011E2E3509F02528000A8E98 /* FSViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSViewManager.m; sourceTree = "<group>"; };
 		0182416A09C892C500CDFD3F /* julia.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = julia.icns; sourceTree = "<group>"; };
-		018241AF09C89D6300CDFD3F /* FSViewport.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FSViewport.h; sourceTree = "<group>"; };
-		018241B009C89D6300CDFD3F /* FSViewport.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FSViewport.m; sourceTree = "<group>"; };
 		018241CB09C89E9E00CDFD3F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		01DD1B6909CB653900A43FB5 /* FSTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTools.h; sourceTree = "<group>"; };
 		01DD1B6A09CB653900A43FB5 /* FSTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSTools.m; sourceTree = "<group>"; };
@@ -202,7 +190,6 @@
 				68FAB4FB0D5ADA07004ABF7A /* FSRenderer.m */,
 				684E65980CF91D8600BAB5A5 /* FSViewer.h */,
 				684E65990CF91D8700BAB5A5 /* FSViewer.m */,
-				685F90D90D3D32CB00C82447 /* Old Viewer */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -319,17 +306,6 @@
 			name = "Color Editor";
 			sourceTree = "<group>";
 		};
-		685F90D90D3D32CB00C82447 /* Old Viewer */ = {
-			isa = PBXGroup;
-			children = (
-				018241AF09C89D6300CDFD3F /* FSViewport.h */,
-				018241B009C89D6300CDFD3F /* FSViewport.m */,
-				011E2E3409F02528000A8E98 /* FSViewManager.h */,
-				011E2E3509F02528000A8E98 /* FSViewManager.m */,
-			);
-			name = "Old Viewer";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -400,11 +376,9 @@
 				687AEF340D75C9CC00998D23 /* FSDocument.nib in Resources */,
 				687AEF350D75C9CC00998D23 /* InfoPlist.strings in Resources */,
 				687AEF360D75C9CC00998D23 /* julia.icns in Resources */,
-				687AEF370D75C9CC00998D23 /* FSViewport.h in Resources */,
 				687AEF3A0D75C9CC00998D23 /* FSTools.h in Resources */,
 				687AEF3B0D75C9CC00998D23 /* FSCursors.h in Resources */,
 				687AEF3C0D75C9CC00998D23 /* ZoomIn.tiff in Resources */,
-				687AEF3D0D75C9CC00998D23 /* FSViewManager.h in Resources */,
 				687AEF3E0D75C9CC00998D23 /* programList in Resources */,
 				687AEF3F0D75C9CC00998D23 /* MyDocument-saved.nib in Resources */,
 			);
@@ -420,11 +394,9 @@
 				8D15AC2E0486D014006FF6A4 /* FSDocument.nib in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
 				0182416B09C892C500CDFD3F /* julia.icns in Resources */,
-				018241B109C89D6300CDFD3F /* FSViewport.h in Resources */,
 				01DD1B6B09CB653900A43FB5 /* FSTools.h in Resources */,
 				01DD1CE509CC945700A43FB5 /* FSCursors.h in Resources */,
 				01DD1D7109CC9DE000A43FB5 /* ZoomIn.tiff in Resources */,
-				011E2E3609F02528000A8E98 /* FSViewManager.h in Resources */,
 				680F378C0CA06E3300F1F52E /* programList in Resources */,
 				684E67E50CF958A800BAB5A5 /* MyDocument-saved.nib in Resources */,
 			);
@@ -455,10 +427,8 @@
 			files = (
 				687AEF410D75C9CC00998D23 /* MyDocument.m in Sources */,
 				687AEF420D75C9CC00998D23 /* main.m in Sources */,
-				687AEF430D75C9CC00998D23 /* FSViewport.m in Sources */,
 				687AEF460D75C9CC00998D23 /* FSTools.m in Sources */,
 				687AEF470D75C9CC00998D23 /* FSCursors.m in Sources */,
-				687AEF480D75C9CC00998D23 /* FSViewManager.m in Sources */,
 				687AEF490D75C9CC00998D23 /* FSViewer.m in Sources */,
 				687AEF4A0D75C9CC00998D23 /* FSBrowser.m in Sources */,
 				687AEF4B0D75C9CC00998D23 /* FSSession.m in Sources */,
@@ -479,10 +449,8 @@
 			files = (
 				8D15AC310486D014006FF6A4 /* MyDocument.m in Sources */,
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
-				018241B209C89D6300CDFD3F /* FSViewport.m in Sources */,
 				01DD1B6C09CB653900A43FB5 /* FSTools.m in Sources */,
 				01DD1CE609CC945700A43FB5 /* FSCursors.m in Sources */,
-				011E2E3709F02528000A8E98 /* FSViewManager.m in Sources */,
 				684E659A0CF91D8700BAB5A5 /* FSViewer.m in Sources */,
 				684E67E10CF9560300BAB5A5 /* FSBrowser.m in Sources */,
 				68B732230D3AFEB10021E000 /* FSSession.m in Sources */,

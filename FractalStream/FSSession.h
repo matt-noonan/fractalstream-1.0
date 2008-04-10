@@ -85,6 +85,9 @@
 - (NSData*) notes;
 - (NSFileWrapper*) kernelWrapper;
 
+- (NSArray*) flagNames;
+
+- (IBAction) goToRoot: (id) sender;
 - (IBAction) selectCurrentParent: (id) sender;
 - (IBAction) cloneCurrentNode: (id) sender;
 - (IBAction) deleteCurrentNode: (id) sender;
@@ -95,6 +98,7 @@
 - (FSSessionNode*) addChildNode: (FSSessionNode*) child andMakeCurrent: (BOOL) makeCurrent;
 - (FSSessionNode*) addChildNodeWithLocation: (double*) box andProgram: (int) program;
 - (FSSessionNode*) addChildNodeWithScale: (double) scale X: (double) x Y: (double) y flags: (int) flag;
+- (FSSessionNode*) addChildWithData: (FSViewerData) theData andMakeCurrent: (BOOL) makeCurrent;
 - (FSSessionNode*) root;
 
 // required methods for NSOutlineView

@@ -21,6 +21,7 @@
 	int tempVar;
 }
 
+- (void) deleteNodeAt: (int) spot;
 - (int) newNodeOfType: (int) type at: (int) spot;
 - (int) newOrphanOfType: (int) type;
 - (int) setParentOfNode: (int) child to: (int) parent;
@@ -31,7 +32,16 @@
 - (void) log;
 - (int) size;
 - (void) setTempVar: (int) newTempVar;
- - (double) evaluateFrom: (int) here usingVariables: (double*) var hashSet: (NSMutableDictionary*) hashpile;
 - (void) countParentsFrom: (int) h;
+- (void) logOpStream: (FSEOpStream*) program;
+- (void) logFrom: (int) currentNode atDepth: (int) depth;
+ - (NSString*) realifyFrom: (int) here;
+- (void) reorderFromNode: (int) here;
+- (int) weight: (int) type;
+ - (double) evaluateFrom: (int) here usingVariables: (double*) var;
+- (id) linearize;
+- (void) linearizeTo: (FSEOpStream*) program;
+- (void) addOp: (FSEOp*) op toOpStream: (FSEOpStream*) program;
+- (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program;
 
 @end

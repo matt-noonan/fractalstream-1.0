@@ -17,7 +17,7 @@
 			<string>DocumentType</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>fs</string>
+				<string>fsdy</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -36,7 +36,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
-	<string>fs</string>
+	<string>fsdy</string>
 	<key>CFBundleVersion</key>
 	<string>0.1</string>
 	<key>NSMainNibFile</key>

@@ -346,7 +346,7 @@
 }
 
 - (void) setFlags: (NSArray*) flagArray { flagNames = [NSArray arrayWithArray: flagArray]; }
-- (NSString*) flagNames { return flagNames; }
+- (NSArray*) flagNames { return flagNames; }
 
 + (void) initialize { [FSSession setVersion: 0]; }
 

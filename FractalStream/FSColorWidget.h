@@ -69,6 +69,10 @@ typedef struct {
 - (void) cacheAutocolor: (int) c to: (float*) cache X: (double*) x Y: (double*) y;
 - (BOOL) useAutocolorForColor: (int) c;
 - (BOOL) useLockForColor: (int) c;
+- (void) colorArrayValue: (float*) cA;
+- (void) setNamesTo: (NSArray*) newNames;
+- (void) setup;
+- (void) getColorsFrom: (FSColorWidget*) cw;
 
 - (NSArray*) names;
 
@@ -91,7 +95,7 @@ typedef struct {
 - (BOOL) active;
 - (void) setColorToR: (float) r G: (float) g B: (float) b;
 - (void) setColorWellTo: (NSColorWell*) cw;
-- (void) setNamesTo: (NSArray*) newNames;
-
+- (void) untoggle;
+- (void) retoggle;
 
 @end

@@ -27,7 +27,7 @@
 	IBOutlet NSPopUpButton* popupMenu;
 	IBOutlet NSTextField* coordinates;
 	IBOutlet FSSession* theSession;
-	IBOutlet id theBrowser;
+	IBOutlet id <FSBrowserProtocol> theBrowser;
 	IBOutlet NSTextField* periodField;
 	IBOutlet NSTextField* stepsBox;
 	
@@ -55,9 +55,8 @@
 - (IBAction) registerTrace: (id) sender;
 - (IBAction) setupMenu: (id) sender;
 - (IBAction) configure: (id) sender;
-- (IBAction) goForward: (id) sender;
-- (IBAction) goBackward: (id) sender;
 - (IBAction) changeTool: (id) sender;
 - (void) setSession: (FSSession*) newSession;
+- (void) updateMenuForParametric: (BOOL) isPar;
 
 @end

@@ -111,8 +111,25 @@ typedef struct {
 - (void*) theKernel;
 - (NSPoint) locationOfPoint: (double*) point;
 - (NSImage*) snapshot;
-- setRenderCompletedMessage: (SEL) message;
+- setRenderCompletedMessage: (SEL) message forObject: (id) obj;
 - zoomFrom: (double*) start to: (double*) end scalingFrom: (double) startSize to: (double) endSize;
+- (void) drawTexture;
+- setDefaultsTo: (double*) def count: (int) n;
+
+- (void) drawBoxFrom: (NSPoint) start to: (NSPoint) end withColor: (float*) rgb;
+- (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps;
+
+- (void) drawItem: (FSViewerItem) newItem;
+- (void) drawObject: (FSViewerObject*) newObject;
+- (void) makeBatch: (int) batch visible: (BOOL) vis;
+- (void) changeBatch: (int) batch to: (int) newBatch;
+- (void) deleteObjectsInBatch: (int) batch;
+- (int) getBatchNumber;
+
+- (void) convertEvent: (NSEvent*) theEvent toPoint: (double*) point;
+- (void) convertLocation: (NSPoint) theLocation toPoint: (double*) point;
+- (NSPoint) locationOfPoint: (double*) point;
+- (void) convertPoint: (double*) point toGL: (double*) gl;
 
 - (FSColorWidget*) colorPicker;
 - setColorPicker: (FSColorWidget*) newColorPicker;
