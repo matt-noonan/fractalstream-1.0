@@ -6,7 +6,7 @@
 //  Copyright __MyCompanyName__ 2006 . All rights reserved.
 //
 
-#import "MyDocument.h"
+#import "FSDocument.h"
 
 @implementation MyDocument
 
