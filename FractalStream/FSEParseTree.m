@@ -981,7 +981,8 @@
  
  /* find equivalent subtrees and replace with links */
  - optimizeReserving: (int) nvars {
-	double* var;
+	NSLog(@"- optimizeReserving: (int) nvars is disabled!!!");
+/*	double* var;
 	int i, here;
 	NSMutableDictionary* hashpile;
 	
@@ -992,7 +993,7 @@
 	[self optimizeFrom: FSE_RootNode usingVariables: (double*) var hashSet: hashpile];
 	NSLog(@"hashpile is %@\n", hashpile);
 	[hashpile release];
-	free(var);
+	free(var);*/
  }
 
 - optimizeFrom: (int) here usingVariables: (double*) var hashSet: (NSMutableDictionary*) hashpile {
@@ -1014,12 +1015,12 @@
 	if(node[h].hashed) {
 		NSNumber* key;
 		key = [NSString stringWithFormat: @"%.18e", node[h].hash];
-		n = [hashpile valueForKey: key];
+		n = [hashpile valueForKey: [key stringValue]];
 		if(n) {
 			if([n intValue] != h) node[h].cloneOf = [n intValue];
 		}
 		else {
-			[hashpile setValue: [NSNumber numberWithInt: h] forKey: key];
+			[hashpile setValue: [NSNumber numberWithInt: h] forKey: [key stringValue]];
 		}
 	}
  	if(node[here].type == (FSE_Command | FSE_Set)) {
@@ -1440,58 +1441,58 @@
 						case FSE_Bumpdown:
 						case FSE_Clear:
 						case FSE_Modulo:
-							log = [log stringByAppendingString: @"<<< invalid FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< invalid FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 						case FSE_NoOp:
-							log = [log stringByAppendingString: @"noop\n"]; break;
+							log = [log stringByAppendingFormat: @"noop\n"]; break;
 						case FSE_InvalidOp:
-							log = [log stringByAppendingString: @"INVALID\n"]; break;
+							log = [log stringByAppendingFormat: @"INVALID\n"]; break;
 						case FSE_LoopLabel:
-							log = [log stringByAppendingString: @"start-loop\n"]; break;
+							log = [log stringByAppendingFormat: @"start-loop\n"]; break;
 						case FSE_CompLabel:
-							log = [log stringByAppendingString: @"end-comparison\n"]; break;
+							log = [log stringByAppendingFormat: @"end-comparison\n"]; break;
 						case FSE_JumpIf:
-							log = [log stringByAppendingString: @"forward-jump-if\n"]; break;
+							log = [log stringByAppendingFormat: @"forward-jump-if\n"]; break;
 						case FSE_JumpIfNot:
-							log = [log stringByAppendingString: @"backward-jump-ifn\n"]; break;
+							log = [log stringByAppendingFormat: @"backward-jump-ifn\n"]; break;
 						default:
-							log = [log stringByAppendingString: @"<<< unknown FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< unknown FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 					}
 				break;
 			case FSE_Arith:
 					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
 						case FSE_Add:
-							log = [log stringByAppendingString: @"add %i, %i -> %i\n",
+							log = [log stringByAppendingFormat: @"add %i, %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
 						case FSE_Sub:
-							log = [log stringByAppendingString: @"sub %i, %i -> %i\n",
+							log = [log stringByAppendingFormat: @"sub %i, %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
 						case FSE_Mul:
-							log = [log stringByAppendingString: @"mul %i, %i -> %i\n",
+							log = [log stringByAppendingFormat: @"mul %i, %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
 						case FSE_Div:
-							log = [log stringByAppendingString: @"div %i, %i -> %i\n",
+							log = [log stringByAppendingFormat: @"div %i, %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].rhs, program -> op[i].result]; break;
 						case FSE_Norm2:
-							log = [log stringByAppendingString: @"norm2 %i -> %i\n",
+							log = [log stringByAppendingFormat: @"norm2 %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Neg:
-							log = [log stringByAppendingString: @"neg %i -> %i\n",
+							log = [log stringByAppendingFormat: @"neg %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Inv:
-							log = [log stringByAppendingString: @"inv %i -> %i\n",
+							log = [log stringByAppendingFormat: @"inv %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Square:
-							log = [log stringByAppendingString: @"square %i -> %i\n",
+							log = [log stringByAppendingFormat: @"square %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Conj:
 						case FSE_Norm:
 						case FSE_Power:
-							log = [log stringByAppendingString: @"<<< invalid FSE_Arith %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< invalid FSE_Arith %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 						default:
-							log = [log stringByAppendingString: @"<<< unknown FSE_Arith %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< unknown FSE_Arith %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 					}
 				break;
@@ -1502,46 +1503,46 @@
 						case FSE_Xor:
 						case FSE_Nor:
 						case FSE_Nand:
-							log = [log stringByAppendingString: @"<<< invalid FSE_Bool %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< invalid FSE_Bool %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 						case FSE_Not:
-							log = [log stringByAppendingString: @"not\n"]; break;
+							log = [log stringByAppendingFormat: @"not\n"]; break;
 						default:
-							log = [log stringByAppendingString: @"<<< unknown FSE_Bool %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< unknown FSE_Bool %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 					}
 				break;
 			case FSE_Comp:
 					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
 						case FSE_Equal:
-							log = [log stringByAppendingString: @"equal %i, %i\n",
+							log = [log stringByAppendingFormat: @"equal %i, %i\n",
 								program -> op[i].lhs, program -> op[i].rhs]; break;
 						case FSE_LT:
-							log = [log stringByAppendingString: @"lt %i, %i\n",
+							log = [log stringByAppendingFormat: @"lt %i, %i\n",
 								program -> op[i].lhs, program -> op[i].rhs]; break;
 						case FSE_GT:
-							log = [log stringByAppendingString: @"gt %i, %i\n",
+							log = [log stringByAppendingFormat: @"gt %i, %i\n",
 								program -> op[i].lhs, program -> op[i].rhs]; break;
 						case FSE_LTE:
-							log = [log stringByAppendingString: @"lte %i, %i\n",
+							log = [log stringByAppendingFormat: @"lte %i, %i\n",
 								program -> op[i].lhs, program -> op[i].rhs]; break;
 						case FSE_GTE:
-							log = [log stringByAppendingString: @"gte %i, %i\n",
+							log = [log stringByAppendingFormat: @"gte %i, %i\n",
 								program -> op[i].lhs, program -> op[i].rhs]; break;
 						case FSE_NotEqual:
-							log = [log stringByAppendingString: @"not-equal %i, %i\n",
+							log = [log stringByAppendingFormat: @"not-equal %i, %i\n",
 								program -> op[i].lhs, program -> op[i].rhs]; break;
 						case FSE_Escapes:
-							log = [log stringByAppendingString: @"big %i\n",
+							log = [log stringByAppendingFormat: @"big %i\n",
 								program -> op[i].lhs]; break;
 						case FSE_Vanishes:
-							log = [log stringByAppendingString: @"tiny %i\n",
+							log = [log stringByAppendingFormat: @"tiny %i\n",
 								program -> op[i].lhs]; break;
 						case FSE_Stops:
-							log = [log stringByAppendingString: @"<<< invalid FSE_Comp %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< invalid FSE_Comp %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 						default:
-							log = [log stringByAppendingString: @"<<< unknown FSE_Comp %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< unknown FSE_Comp %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 					}
 				break;
@@ -1559,58 +1560,58 @@
 						case FSE_Constant:
 						case FSE_Variable:
 						case FSE_Counter:
-							log = [log stringByAppendingString: @"<<< invalid FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< invalid FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 						default:
-							log = [log stringByAppendingString: @"<<< unknown FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< unknown FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 					}
 				break;
 			case FSE_Func:
 					switch(program -> op[i].type & (-1 ^ FSE_Type_Mask)) {
 						case FSE_Exp:
-							log = [log stringByAppendingString: @"exp %i -> %i\n",
+							log = [log stringByAppendingFormat: @"exp %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Cosh:
-							log = [log stringByAppendingString: @"cosh %i -> %i\n",
+							log = [log stringByAppendingFormat: @"cosh %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Sinh:
-							log = [log stringByAppendingString: @"sinh %i -> %i\n",
+							log = [log stringByAppendingFormat: @"sinh %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Tanh:
-							log = [log stringByAppendingString: @"tanh %i -> %i\n",
+							log = [log stringByAppendingFormat: @"tanh %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Cos:
-							log = [log stringByAppendingString: @"cos %i -> %i\n",
+							log = [log stringByAppendingFormat: @"cos %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Sin:
-							log = [log stringByAppendingString: @"sin %i -> %i\n",
+							log = [log stringByAppendingFormat: @"sin %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Tan:
-							log = [log stringByAppendingString: @"tan %i -> %i\n",
+							log = [log stringByAppendingFormat: @"tan %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Log:
-							log = [log stringByAppendingString: @"log %i -> %i\n",
+							log = [log stringByAppendingFormat: @"log %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Sqrt:
-							log = [log stringByAppendingString: @"sqrt %i -> %i\n",
+							log = [log stringByAppendingFormat: @"sqrt %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Arccos:
-							log = [log stringByAppendingString: @"arccos %i -> %i\n",
+							log = [log stringByAppendingFormat: @"arccos %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Arcsin:
-							log = [log stringByAppendingString: @"arcsin %i -> %i\n",
+							log = [log stringByAppendingFormat: @"arcsin %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Arctan:
-							log = [log stringByAppendingString: @"arctan %i -> %i\n",
+							log = [log stringByAppendingFormat: @"arctan %i -> %i\n",
 								program -> op[i].lhs, program -> op[i].result]; break;
 						case FSE_Arg:
 						case FSE_Re:
 						case FSE_Im:
-							log = [log stringByAppendingString: @"<<< invalid FSE_Func %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< invalid FSE_Func %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 						default:
-							log = [log stringByAppendingString: @"<<< unknown FSE_Func %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							log = [log stringByAppendingFormat: @"<<< unknown FSE_Func %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
 					}
 				break;
@@ -1633,61 +1634,61 @@
 			case FSE_Command:
 					switch(node[currentNode].type & (-1 ^ FSE_Type_Mask)) {
 						case FSE_Block:
-							 log = [log stringByAppendingString: @"block"]; break;
+							 log = [log stringByAppendingFormat: @"block"]; break;
 						case FSE_Iterate:
-							log = [log stringByAppendingString: @"iterate"]; break;
+							log = [log stringByAppendingFormat: @"iterate"]; break;
 						case FSE_Do:
-							log = [log stringByAppendingString: @"do"]; break;
+							log = [log stringByAppendingFormat: @"do"]; break;
 						case FSE_Set:
-							log = [log stringByAppendingString: @"set"]; break;
+							log = [log stringByAppendingFormat: @"set"]; break;
 						case FSE_Par:
-							log = [log stringByAppendingString: @"par"]; break;
+							log = [log stringByAppendingFormat: @"par"]; break;
 						case FSE_Dyn:
-							log = [log stringByAppendingString: @"dyn"]; break;
+							log = [log stringByAppendingFormat: @"dyn"]; break;
 						case FSE_Report:
-							log = [log stringByAppendingString: @"report"]; break;
+							log = [log stringByAppendingFormat: @"report"]; break;
 						case FSE_If:
-							log = [log stringByAppendingString: @"if"]; break;
+							log = [log stringByAppendingFormat: @"if"]; break;
 						case FSE_Flag:
-							log = [log stringByAppendingString: @"flag"]; break;
+							log = [log stringByAppendingFormat: @"flag"]; break;
 						case FSE_Default:
-							log = [log stringByAppendingString: @"default"]; break;
+							log = [log stringByAppendingFormat: @"default"]; break;
 						case FSE_Reset:
-							log = [log stringByAppendingString: @"reset"]; break;
+							log = [log stringByAppendingFormat: @"reset"]; break;
 						case FSE_Bumpdown:
-							log = [log stringByAppendingString: @"bumpdown"]; break;
+							log = [log stringByAppendingFormat: @"bumpdown"]; break;
 						case FSE_Clear:
 							log = [log stringByAppendingFormat: @"clear:%i", node[currentNode].auxi[0]]; break;
 						default:
-							log = [log stringByAppendingString: @"command"]; break;
+							log = [log stringByAppendingFormat: @"command"]; break;
 					}
 					break;
 			case FSE_Arith:
 					switch(node[currentNode].type & (-1 ^ FSE_Type_Mask)) {
 						case FSE_Add:
-							log = [log stringByAppendingString: @"+"]; break;
+							log = [log stringByAppendingFormat: @"+"]; break;
 						case FSE_Sub:
-							log = [log stringByAppendingString: @"-"]; break;
+							log = [log stringByAppendingFormat: @"-"]; break;
 						case FSE_Mul:
-							log = [log stringByAppendingString: @"*"]; break;
+							log = [log stringByAppendingFormat: @"*"]; break;
 						case FSE_Div:
-							log = [log stringByAppendingString: @"/"]; break;
+							log = [log stringByAppendingFormat: @"/"]; break;
 						case FSE_Norm:
-							log = [log stringByAppendingString: @"norm"]; break;
+							log = [log stringByAppendingFormat: @"norm"]; break;
 						case FSE_Norm2:
-							log = [log stringByAppendingString: @"norm2"]; break;
+							log = [log stringByAppendingFormat: @"norm2"]; break;
 						case FSE_Conj:
-							log = [log stringByAppendingString: @"bar"]; break;
+							log = [log stringByAppendingFormat: @"bar"]; break;
 						case FSE_Neg:
-							log = [log stringByAppendingString: @"neg"]; break;
+							log = [log stringByAppendingFormat: @"neg"]; break;
 						case FSE_Inv:
-							log = [log stringByAppendingString: @"inv"]; break;
+							log = [log stringByAppendingFormat: @"inv"]; break;
 						case FSE_Square:
-							log = [log stringByAppendingString: @"sqr"]; break;
+							log = [log stringByAppendingFormat: @"sqr"]; break;
 						case FSE_Power:
-							log = [log stringByAppendingString: @"^"]; break;
+							log = [log stringByAppendingFormat: @"^"]; break;
 						default:
-							log = [log stringByAppendingString: @"unknown-arith"]; break;
+							log = [log stringByAppendingFormat: @"unknown-arith"]; break;
 					}
 				break;
 			case FSE_Bool:
