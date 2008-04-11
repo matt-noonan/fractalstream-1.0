@@ -43,6 +43,7 @@
 	node[nextNode].cachedAt = 0;
 	node[nextNode].hashed = 0;
 	node[nextNode].hash = 42.0;
+	node[nextNode].processed = 0;
 	nextNode++;
 	return nextNode - 1;
 }
@@ -1196,12 +1197,6 @@
 	}
 }
 
-- (id) linearize { 
-	FSEOpStream p;
-	[self linearizeTo: &p];
-	return self;
-}
-
 - (void) linearizeTo: (FSEOpStream*) program {
 	
 	NSLog(@"linearizing...\n");
@@ -1217,7 +1212,7 @@
 	node[FSE_RootNode].nparents = 0;
 
 	
-	[self linearizeFrom: FSE_RootNode intoOpStream: program];
+	[self linearizeFrom: node[node[FSE_RootNode].firstChild].nextSibling intoOpStream: program];
 
 }
 
@@ -1230,8 +1225,108 @@
 	program -> ops++;
 }
 
+- (void) reduceOpStream: (FSEOpStream*) program toRegisterCount: (int) reg {
+	int* range[2];
+	int* alias;
+	FSEOpStream* rprogram;
+	FSEOpStream rpr;
+	int i, j;
+	
+	if(program -> registers == 1) return; // dumb case, probably never happens
+	
+	rprogram = &rpr;
+	rprogram -> ops = 0;
+	rprogram -> allocation_size = 1024;
+	rprogram -> savedops = 0;
+	rprogram -> registers = reg;
+	rprogram -> op = (FSEOp*) malloc(rprogram -> allocation_size * sizeof(FSEOp));
+	range[0] = (int*) malloc(program -> registers * sizeof(int));
+	range[1] = (int*) malloc(program -> registers * sizeof(int));
+	alias = (int*) malloc(program -> registers * sizeof(int));
+
+	for(i = 0; i < program -> registers; i++) { range[0][i] = 0; range[1][i] = program -> ops; alias[i] = i; }
+	
+	// find store commands or multiple loads, use to seed the alias table
+	for(i = 0; i < program -> ops - 1; i++) {
+		if(program -> op[i].type == (FSE_Command | FSE_Store)) {
+			for(j = i + 1; j < program -> ops; j++) {
+				if((program -> op[j].type == (FSE_Var | FSE_Variable)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) {
+					program -> op[j].type = FSE_Command | FSE_Copy;
+					program -> op[j].lhs = program -> op[i].lhs;
+//					alias[program -> op[j].result] = alias[program -> op[i].lhs];
+					program -> op[i].type = FSE_Command | FSE_NoOp;
+					program -> op[i].lhs = program -> op[i].rhs = program -> op[i].result = -1;
+				}
+				if((program -> op[j].type == (FSE_Command | FSE_Store)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) break;
+			}
+		}
+		if(program -> op[i].type == (FSE_Var | FSE_Variable)) {
+			for(j = i + 1; j < program -> ops; j++) {
+				if((program -> op[j].type == (FSE_Var | FSE_Variable)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) {
+					program -> op[j].type = FSE_Command | FSE_Copy;
+					program -> op[j].lhs = program -> op[i].result;
+				}
+				if((program -> op[j].type == (FSE_Command | FSE_Store)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) {
+					program -> op[j].type = FSE_Command | FSE_Copy;
+					program -> op[j].result = program -> op[i].result;
+				}
+			}
+		}
+	}
+/*
+	for(i = 0; i < program -> ops; i++) {
+		if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
+		if(program -> op[i].rhs >= 0) program -> op[i].rhs = alias[program -> op[i].rhs];
+		if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
+	}
+*/
+	
+	// compute ranges in which each variable is active
+	for(i = 0; i < program -> registers; i++) alias[i] = i;
+	for(i = 0; i < program -> ops; i++) {
+		if(program -> op[i].lhs >= 0) range[(range[0][program -> op[i].lhs] > 0)? 1 : 0][program -> op[i].lhs] = i;
+		if(program -> op[i].rhs >= 0) range[(range[0][program -> op[i].rhs] > 0)? 1 : 0][program -> op[i].rhs] = i;
+		if(program -> op[i].result >= 0) range[(range[0][program -> op[i].result] > 0)? 1 : 0][program -> op[i].result] = i;
+	}
+	
+	for(i = 0; i < program -> registers; i++) NSLog(@"r%i has active range (%i, %i)\n", i, range[0][i], range[1][i]);
+	
+	for(i = 0; i < program -> registers - 1; i++) {
+		for(j = i; j < program -> registers; j++) {
+			if((range[1][i] <= range[0][j]) && (j == alias[j])) {
+				alias[j] = alias[i];
+				break;
+			}
+		}
+	}
+
+	for(i = 0; i < program -> ops; i++) {
+		if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
+		if(program -> op[i].rhs >= 0) program -> op[i].rhs = alias[program -> op[i].rhs];
+		if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
+		if((program -> op[i].type == (FSE_Command | FSE_Copy)) && (program -> op[i].lhs == program -> op[i].result)) {
+			program -> op[i].lhs = program -> op[i].result = -1;
+			program -> op[i].type = FSE_Command | FSE_NoOp;
+		}
+	}
+	
+		
+	// migrate loads outside of loops
+	for(i = 0; i < program -> ops; i++) {
+		int lastloop = 0;
+		FSEOp op;
+		if(program -> op[i].type == (FSE_Command | FSE_LoopLabel)) lastloop = i;
+		if(program -> op[i].type == (FSE_Var | FSE_Variable)) {
+			memcpy(&op, &(program -> op[i]), sizeof(FSEOp));
+			for(j = 0; j < i - lastloop; j++) memcpy(&(program -> op[i - j]), &(program -> op[i - j - 1]), sizeof(FSEOp));
+			memcpy(&(program -> op[lastloop]), &op, sizeof(FSEOp));
+		}
+	}
+
+}
+
 - (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program {
-	int here, i, nkids, c;
+	int here, i, nkids, c, rhs;
 	FSEOp op;
 	here = h;
 	
@@ -1240,6 +1335,8 @@
 	op.result = -1;
 	
 	while(node[here].cloneOf) here = node[here].cloneOf;
+	if(node[here].processed) return node[here].result;
+
 	switch(node[here].type & FSE_Type_Mask) {
 		case FSE_Command:
 			switch(node[here].type & (-1 ^ FSE_Type_Mask)) {
@@ -1254,16 +1351,53 @@
 					op.type = FSE_Command | FSE_NoOp;
 					break;
 				case FSE_Set:
+					op.type = FSE_Command | FSE_Store;
+					op.aux[0] = (int) node[node[here].firstChild].auxi[0];
+					op.lhs = [self linearizeFrom: node[node[here].firstChild].nextSibling intoOpStream: program];
+					op.result = op.rhs;
+					break;
 				case FSE_Flag:
+					op.type = node[here].type;
+					break;
 				case FSE_Do:
+					op.type = FSE_Command | FSE_LoopLabel;
+					[self addOp: &op toOpStream: program];
+					[self linearizeFrom: node[here].firstChild intoOpStream: program];
+					[self linearizeFrom: node[node[here].firstChild].nextSibling intoOpStream: program];
+					op.type = FSE_Command | FSE_LoopJump;
+					break;
 				case FSE_Report:
+					op.type = node[here].type;
+					op.aux[0] = (int) node[here].auxi[0];
+					break;
+				case FSE_Bumpdown:
+					op.type = FSE_Command | FSE_NoOp;
+					break;
 				case FSE_If:
+				
+					break;
 				case FSE_Iterate:
 				case FSE_Par:
 				case FSE_Dyn:
+					op.type = FSE_Command | FSE_InvalidOp;
+					break;
 				case FSE_Default:
+					op.type = node[here].type;
+					op.aux[0] = (int) node[node[here].firstChild].auxi[0];
+					op.result = program -> registers++;
+					break;
 				case FSE_Clear:
+					op.type = node[here].type;
+					op.aux[0] = (int) node[node[here].firstChild].auxi[0];
+					break;
 				case FSE_Repeat:
+					op.type = node[here].type;
+					op.aux[0] = (double) node[here].auxi[0];
+					[self addOp: &op toOpStream: program];
+					[self linearizeFrom: node[here].firstChild intoOpStream: program];
+					op.type = FSE_Command | FSE_Loop;
+					op.aux[0] = 0.0;
+					break;
 				case FSE_Modulo:
 					break;
 			}
@@ -1276,12 +1410,24 @@
 				case FSE_Truth:
 				case FSE_C_Const:
 				case FSE_R_Const:
-				case FSE_Ident:
 				case FSE_Join:
-				case FSE_LinkedSubexpression:
-				case FSE_Constant:
-				case FSE_Variable:
 				case FSE_Counter:
+					op.type = FSE_Command | FSE_InvalidOp;
+					break;
+				case FSE_Ident:
+					return [self linearizeFrom: node[here].firstChild intoOpStream: program];
+					break;
+				case FSE_LinkedSubexpression:
+					return [self linearizeFrom: node[here].auxi[0] intoOpStream: program];
+					break;
+				case FSE_Constant:
+					op.type = node[here].type;
+					op.aux[0] = node[here].auxf[0];
+					op.result = program -> registers++;
+				case FSE_Variable:
+					op.type = node[here].type;
+					op.aux[0] = (double) node[here].auxi[0];
+					op.result = program -> registers++;
 					break;
 			}
 			break;
@@ -1373,6 +1519,8 @@
 			break;
 	}
 	[self addOp: &op toOpStream: program];
+	if(op.result != -1) node[here].processed = 1;
+	node[here].result = op.result;
 	return op.result;
 }
 
@@ -1422,7 +1570,7 @@
 		NSString* log;
 		int i, clonedepth, c;
 
-		log = [NSString stringWithString: @""];
+		log = [NSString stringWithString: @"\n\n"];
 		for(i = 0; i < program -> ops; i++) {
 			switch(program -> op[i].type & FSE_Type_Mask) {
 				case FSE_Command:
@@ -1433,28 +1581,38 @@
 						case FSE_Par:
 						case FSE_Dyn:
 						case FSE_Do:
-						case FSE_Report:
 						case FSE_If:
-						case FSE_Flag:
-						case FSE_Default:
 						case FSE_Reset:
 						case FSE_Bumpdown:
-						case FSE_Clear:
 						case FSE_Modulo:
 							log = [log stringByAppendingFormat: @"<<< invalid FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
+						case FSE_Repeat:
+							log = [log stringByAppendingFormat: @"repeat \'%i\'\n", (int) program -> op[i].aux[0]]; break;
+						case FSE_Clear:
+							log = [log stringByAppendingFormat: @"clear v%i\n", (int) program -> op[i].aux[0]]; break;
+						case FSE_Default:
+							log = [log stringByAppendingFormat: @"read v%i -> %i\n", (int) program -> op[i].aux[0], program -> op[i].result]; break;
+						case FSE_Report:
+							log = [log stringByAppendingFormat: @"log v%i\n", (int) program -> op[i].aux[0]]; break;
+						case FSE_Flag:
+							log = [log stringByAppendingString: @"flag\n"]; break;
+						case FSE_Store:
+							log = [log stringByAppendingFormat: @"store v%i, %i\n", (int) program -> op[i].aux[0], program -> op[i].lhs]; break;
 						case FSE_NoOp:
-							log = [log stringByAppendingFormat: @"noop\n"]; break;
+							break; log = [log stringByAppendingFormat: @"noop\n"]; break;
 						case FSE_InvalidOp:
 							log = [log stringByAppendingFormat: @"INVALID\n"]; break;
 						case FSE_LoopLabel:
 							log = [log stringByAppendingFormat: @"start-loop\n"]; break;
 						case FSE_CompLabel:
 							log = [log stringByAppendingFormat: @"end-comparison\n"]; break;
-						case FSE_JumpIf:
-							log = [log stringByAppendingFormat: @"forward-jump-if\n"]; break;
-						case FSE_JumpIfNot:
-							log = [log stringByAppendingFormat: @"backward-jump-ifn\n"]; break;
+						case FSE_CompJump:
+							log = [log stringByAppendingFormat: @"jump-fwd\n"]; break;
+						case FSE_LoopJump:
+							log = [log stringByAppendingFormat: @"jump-back\n"]; break;
+						case FSE_Copy:
+							log = [log stringByAppendingFormat: @"copy %i -> %i\n", program -> op[i].lhs, program -> op[i].result]; break;
 						default:
 							log = [log stringByAppendingFormat: @"<<< unknown FSE_Command %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
 							break;
@@ -1557,10 +1715,13 @@
 						case FSE_Ident:
 						case FSE_Join:
 						case FSE_LinkedSubexpression:
-						case FSE_Constant:
-						case FSE_Variable:
 						case FSE_Counter:
 							log = [log stringByAppendingFormat: @"<<< invalid FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];
+							break;
+						case FSE_Constant:
+							log = [log stringByAppendingFormat: @"load \'%f\' -> %i\n", program -> op[i].aux[0], program -> op[i].result]; break;
+						case FSE_Variable:
+							log = [log stringByAppendingFormat: @"load v%i -> %i\n", (int) program -> op[i].aux[0], program -> op[i].result]; break;
 							break;
 						default:
 							log = [log stringByAppendingFormat: @"<<< unknown FSE_Var %i >>>\n", program -> op[i].type & (-1 ^ FSE_Type_Mask)];

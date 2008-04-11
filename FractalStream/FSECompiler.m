@@ -415,6 +415,7 @@
 	char gccC[256], ifileC[256];
 	int stack[512], stackptr, loopDepth;
 	BOOL reported;
+	FSEOpStream opstream;
 	
 	NSLog(@"compiling source:\n%@\n\n", source);
 	error = nil;
@@ -738,10 +739,17 @@
 	if(error) { NSLog(@"ERROR -----> \"%@\", tree is:\n", error); [tree log]; return; }
 	else NSLog(@"realification completed\n");
 	[tree postprocessReserving: nextvar];
-	[tree linearize];
-	[tree log];
+//	[tree log];
+
+	NSLog(@"linearizing to opstream\n");
+	[tree linearizeTo: &opstream];
+	NSLog(@"logging opstream:\n");
+	[tree logOpStream: &opstream];
+	NSLog(@"reducing to 8 registers\n");
+	[tree reduceOpStream: &opstream toRegisterCount: 8];
+	[tree logOpStream: &opstream];
 	
-	NSLog(@"searching for subtree equivalences\n");
+//	NSLog(@"searching for subtree equivalences\n");
 //	[tree optimizeReserving: nextvar];
 //	[tree log];
 	[self printVariableStack];

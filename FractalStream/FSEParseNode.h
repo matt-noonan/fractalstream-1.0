@@ -15,6 +15,8 @@ typedef struct {
 	int auxi[2]; /* auxi[0] gets used as index for return variable */
 	double auxf[2];
 	char name[64];
+	int processed;
+	int result;
 } FSEParseNode;
 
 #define FSEOp_Constant	0x01
@@ -65,8 +67,12 @@ typedef struct {
 #define FSE_InvalidOp	16
 #define FSE_LoopLabel	17
 #define FSE_CompLabel	18
-#define FSE_JumpIf		19
-#define FSE_JumpIfNot	20
+#define FSE_LoopJump	19
+#define FSE_CompJump	20
+#define FSE_Loop		21
+#define FSE_Alias		22
+#define FSE_Store		23
+#define FSE_Copy		24
 
 #define FSE_Type_Mask	0xffffff00
 #define FSE_Arith		0x200

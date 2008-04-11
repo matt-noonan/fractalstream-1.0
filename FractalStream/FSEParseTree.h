@@ -39,9 +39,9 @@
 - (void) reorderFromNode: (int) here;
 - (int) weight: (int) type;
  - (double) evaluateFrom: (int) here usingVariables: (double*) var;
-- (id) linearize;
 - (void) linearizeTo: (FSEOpStream*) program;
 - (void) addOp: (FSEOp*) op toOpStream: (FSEOpStream*) program;
 - (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program;
+- (void) reduceOpStream: (FSEOpStream*) program toRegisterCount: (int) reg;
 
 @end
