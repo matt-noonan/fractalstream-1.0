@@ -586,7 +586,7 @@ int emit(char* filename, FSEParseNode* tree, int stacksize) {
 	fprintf(fp, "if(mode == 1) { /* parameter plane */\n"); mode = 2;
 	fprintf(fp, "maxnorm *= maxnorm; close *= close;\n step = in[2];\n");
 	fprintf(fp, "cx = in[0]; cy = in[1];\n");
-	fprintf(fp, "for(i = 0; i < 3 * length; i += 3) {\n");
+	fprintf(fp, "for(i = 0; i < 3 * length; i += 3) {\nj[0] = 0;\n");
 	fprintf(fp, "flag = 0; x[0] = 0.0; x[1] = 0.0;\nx[2] = cx; x[3] = cy;\nx[4] = in[5]; x[5] = in[6];\n");
 		emitSubtreeFrom(subtree, tree, fp); /* emit the dynamics */	
 	fprintf(fp, "out[i + 2] = (double) ((j[0] << 8) | flag);\n");
@@ -596,7 +596,7 @@ int emit(char* filename, FSEParseNode* tree, int stacksize) {
 	fprintf(fp, "if(mode == 3) { /* dynamical plane */\n"); mode = 3;
 	fprintf(fp, "maxnorm *= maxnorm; close *= close;\n step = in[2];\n");
 	fprintf(fp, "cx = in[3]; cy = in[4];\n");
-	fprintf(fp, "for(i = 0; i < 3 * length; i += 3) {\n");
+	fprintf(fp, "for(i = 0; i < 3 * length; i += 3) {\nj[0] = 0;\n");
 	fprintf(fp, "flag = 0; \nx[0] = in[0]; x[1] = in[1];\nx[2] = cx; x[3] = cy;\nx[4] = in[5]; x[5] = in[6];\n");
 		emitSubtreeFrom(subtree, tree, fp); /* emit the dynamics */
 	fprintf(fp, "out[i + 2] = (double) ((j[0] << 8) | flag);\n");

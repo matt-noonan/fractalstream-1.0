@@ -75,8 +75,6 @@
 	switch([popupMenu indexOfSelectedItem]) {
 			case 0:
 			case 1:
-			case 2:
-			case 3:
 				break;
 			default:
 				[[tools objectAtIndex: [popupMenu indexOfSelectedItem] - builtInTools] configure];
@@ -117,14 +115,6 @@
 			case 1:
 				break;
 
-			case 2:
-				break;
-
-			case 3:
-				snapshot = [viewport snapshot];
-				[[snapshot TIFFRepresentation] writeToFile: @"/Users/noonan/Desktop/test.tiff" atomically: YES];
-				break;
-				
 			default:
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] rightMouseDown: theEvent];
 				break;
@@ -165,31 +155,7 @@
 				];
 				ignoreMouseUp = YES;
 				break;
-				
-			case 2: /* trace tool */
-				lastTrace = [theEvent locationInWindow];
-				savedTrace[traces] = lastTrace;
-				[viewport draw: traces + 1 tracesFrom: savedTrace steps: traceSteps];
-				break;
-			
-			case 3: 
-				[viewport convertLocation: [theEvent locationInWindow] toPoint: p];
-				item.batch = [viewport getBatchNumber];
-				item.type = FSVO_Dot;
-				item.point[0][0] = p[0]; item.point[0][1] = p[1];
-				item.color[0][0] = 1.0;
-				item.color[0][1] = 0.0;
-				item.color[0][2] = 0.0;
-				item.color[0][3] = 1.0;
-				item.color[1][0] = 1.0;
-				item.color[1][1] = 1.0;
-				item.color[1][2] = 1.0;
-				item.color[1][3] = 1.0;
-				item.visible = YES;
-				[viewport drawItem: item];
-				[viewport setNeedsDisplay: YES];
-				break;
-				
+							
 			default:
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseDown: theEvent];
 				break;
@@ -251,12 +217,7 @@
 		
 		case 1:
 			break;
-			
-		case 2: /* trace tool */
-			break;
-		case 3:
-			break;
-			
+
 		default:
 			[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseUp: theEvent];
 			break;
@@ -290,13 +251,6 @@
 				[viewport drawBoxFrom: lastClick to: [theEvent locationInWindow] withColor: c];
 				break;
 			case 1:
-				break;
-			case 2:
-				lastTrace = [theEvent locationInWindow];
-				savedTrace[traces] = lastTrace;
-				[viewport draw: traces + 1 tracesFrom: savedTrace steps: traceSteps];
-				break;
-			case 3:
 				break;
 			default:
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseDragged: theEvent];
@@ -404,7 +358,6 @@
 - (IBAction) changeTool: (id) sender {
 	int selected;
 	selected = [popupMenu indexOfSelectedItem];
-	if(selected == 2) [self resetTrace: self];
 	if(selected != currentTool) {
 		if(currentTool >= builtInTools) [tool[currentTool - builtInTools] deactivate];
 		if(selected >= builtInTools) [tool[selected - builtInTools] activate];
