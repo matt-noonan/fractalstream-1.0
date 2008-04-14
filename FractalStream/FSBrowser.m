@@ -9,7 +9,6 @@
 	NSString* path;
 	void* loadedModule;
 	
-	NSLog(@"FSBrowser awoke\n");
 	[theTools setupMenu: self];
 }
 
@@ -28,7 +27,6 @@
 	FSViewerData d;
 
 	d = [[theSession root] data];
-	NSLog(@"reloadSession: [[theSession root] data] is %p, rootData is %p, d.program is %i\n", &d, &rootData, d.program);
 	memmove(&rootData, &d, sizeof(FSViewerData));
 	[iterBox setIntValue: rootData.maxIters];
 	[radiusBox setFloatValue: rootData.maxRadius];
@@ -53,7 +51,6 @@
 		return;
 	}
 	rootData.kernel = kernel;
-	NSLog(@"theSession is %@, root is %@, currentNode is %@, I am %@\n", theSession, [theSession root], [theSession currentNode], self);
 
 	/* hack */
 	kernel3 = kernel;
@@ -100,13 +97,11 @@
 //	([theSession currentNode] -> data).kernel = ([programBox indexOfSelectedItem] == 0)? kernel1 : kernel2;
 	/* hack */ ([theSession currentNode] -> data).kernel = kernel;
 	([theSession currentNode] -> data).eventManager = theTools;
-	NSLog(@"is everything linked up?  iterBox is %@\n", iterBox);
 	([theSession currentNode] -> data).maxIters = [iterBox intValue];
 	([theSession currentNode] -> data).maxRadius = [radiusBox doubleValue];
 	([theSession currentNode] -> data).minRadius = [minRadiusBox doubleValue];
 	([theSession currentNode] -> data).aspectRatio = [aspectBox floatValue];
 	([theSession currentNode] -> data).detailLevel = ([detailBox state] == NSOnState) ? 2.0 : 1.0;
-	NSLog(@"refresh: ([theSession currentNode] -> data).program = %i\n", ([theSession currentNode] -> data).program);
 	[self sendDefaultsToViewer];
 	[theViewer setViewerData: &([theSession currentNode] -> data)];
 }
@@ -115,7 +110,6 @@
 - (void) putCurrentDataIn: (FSViewerData*) p {
 	FSViewerData d;
 	d = [[theSession currentNode] data];
-	NSLog(@"putCurrentDataIn: &d is %p, d thinks that pixelSize is %f\n", &d, d.pixelSize);
 	memmove(p, &d, sizeof(FSViewerData));
 }
 
@@ -130,7 +124,6 @@
 	data.par[1] = p2;
 	data.detailLevel = ([detailBox state] == NSOnState) ? 2.0 : 1.0;
 	data.pixelSize = pixelSize;
-	NSLog(@"FSBrowser was told to use a pixelSize of %f\n", pixelSize);
 	
 	data.center[0] = x;
 	data.center[1] = y;
@@ -142,7 +135,6 @@
 	data.minRadius = [minRadiusBox doubleValue];
 	data.aspectRatio = [aspectBox floatValue];
 	data.eventManager = theTools;
-	NSLog(@"telling %@ to make a new node\n", theSession);
 	[theSession addChildWithData: data andMakeCurrent: YES];
 	[theTools updateMenuForParametric: isPar];
 	[self sendDefaultsToViewer];
@@ -178,7 +170,7 @@
 	double* defaults;
 	double c;
 	int i, j;
-	NSMutableArray* re, *im;
+	NSMutableArray *re, *im, *rvn;
 	NSString* prevName, *curName;
 	NSEnumerator* nameEnum;
 	
@@ -188,6 +180,7 @@
 	
 	re = [[NSMutableArray alloc] init];
 	im = [[NSMutableArray alloc] init];
+	rvn = [[NSMutableArray alloc] init];
 	defaults = malloc(2 * sizeof(double) * [variableNames count]);
 	kernel(-3, NULL, 0, defaults, 0, 0.0, 0.0);
 	prevName = @"";
@@ -196,6 +189,7 @@
 	uniqueVariableNames = 0; j = 0;
 	while(curName) {
 		[re addObject: [NSNumber numberWithDouble: defaults[j++]]];
+		[rvn addObject: curName];
 		++uniqueVariableNames;
 		prevName = curName; curName = [nameEnum nextObject];
 		if([curName isEqualToString: prevName]) {
@@ -208,6 +202,7 @@
 	free(defaults);
 	realPart = [[NSArray arrayWithArray: re] retain];
 	imagPart = [[NSArray arrayWithArray: im] retain];
+	reducedVariableNames = [[NSArray arrayWithArray: rvn] retain];
 }
 
 - (void) sendDefaultsToViewer {
@@ -239,7 +234,7 @@
 	col = [[tableColumn identifier] intValue];
 	switch(col) {
 		case 0:
-			return [NSString stringWithString: [variableNames objectAtIndex: row]];
+			return [NSString stringWithString: [reducedVariableNames objectAtIndex: row]];
 		case 1:
 			return [realPart objectAtIndex: row];
 		case 2:
@@ -254,7 +249,6 @@
 	NSMutableArray* ar;
 	int col, i;
 	col = [[tableColumn identifier] intValue];
-	NSLog(@"anObject doubleValue is %f\n", [anObject doubleValue]);
 	switch(col) {
 		case 1:
 			i = 0;

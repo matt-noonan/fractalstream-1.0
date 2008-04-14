@@ -40,6 +40,7 @@
 	IBOutlet FSColorWidget* colorWidget;
 	
 	NSArray* variableNames;
+	NSArray* reducedVariableNames;
 	NSArray* realPart;
 	NSArray* imagPart;
 	int uniqueVariableNames;
