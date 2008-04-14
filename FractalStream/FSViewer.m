@@ -334,8 +334,8 @@
 					realloc(acCache[i].color, 8 * 8 * 3 * sizeof(float) * acCache[i].allocated_entries);
 					realloc(acCache[i].x, sizeof(double) * acCache[i].allocated_entries);
 					realloc(acCache[i].y, sizeof(double) * acCache[i].allocated_entries);
-					[colorPicker cacheAutocolor: i to: acCache[i].color X: acCache[i].x Y: acCache[i].y];
 				}
+				[colorPicker cacheAutocolor: i to: acCache[i].color X: acCache[i].x Y: acCache[i].y];
 			}
 		}
 		[acLock unlock];

@@ -72,7 +72,6 @@
 	int c, i, j;
 	float shade, fill, r, g, b;
 	
-	NSLog(@"colorWidget awoke from nib\n");
 	c = 0;
 	while(named_color[c].name) ++c;
 	namedColorCount = c;
@@ -242,9 +241,26 @@
 	if(tlog == 2) break;
 	if(touched == YES) tlog++; 
 	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
-		colorArray[i][j][0] = fullColorArray[currentColor][i][j][0] = tcolor[i][j][0];
-		colorArray[i][j][1] = fullColorArray[currentColor][i][j][1] = tcolor[i][j][1];
-		colorArray[i][j][2] = fullColorArray[currentColor][i][j][2] = tcolor[i][j][2];
+		colorArray[i][j][0] = tcolor[i][j][0];
+		colorArray[i][j][1] = tcolor[i][j][1];
+		colorArray[i][j][2] = tcolor[i][j][2];
+		if(usesAutocolor[currentColor]) {
+			int ac;  float acColor[3];
+			acColor[0] = colorArray[i][j][0];
+			acColor[1] = colorArray[i][j][1];
+			acColor[2] = colorArray[i][j][2];
+			ac = [acList indexOfSelectedItem];
+			if(ac >= 0) {
+				[[autocolor[currentColor] objectAtIndex: 1 + ac * 4]
+					setRGBAtMagnitude: j andPhase: i to: acColor					
+				];
+			}
+		}
+		else {
+			fullColorArray[currentColor][i][j][0] = colorArray[i][j][0];
+			fullColorArray[currentColor][i][j][1] = colorArray[i][j][1];
+			fullColorArray[currentColor][i][j][2] = colorArray[i][j][2];
+		}
 	}
 	}
 	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
@@ -275,10 +291,15 @@
 - (IBAction) change: (id) sender {
 	/* user selected a different color */
 	int newColor, i, j, k;
-
+	float c[3];
+	BOOL acChanged;
+	
 	newColor = [colorButton indexOfSelectedItem];
 	
+
+	acChanged = usesAutocolor[currentColor];
 	usesAutocolor[currentColor] = ([autocolorBox state] == NSOnState)? YES : NO;
+	acChanged = (acChanged == usesAutocolor[currentColor])? NO : YES;
 	if(usesAutocolor[newColor]) {
 		NSEnumerator* acEnum;
 		id ob;
@@ -290,11 +311,26 @@
 		[autocolorBox setState: NSOnState];
 		[acLockButton setEnabled: YES];
 		[acLockButton setState: (lockedAutocolor[currentColor] == YES)? NSOnState : NSOffState];
-		acEnum = [autocolor[newColor] objectEnumerator];
-		[acList removeAllItems];
-		while(ob = [acEnum nextObject]) {
-			[acList addItemWithTitle: ob];
-			[acEnum nextObject]; [acEnum nextObject]; [acEnum nextObject];
+		if(acChanged || (newColor != currentColor) || ([autocolor[newColor] count] / 4 != [acList numberOfItems])) {
+			acEnum = [autocolor[newColor] objectEnumerator];
+			[acList removeAllItems];
+			while(ob = [acEnum nextObject]) {
+				[acList addItemWithTitle: ob];
+				[acEnum nextObject]; [acEnum nextObject]; [acEnum nextObject];
+			}
+			[acList selectItemAtIndex: 0];
+		}
+		for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++) {
+			if([acList indexOfSelectedItem] != -1) 
+				[[autocolor[newColor] objectAtIndex: 1 + 4 * [acList indexOfSelectedItem]]
+					putRGBAtMagnitude: j andPhase: i into: c
+				];
+			else c[0] = c[1] = c[2] = 0.0;
+			fullColorArray[currentColor][i][j][k] = colorArray[i][j][k];
+			colorArray[i][j][k] = c[k];
+			[[colorMatrix cellAtRow: i column: j] setColorToR: colorArray[i][j][0] G: colorArray[i][j][1] B: colorArray[i][j][2] ];	
+			[[colorMatrix cellAtRow: i column: j] untoggle];
+			[colorMatrix drawCellAtRow: i column: j];
 		}
 	}
 	else {
@@ -307,16 +343,14 @@
 		[acLockButton setState: NSOffState];
 		[acLockButton setEnabled: NO];
 		[acList removeAllItems];
+		for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++) {
+			fullColorArray[currentColor][i][j][k] = colorArray[i][j][k];
+			colorArray[i][j][k] = fullColorArray[newColor][i][j][k];
+			[[colorMatrix cellAtRow: i column: j] setColorToR: colorArray[i][j][0] G: colorArray[i][j][1] B: colorArray[i][j][2] ];	
+			[[colorMatrix cellAtRow: i column: j] untoggle];
+			[colorMatrix drawCellAtRow: i column: j];
+		}
 	}
-	
-	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++) {
-		fullColorArray[currentColor][i][j][k] = colorArray[i][j][k];
-		colorArray[i][j][k] = fullColorArray[newColor][i][j][k];
-		[[colorMatrix cellAtRow: i column: j] setColorToR: colorArray[i][j][0] G: colorArray[i][j][1] B: colorArray[i][j][2] ];	
-		[[colorMatrix cellAtRow: i column: j] untoggle];
-		[colorMatrix drawCellAtRow: i column: j];
-	}
-	
 	currentColor = newColor;
 }
 

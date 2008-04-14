@@ -189,6 +189,8 @@
 				<string>id</string>
 				<key>goForward</key>
 				<string>id</string>
+				<key>goToRoot</key>
+				<string>id</string>
 				<key>selectCurrentParent</key>
 				<string>id</string>
 			</dict>
