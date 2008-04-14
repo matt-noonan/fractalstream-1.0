@@ -195,19 +195,34 @@
 	}
 
 	if(node[here].type == (FSE_Command | FSE_Reset)) {
-		int movednode, bro, lhs, rhs, clearnode;
+		int movednode, bro, lhs, rhs, clearnode, t;
 		bro = node[loopStack[stackPtr - 1]].firstChild;
 		if(node[loopStack[stackPtr - 1]].type == (FSE_Command | FSE_Do)) bro = node[bro].firstChild;
 		else if(node[loopStack[stackPtr - 1]].type == (FSE_Command | FSE_Iterate)) {
 			NSLog(@"fseiterate\n");
 		}		
 		movednode = [self newNodeOfType: FSE_Command | FSE_Set before: bro];
-		lhs = [self newNodeOfType: FSE_Var | FSE_Complex at: movednode];
+		if(node[here].auxf[0] == 1.0) {
+			lhs = [self newNodeOfType: FSE_Var | FSE_Variable at: movednode];
+			node[lhs].auxi[0] = node[here].auxi[0];
+		}
+		else {
+			lhs = [self newNodeOfType: FSE_Var | FSE_Join at: movednode];
+			t = [self newNodeOfType: FSE_Var | FSE_Variable at: lhs];
+			node[t].auxi[0] = node[here].auxi[0];
+			t = [self newNodeOfType: FSE_Var | FSE_Variable at: lhs];
+			node[t].auxi[0] = node[here].auxi[0] + 1;
+		}
+		rhs = [self cloneSubtreeFrom: node[here].auxi[1] to: movednode];
+/*
 		rhs = [self newNodeOfType: FSE_Var | FSE_LinkedSubexpression at: movednode];
 		node[lhs].auxi[0] = node[here].auxi[0];
 		node[rhs].auxi[0] = node[here].auxi[1];
+*/
+
 		clearnode = [self newNodeOfType: FSE_Command | FSE_Clear before: loopStack[stackPtr - 1]];
 		node[clearnode].auxi[0] = node[here].auxi[1];
+
 		[self deleteNodeAt: here];
 		return;
 	}
@@ -865,7 +880,40 @@
 					return [self realifyFrom: here];
 					break;
 				case FSE_Stops:
-					/* auxi[1] */
+					child1 = node[here].firstChild;
+					if(node[child1].type == (FSE_Var | FSE_Variable)) {
+						node[here].type = FSE_Comp | FSE_Equal;
+						child2 = [self newNodeOfType: FSE_Var | FSE_Variable at: here];
+						node[child2].auxi[0] = node[here].auxi[0];
+						node[here].auxi[0] = -1;
+					}
+					if(node[child1].type == (FSE_Var | FSE_Join)) {
+						int nchilds, stops, v;
+						nchilds = node[child1].children;
+						child = node[child1].firstChild;
+						if(nchilds == 1) return error;
+						node[here].type = FSE_Bool | FSE_And;
+						v = node[here].auxi[1];
+						n = here;
+						stops = [self newNodeOfType: FSE_Comp | FSE_Stops at: n];
+						node[stops].auxi[0] = v++;
+						[self cloneSubtreeFrom: child to: stops];
+						if(nchilds > 2) for(i = 0; i < nchilds - 1; i++) {
+							n = [self newNodeOfType: FSE_Bool | FSE_And at: n];
+							node[n].auxi[0] = -1;
+							child = node[child].nextSibling;
+							stops = [self newNodeOfType: FSE_Comp | FSE_Stops at: n];
+							node[stops].auxi[0] = v++;
+							[self cloneSubtreeFrom: child to: stops];
+						}
+						child = node[child].nextSibling;
+						stops = [self newNodeOfType: FSE_Comp | FSE_Stops at: n];
+						node[here].auxi[0] = -1;
+						node[stops].auxi[0] = v++;
+						[self cloneSubtreeFrom: child to: stops];
+						[self deleteNodeAt: child1];
+						return [self realifyFrom: here];
+					}
 					break;
 				case FSE_Escapes:
 				case FSE_Vanishes:

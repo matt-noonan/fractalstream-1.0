@@ -382,10 +382,12 @@
 			int resetnode;
 			[tree nodeAt: compnode] -> auxi[1] = [self indexOfVariableWithName:
 					[NSString stringWithFormat: @".stops.%i", compnode]];
+			[tree nodeAt: compnode] -> auxf[0] = (useComplexVars? 2.0 : 1.0);
 			resetnode = [tree newNodeOfType: (FSE_Command | FSE_Reset) at: compnode];
 			[tree nodeAt: resetnode] -> auxi[0] = [self indexOfVariableWithName:
 					[NSString stringWithFormat: @".stops.%i", compnode]];
 			[tree nodeAt: resetnode] -> auxi[1] = expr;
+			[tree nodeAt: resetnode] -> auxf[0] = (useComplexVars? 2.0 : 1.0);
 		}
 		/* is that followed by a boolean operator? */
 		savedindex = index;
@@ -741,6 +743,7 @@
 	[tree postprocessReserving: nextvar];
 	[tree log];
 
+/*
 	NSLog(@"linearizing to opstream\n");
 	[tree linearizeTo: &opstream];
 	NSLog(@"logging opstream:\n");
@@ -748,6 +751,7 @@
 	NSLog(@"reducing to 8 registers\n");
 	[tree reduceOpStream: &opstream toRegisterCount: 8];
 	[tree logOpStream: &opstream];
+*/
 	
 //	NSLog(@"searching for subtree equivalences\n");
 //	[tree optimizeReserving: nextvar];
