@@ -892,26 +892,12 @@
 						nchilds = node[child1].children;
 						child = node[child1].firstChild;
 						if(nchilds == 1) return error;
-						node[here].type = FSE_Bool | FSE_And;
-						v = node[here].auxi[1];
-						n = here;
-						stops = [self newNodeOfType: FSE_Comp | FSE_Stops at: n];
-						node[stops].auxi[0] = v++;
-						[self cloneSubtreeFrom: child to: stops];
-						if(nchilds > 2) for(i = 0; i < nchilds - 1; i++) {
-							n = [self newNodeOfType: FSE_Bool | FSE_And at: n];
-							node[n].auxi[0] = -1;
-							child = node[child].nextSibling;
-							stops = [self newNodeOfType: FSE_Comp | FSE_Stops at: n];
-							node[stops].auxi[0] = v++;
-							[self cloneSubtreeFrom: child to: stops];
-						}
-						child = node[child].nextSibling;
-						stops = [self newNodeOfType: FSE_Comp | FSE_Stops at: n];
+						node[here].type = FSE_Comp | FSE_Equal;
 						node[here].auxi[0] = -1;
-						node[stops].auxi[0] = v++;
-						[self cloneSubtreeFrom: child to: stops];
-						[self deleteNodeAt: child1];
+						v = node[here].auxi[1];
+						n = [self newNodeOfType: FSE_Var | FSE_Join at: here];
+						for(i = 0; i < nchilds; i++) 
+							node[[self newNodeOfType: FSE_Var | FSE_Variable at: n]].auxi[0] = v++;
 						return [self realifyFrom: here];
 					}
 					break;
