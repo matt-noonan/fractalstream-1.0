@@ -1280,6 +1280,18 @@
 
 	for(i = 0; i < program -> registers; i++) { range[0][i] = 0; range[1][i] = program -> ops; alias[i] = i; }
 	
+	// migrate loads outside of loops
+	for(i = 0; i < program -> ops; i++) {
+		int lastloop = 0;
+		FSEOp op;
+		if(program -> op[i].type == (FSE_Command | FSE_LoopLabel)) lastloop = i;
+		if(program -> op[i].type == (FSE_Var | FSE_Variable)) {
+			memcpy(&op, &(program -> op[i]), sizeof(FSEOp));
+			for(j = 0; j < i - lastloop; j++) memcpy(&(program -> op[i - j]), &(program -> op[i - j - 1]), sizeof(FSEOp));
+			memcpy(&(program -> op[lastloop]), &op, sizeof(FSEOp));
+		}
+	}
+
 	// find store commands or multiple loads, use to seed the alias table
 	for(i = 0; i < program -> ops - 1; i++) {
 		if(program -> op[i].type == (FSE_Command | FSE_Store)) {
@@ -1307,32 +1319,32 @@
 			}
 		}
 	}
-/*
+
 	for(i = 0; i < program -> ops; i++) {
 		if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
 		if(program -> op[i].rhs >= 0) program -> op[i].rhs = alias[program -> op[i].rhs];
 		if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
 	}
-*/
 	
 	// compute ranges in which each variable is active
-	for(i = 0; i < program -> registers; i++) alias[i] = i;
+	//for(i = 0; i < program -> registers; i++) alias[i] = i;
 	for(i = 0; i < program -> ops; i++) {
 		if(program -> op[i].lhs >= 0) range[(range[0][program -> op[i].lhs] > 0)? 1 : 0][program -> op[i].lhs] = i;
 		if(program -> op[i].rhs >= 0) range[(range[0][program -> op[i].rhs] > 0)? 1 : 0][program -> op[i].rhs] = i;
 		if(program -> op[i].result >= 0) range[(range[0][program -> op[i].result] > 0)? 1 : 0][program -> op[i].result] = i;
 	}
 	
-	for(i = 0; i < program -> registers; i++) NSLog(@"r%i has active range (%i, %i)\n", i, range[0][i], range[1][i]);
+//	for(i = 0; i < program -> registers; i++) NSLog(@"r%i has active range (%i, %i)\n", i, range[0][i], range[1][i]);
 	
-	for(i = 0; i < program -> registers - 1; i++) {
-		for(j = i; j < program -> registers; j++) {
+	for(i = 0; i < program -> registers; i++) {
+		for(j = 0; j < program -> registers; j++) {
 			if((range[1][i] <= range[0][j]) && (j == alias[j])) {
 				alias[j] = alias[i];
 				break;
 			}
 		}
 	}
+//	for(i = 0; i < program -> registers; i++) NSLog(@"r%i ---> r%i\n", i, alias[i]);
 
 	for(i = 0; i < program -> ops; i++) {
 		if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
@@ -1344,18 +1356,6 @@
 		}
 	}
 	
-		
-	// migrate loads outside of loops
-	for(i = 0; i < program -> ops; i++) {
-		int lastloop = 0;
-		FSEOp op;
-		if(program -> op[i].type == (FSE_Command | FSE_LoopLabel)) lastloop = i;
-		if(program -> op[i].type == (FSE_Var | FSE_Variable)) {
-			memcpy(&op, &(program -> op[i]), sizeof(FSEOp));
-			for(j = 0; j < i - lastloop; j++) memcpy(&(program -> op[i - j]), &(program -> op[i - j - 1]), sizeof(FSEOp));
-			memcpy(&(program -> op[lastloop]), &op, sizeof(FSEOp));
-		}
-	}
 
 }
 

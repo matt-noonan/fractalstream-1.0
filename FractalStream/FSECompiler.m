@@ -734,16 +734,16 @@
 		[tree nodeAt: node] -> auxi[0] = useComplexVars? [self indexOfVariableWithName: @"z"] : [self indexOfVariableWithName: @"x"];
 	}
 	[tree reorder];
-	[tree log];
+//	[tree log];
 	
 	[tree setTempVar: [self indexOfVariableWithName: @".temp"]];
 	error = [tree realifyFrom: FSE_RootNode];
 	if(error) { NSLog(@"ERROR -----> \"%@\", tree is:\n", error); [tree log]; return; }
 	else NSLog(@"realification completed\n");
 	[tree postprocessReserving: nextvar];
-	[tree log];
+//	[tree log];
 
-/*
+
 	NSLog(@"linearizing to opstream\n");
 	[tree linearizeTo: &opstream];
 	NSLog(@"logging opstream:\n");
@@ -751,7 +751,7 @@
 	NSLog(@"reducing to 8 registers\n");
 	[tree reduceOpStream: &opstream toRegisterCount: 8];
 	[tree logOpStream: &opstream];
-*/
+
 	
 //	NSLog(@"searching for subtree equivalences\n");
 //	[tree optimizeReserving: nextvar];
