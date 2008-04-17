@@ -33,19 +33,24 @@
 	[minRadiusBox setFloatValue: rootData.minRadius];
 	[aspectBox setFloatValue: rootData.aspectRatio];
 	rootData.eventManager = theTools;
-	tmp = [[NSString stringWithFormat: @"%@/fskernel%i", NSTemporaryDirectory(), random()] autorelease];
+	tmp = [[NSString stringWithFormat: @"%@/fskernel%i", NSTemporaryDirectory(), rand()] autorelease];
 	if([[theSession kernelWrapper] writeToFile: tmp atomically: YES updateFilenames: NO] == NO) {
 		NSLog(@"writeToFile failed with session %@ and data %@ writing to %@\n", theSession, [theSession kernelWrapper], tmp);
 	}
 	NSLog(@"Trying dlopen on \"%@\"\n", tmp);
 
+#ifdef __WIN32__
+	NSLog(@"-----> NO SUPPORT FOR DYNAMIC LOADING ON WINDOWS YET!!!\n");
+	loadedModule = kernel = NULL;
+	return;
+#else
 	loadedModule = dlopen([tmp cString], RTLD_NOW);
-
 	if(loadedModule == NULL) { 
 		NSLog(@"loadedModule was null, error code %s\n", dlerror());
 		return;
 	}
 	kernel = dlsym(loadedModule, "kernel");
+#endif
 	if(kernel == NULL) {
 		NSLog(@"could not extract kernel routine\n");
 		return;

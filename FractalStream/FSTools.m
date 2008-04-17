@@ -287,7 +287,11 @@
 		toolsLoaded = YES;
 
 		/***** broken for cocotron :( *****/
+#ifdef __WIN32__
+		librarySearchPaths = [NSArray arrayWithObject: @"/Library"];
+#else
 		librarySearchPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSAllDomainsMask - NSSystemDomainMask, YES);
+#endif
 //		librarySearchPaths = [NSArray arrayWithObject: @"/Library"]; 
 
 

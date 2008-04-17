@@ -1022,7 +1022,7 @@
 	NSMutableDictionary* hashpile;
 	
 	var = malloc(nvars * sizeof(double));
-	for(i = 0; i < nvars; i++) var[i] = 2.0 * ((double) random() / (double) RAND_MAX) - 1.0;
+	for(i = 0; i < nvars; i++) var[i] = 2.0 * ((double) rand() / (double) RAND_MAX) - 1.0;
 	
 	hashpile = [[NSMutableDictionary alloc] initWithCapacity: 1024];
 	[self optimizeFrom: FSE_RootNode usingVariables: (double*) var hashSet: hashpile];
@@ -1060,7 +1060,7 @@
 	}
  	if(node[here].type == (FSE_Command | FSE_Set)) {
 		i = node[node[here].firstChild].auxi[0];
-		var[i] = 2.0 * ((double) random() / (double) RAND_MAX) - 1.0;
+		var[i] = 2.0 * ((double) rand() / (double) RAND_MAX) - 1.0;
 	}
 }
  
@@ -1208,7 +1208,7 @@
 			noluck = YES;
 			break;
 	}
-	if(noluck) return 2.0 * ((double) random() / (double) RAND_MAX) - 1.0;
+	if(noluck) return 2.0 * ((double) rand() / (double) RAND_MAX) - 1.0;
 	NSLog(@"node %i is getting hash %f (x = %f, y = %f)\n", here, r, x, y);
 	node[here].hashed = 1; node[here].hash = r;
 	return r;
@@ -1299,7 +1299,7 @@
 				if((program -> op[j].type == (FSE_Var | FSE_Variable)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) {
 					program -> op[j].type = FSE_Command | FSE_Copy;
 					program -> op[j].lhs = program -> op[i].lhs;
-//					alias[program -> op[j].result] = alias[program -> op[i].lhs];
+					alias[program -> op[j].result] = alias[program -> op[i].lhs];
 					program -> op[i].type = FSE_Command | FSE_NoOp;
 					program -> op[i].lhs = program -> op[i].rhs = program -> op[i].result = -1;
 				}

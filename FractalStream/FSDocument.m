@@ -35,6 +35,7 @@
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 //	[configSheet configureSession: self];
 //	[toolkit setupMenu: self];
+	NSLog(@"windowControllerDidLoadNib\n");
 	if(newSession == NO) { 
 		[editor restoreFrom: [savedData editor]];
 		NSLog(@"[savedData session] = %@\n", [savedData session]);

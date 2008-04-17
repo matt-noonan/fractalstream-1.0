@@ -9,7 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import <stdlib.h>
 #import <string.h>
+#ifdef __WIN32__
+#else
 #import <dlfcn.h>
+#endif
 #import "FSTools.h"
 #import "FSViewer.h"
 #import "FSSession.h"

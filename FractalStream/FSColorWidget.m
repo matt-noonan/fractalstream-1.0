@@ -553,9 +553,9 @@
 	float r, g, b;
 	self = [super init]; 
 	
-	r = (float) random() / (float) RAND_MAX;
-	g = (float) random() / (float) RAND_MAX;
-	b = (float) random() / (float) RAND_MAX;
+	r = (float) rand() / (float) RAND_MAX;
+	g = (float) rand() / (float) RAND_MAX;
+	b = (float) rand() / (float) RAND_MAX;
 	color = [[NSColor colorWithCalibratedRed: r green: g blue: b alpha: 1.0] retain];	
 	active = NO;
 	return self;

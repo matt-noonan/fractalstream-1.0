@@ -12,5 +12,3 @@ int main(int argc, char *argv[])
 {
     return NSApplicationMain(argc, (const char **) argv);
 }
-
-//void kernel(int a, double* b, int c, double* d, int e, double f) { return; }

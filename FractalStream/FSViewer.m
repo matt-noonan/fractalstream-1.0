@@ -192,7 +192,10 @@
 		Debug(@"engine: waiting\n");
 		[renderLock lock]; // try to aquire the render lock.  can only do this if the browser releases this lock to request a new frame
 		pool = [[NSAutoreleasePool alloc] init];
+#ifdef __WIN32__
+#else
 		gettimeofday(&startTime, NULL);
+#endif
 
 		flushDenormals = ([denormalButton state] == NSOnState)? YES : NO;
 
@@ -273,7 +276,11 @@
 		if(autocolorAdded) [colorPicker change: self];
 		}
 		Debug(@"got there\n");
+#ifdef __WIN32__
+		memcpy(&startTime, &endTime, sizeof(struct timeval));
+#else
 		gettimeofday(&endTime, NULL);
+#endif
 		[timerField setStringValue: [NSString stringWithFormat: @"%f seconds",
 			(double)(endTime.tv_sec - startTime.tv_sec) + (double)(endTime.tv_usec - startTime.tv_usec) / 1000000.0]
 		];
