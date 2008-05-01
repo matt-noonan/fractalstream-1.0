@@ -1278,7 +1278,7 @@
 	range[1] = (int*) malloc(program -> registers * sizeof(int));
 	alias = (int*) malloc(program -> registers * sizeof(int));
 
-	for(i = 0; i < program -> registers; i++) { range[0][i] = 0; range[1][i] = program -> ops; alias[i] = i; }
+	for(i = 0; i < program -> registers; i++) { range[0][i] = -1; range[1][i] = program -> ops; alias[i] = i; }
 	
 	// seed the alias table using load and store commands for hints
 	for(i = 0; i < program -> ops; i++) {
@@ -1314,23 +1314,36 @@
 			memcpy(&(program -> op[lastloop]), &op, sizeof(FSEOp));
 		}
 	}
-
-	// compute ranges in which each variable is active
-	//for(i = 0; i < program -> registers; i++) alias[i] = i;
+	
+	// find copy commands, search backward to remove temporary registers
+	for(i = 1; i < program -> ops; i++) {
+		if(program -> op[i].type == (FSE_Command | FSE_Copy)) {
+			for(j = i - 1; j >= 0; j--) {
+				if(program -> op[j].result == program -> op[i].lhs) {
+					program -> op[j].result = program -> op[i].result;
+					program -> op[i].type = FSE_Command | FSE_NoOp;
+					program -> op[i].lhs = program -> op[i].rhs = program -> op[i].result = -1;
+					break;
+				}
+				if((program -> op[j].lhs == program -> op[i].result) || (program -> op[j].rhs == program -> op[i].result)) break;
+			}
+		}
+	}
+	
+	// optional: split up ops of the form "add X, Y -> Z" to "copy X -> Z ... add Z, Y -> Z" for 2-operand languages
 	for(i = 0; i < program -> ops; i++) {
-		if(program -> op[i].lhs >= 0) range[(range[0][program -> op[i].lhs] > 0)? 1 : 0][program -> op[i].lhs] = i;
-		if(program -> op[i].rhs >= 0) range[(range[0][program -> op[i].rhs] > 0)? 1 : 0][program -> op[i].rhs] = i;
-		if(program -> op[i].result >= 0) range[(range[0][program -> op[i].result] > 0)? 1 : 0][program -> op[i].result] = i;
+		/* ... */
 	}
 	
-	for(i = 0; i < program -> registers; i++) {
-		if(i == alias[i]) NSLog(@"r%i has active range (%i, %i)\n", i, range[0][i], range[1][i]);
-		else NSLog(@"< r%i is defunct >\n", i);
+	// compute ranges in which each variable is active and set aliases.
+	for(i = 0; i < program -> ops; i++) {
+		if(program -> op[i].lhs >= 0) range[(range[0][program -> op[i].lhs] >= 0)? 1 : 0][program -> op[i].lhs] = i;
+		if(program -> op[i].rhs >= 0) range[(range[0][program -> op[i].rhs] >= 0)? 1 : 0][program -> op[i].rhs] = i;
+		if(program -> op[i].result >= 0) range[(range[0][program -> op[i].result] >= 0)? 1 : 0][program -> op[i].result] = i;
 	}
-	
-	return;
-	
-	
+	for(i = 0; i < program -> ops; i++)
+		if(program -> op[i].type == (FSE_Var | FSE_Variable))
+			range[1][program -> op[i].result] = program -> ops;
 	for(i = 0; i < program -> registers; i++) {
 		for(j = 0; j < program -> registers; j++) {
 			if((range[1][i] <= range[0][j]) && (j == alias[j])) {
@@ -1339,16 +1352,10 @@
 			}
 		}
 	}
-//	for(i = 0; i < program -> registers; i++) NSLog(@"r%i ---> r%i\n", i, alias[i]);
-
 	for(i = 0; i < program -> ops; i++) {
 		if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
 		if(program -> op[i].rhs >= 0) program -> op[i].rhs = alias[program -> op[i].rhs];
 		if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
-		if((program -> op[i].type == (FSE_Command | FSE_Copy)) && (program -> op[i].lhs == program -> op[i].result)) {
-			program -> op[i].lhs = program -> op[i].result = -1;
-			program -> op[i].type = FSE_Command | FSE_NoOp;
-		}
 	}
 	
 
