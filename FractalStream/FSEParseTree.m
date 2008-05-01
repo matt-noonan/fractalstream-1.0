@@ -1280,6 +1280,29 @@
 
 	for(i = 0; i < program -> registers; i++) { range[0][i] = 0; range[1][i] = program -> ops; alias[i] = i; }
 	
+	// seed the alias table using load and store commands for hints
+	for(i = 0; i < program -> ops; i++) {
+		if(program -> op[i].type == (FSE_Var | FSE_Variable)) {
+			for(j = i; j < program -> ops; j++) {
+				if((program -> op[j].type == (FSE_Var | FSE_Variable)) && (program -> op[i].aux[0] == program -> op[j].aux[0]) && (j != i)) {
+					// found another load command, replace with an alias and a noop
+					program -> op[j].type = FSE_Command | FSE_NoOp;
+					alias[program -> op[j].result] = alias[program -> op[i].result];
+					program -> op[j].lhs = program -> op[j].rhs = program -> op[j].result = -1;
+				}
+				if((program -> op[j].type == (FSE_Command | FSE_Store)) && (program -> op[i].aux[0] == program -> op[j].aux[0])) {
+					// found a store command, replace with a copy command
+					program -> op[j].type = FSE_Command | FSE_Copy;
+					program -> op[j].result = program -> op[i].result;
+				}
+			}
+		}
+	}
+	for(i = 0; i < program -> ops; i++) {
+		if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
+		if(program -> op[i].rhs >= 0) program -> op[i].rhs = alias[program -> op[i].rhs];
+		if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
+	}
 	// migrate loads outside of loops
 	for(i = 0; i < program -> ops; i++) {
 		int lastloop = 0;
@@ -1292,40 +1315,6 @@
 		}
 	}
 
-	// find store commands or multiple loads, use to seed the alias table
-	for(i = 0; i < program -> ops - 1; i++) {
-		if(program -> op[i].type == (FSE_Command | FSE_Store)) {
-			for(j = i + 1; j < program -> ops; j++) {
-				if((program -> op[j].type == (FSE_Var | FSE_Variable)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) {
-					program -> op[j].type = FSE_Command | FSE_Copy;
-					program -> op[j].lhs = program -> op[i].lhs;
-					alias[program -> op[j].result] = alias[program -> op[i].lhs];
-					program -> op[i].type = FSE_Command | FSE_NoOp;
-					program -> op[i].lhs = program -> op[i].rhs = program -> op[i].result = -1;
-				}
-				if((program -> op[j].type == (FSE_Command | FSE_Store)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) break;
-			}
-		}
-		if(program -> op[i].type == (FSE_Var | FSE_Variable)) {
-			for(j = i + 1; j < program -> ops; j++) {
-				if((program -> op[j].type == (FSE_Var | FSE_Variable)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) {
-					program -> op[j].type = FSE_Command | FSE_Copy;
-					program -> op[j].lhs = program -> op[i].result;
-				}
-				if((program -> op[j].type == (FSE_Command | FSE_Store)) && ((int) program -> op[j].aux[0] == (int) program -> op[i].aux[0])) {
-					program -> op[j].type = FSE_Command | FSE_Copy;
-					program -> op[j].result = program -> op[i].result;
-				}
-			}
-		}
-	}
-
-	for(i = 0; i < program -> ops; i++) {
-		if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
-		if(program -> op[i].rhs >= 0) program -> op[i].rhs = alias[program -> op[i].rhs];
-		if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
-	}
-	
 	// compute ranges in which each variable is active
 	//for(i = 0; i < program -> registers; i++) alias[i] = i;
 	for(i = 0; i < program -> ops; i++) {
@@ -1334,7 +1323,13 @@
 		if(program -> op[i].result >= 0) range[(range[0][program -> op[i].result] > 0)? 1 : 0][program -> op[i].result] = i;
 	}
 	
-//	for(i = 0; i < program -> registers; i++) NSLog(@"r%i has active range (%i, %i)\n", i, range[0][i], range[1][i]);
+	for(i = 0; i < program -> registers; i++) {
+		if(i == alias[i]) NSLog(@"r%i has active range (%i, %i)\n", i, range[0][i], range[1][i]);
+		else NSLog(@"< r%i is defunct >\n", i);
+	}
+	
+	return;
+	
 	
 	for(i = 0; i < program -> registers; i++) {
 		for(j = 0; j < program -> registers; j++) {
@@ -1385,6 +1380,10 @@
 					op.type = FSE_Command | FSE_NoOp;
 					break;
 				case FSE_Set:
+					op.type = FSE_Var | FSE_Variable;  // add in a fake load instruction, used to simplify register allocation routine
+					op.aux[0] = (int) node[node[here].firstChild].auxi[0];
+					op.result = program -> registers++;
+					[self addOp: &op toOpStream: program];
 					op.type = FSE_Command | FSE_Store;
 					op.aux[0] = (int) node[node[here].firstChild].auxi[0];
 					op.lhs = [self linearizeFrom: node[node[here].firstChild].nextSibling intoOpStream: program];
