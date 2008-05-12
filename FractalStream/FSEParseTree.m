@@ -1259,12 +1259,26 @@
 	program -> ops++;
 }
 
+- (void) insertOp: (FSEOp*) op intoProgram: (FSEOpStream*) program atLocation: (int) loc {
+	int i;
+	if(program -> ops == program -> allocation_size) {
+		program -> allocation_size += 1024;
+		program -> op = (FSEOp*) realloc(program -> op, program -> allocation_size * sizeof(FSEOp));
+	}
+	if(loc == program -> ops) { [self addOp: op toOpStream: program]; return; }
+	for(i = program -> ops; i > loc; i--) memcpy(&(program -> op[i]), &(program -> op[i - 1]), sizeof(FSEOp));
+	memcpy(&(program -> op[loc]), op, sizeof(FSEOp));
+	program -> ops++;
+}
+
 - (void) reduceOpStream: (FSEOpStream*) program toRegisterCount: (int) reg {
 	int* range[2];
 	int* alias;
 	FSEOpStream* rprogram;
 	FSEOpStream rpr;
-	int i, j;
+	int i, j, nextreg;
+	int* regusage;
+	FSEOp tmpop;
 	
 	if(program -> registers == 1) return; // dumb case, probably never happens
 	
@@ -1277,6 +1291,7 @@
 	range[0] = (int*) malloc(program -> registers * sizeof(int));
 	range[1] = (int*) malloc(program -> registers * sizeof(int));
 	alias = (int*) malloc(program -> registers * sizeof(int));
+	regusage = (int*) malloc(program -> registers * sizeof(int));
 
 	for(i = 0; i < program -> registers; i++) { range[0][i] = -1; range[1][i] = program -> ops; alias[i] = i; }
 	
@@ -1331,9 +1346,10 @@
 	}
 	
 	// optional: split up ops of the form "add X, Y -> Z" to "copy X -> Z ... add Z, Y -> Z" for 2-operand languages
+	/*
 	for(i = 0; i < program -> ops; i++) {
-		/* ... */
 	}
+	*/
 	
 	// compute ranges in which each variable is active and set aliases.
 	for(i = 0; i < program -> ops; i++) {
@@ -1358,6 +1374,63 @@
 		if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
 	}
 	
+	// consolidate the registers to a single range
+	{
+		nextreg = 0;
+		for(i = 0; i < program -> registers; i++) alias[i] = -1;
+		for(i = 0; i < program -> ops; i++) {
+			if((program -> op[i].rhs >= 0) && (alias[program -> op[i].rhs] == -1)) alias[program -> op[i].rhs] = nextreg++;
+			if((program -> op[i].lhs >= 0) && (alias[program -> op[i].lhs] == -1)) alias[program -> op[i].lhs] = nextreg++;
+			if((program -> op[i].result >= 0) && (alias[program -> op[i].result] == -1)) alias[program -> op[i].result] = nextreg++;
+		}
+		NSLog(@"reduced to %i registers without touching memory\n", nextreg);
+		for(i = 0; i < program -> ops; i++) {
+			if(program -> op[i].lhs >= 0) program -> op[i].lhs = alias[program -> op[i].lhs];
+			if(program -> op[i].rhs >= 0) program -> op[i].rhs = alias[program -> op[i].rhs];
+			if(program -> op[i].result >= 0) program -> op[i].result = alias[program -> op[i].result];
+		}
+		if(nextreg <= reg) {
+		}
+	}
+	
+	// insert loads and stores to keep the register count within bounds
+	for(i = 0; i < program -> ops; i++) {
+		int vreg, rreg;
+		if(program -> op[i].type == (FSE_Command | FSE_NoOp)) continue; 
+		if(program -> op[i].result >= reg) {
+			vreg = program -> op[i].result;
+
+			for(j = 0; j < nextreg; j++) range[0][j] = 2000000017;
+			for(j = i + 1; j < program -> ops; j++) { // find the register which is first used furthest in the future
+				if((program -> op[j].rhs >= 0) && (range[0][program -> op[j].rhs] == 2000000017)) range[0][program -> op[j].rhs] = j;
+				if((program -> op[j].lhs >= 0) && (range[0][program -> op[j].lhs] == 2000000017)) range[0][program -> op[j].lhs] = j;
+				if((program -> op[j].result >= 0) && (range[0][program -> op[j].result] == 2000000017)) range[0][program -> op[j].result] = j;
+			}
+			rreg = 0;
+			for(j = 0; j < nextreg; j++) if(range[0][j] > range[0][rreg]) rreg = j;
+			
+			// replace all instances of vreg with rreg until an instance of rreg appears or vreg is written to.
+			for(j = i; j < program -> ops; j++) {
+				if((program -> op[j].rhs == rreg) || (program -> op[j].lhs == rreg)) {
+					NSLog(@"replacing vreg %i with rreg %i\n", vreg, rreg);
+					// need to store the value of rreg, then restore it at this point.
+					tmpop.type = FSE_Command | FSE_Copy;
+					tmpop.lhs = vreg;
+					tmpop.result = rreg;
+					tmpop.rhs = -1;
+					[self insertOp: &tmpop intoProgram: program atLocation: j];
+					tmpop.lhs = rreg;
+					tmpop.result = vreg;
+					[self insertOp: &tmpop intoProgram: program atLocation: i];					
+					break;
+				}
+				if(program -> op[j].result == rreg) { NSLog(@"a"); break; }  // don't need to store / restore the value of rreg
+				if(program -> op[j].rhs == vreg) program -> op[j].rhs = rreg;
+				if(program -> op[j].lhs == vreg) program -> op[j].lhs = rreg;
+				if(program -> op[j].result == vreg) { if(j != i) { NSLog(@"B");  } program -> op[j].result = rreg; }
+			}
+		}
+	}
 
 }
 
