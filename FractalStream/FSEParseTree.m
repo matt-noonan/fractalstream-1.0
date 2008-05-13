@@ -1427,7 +1427,21 @@
 				if(program -> op[j].result == rreg) { NSLog(@"a"); break; }  // don't need to store / restore the value of rreg
 				if(program -> op[j].rhs == vreg) program -> op[j].rhs = rreg;
 				if(program -> op[j].lhs == vreg) program -> op[j].lhs = rreg;
-				if(program -> op[j].result == vreg) { if(j != i) { NSLog(@"B");  } program -> op[j].result = rreg; }
+				if(program -> op[j].result == vreg) {
+					if(j != i) {
+						// need to store the value of rreg, then restore it at this point.
+						tmpop.type = FSE_Command | FSE_Copy;
+						tmpop.lhs = vreg;
+						tmpop.result = rreg;
+						tmpop.rhs = -1;
+						[self insertOp: &tmpop intoProgram: program atLocation: j];
+						tmpop.lhs = rreg;
+						tmpop.result = vreg;
+						[self insertOp: &tmpop intoProgram: program atLocation: i];					
+						break;
+					}
+					program -> op[j].result = rreg;
+				}
 			}
 		}
 	}
