@@ -195,7 +195,48 @@
 	<key>Notifications</key>
 	<array/>
 	<key>OpenEditors</key>
-	<array/>
+	<array>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>682FE42E0DF8930C0048EEEA</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>FSEParseNode.h</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>682FE42F0DF8930C0048EEEA</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>FSEParseNode.h</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>682FE4350DF8D5160048EEEA</string>
+						<key>history</key>
+						<array>
+							<string>682FE42B0DF890BE0048EEEA</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {593, 744}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>88 67 593 785 0 0 1440 878 </string>
+			</dict>
+		</dict>
+	</array>
 	<key>PerspectiveWidths</key>
 	<array>
 		<integer>-1</integer>
@@ -277,8 +318,9 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>32</integer>
-									<integer>31</integer>
+									<integer>6</integer>
+									<integer>4</integer>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -332,7 +374,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>682FE3940DDA1C660048EEEA</string>
+										<string>682FE4340DF8D5160048EEEA</string>
 										<key>history</key>
 										<array>
 											<string>680F37980CA06F0200F1F52E</string>
@@ -721,6 +763,7 @@
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>68972ADD0D49B2BC00FBF09B</string>
 		<string>1C78EAAD065D492600B07095</string>
+		<string>682FE42E0DF8930C0048EEEA</string>
 		<string>/Users/noonan/Desktop/FractalStream-cvs/FractalStream.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

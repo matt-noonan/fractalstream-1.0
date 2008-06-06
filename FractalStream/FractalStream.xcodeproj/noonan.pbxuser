@@ -393,6 +393,13 @@
 			682FE3910DD953A40048EEEA /* PBXTextBookmark */ = 682FE3910DD953A40048EEEA /* PBXTextBookmark */;
 			682FE3930DD954530048EEEA /* PBXTextBookmark */ = 682FE3930DD954530048EEEA /* PBXTextBookmark */;
 			682FE3940DDA1C660048EEEA /* PBXTextBookmark */ = 682FE3940DDA1C660048EEEA /* PBXTextBookmark */;
+			682FE42B0DF890BE0048EEEA /* PBXBookmark */ = 682FE42B0DF890BE0048EEEA /* PBXBookmark */;
+			682FE42D0DF8930C0048EEEA /* PBXTextBookmark */ = 682FE42D0DF8930C0048EEEA /* PBXTextBookmark */;
+			682FE4300DF8930C0048EEEA /* PBXTextBookmark */ = 682FE4300DF8930C0048EEEA /* PBXTextBookmark */;
+			682FE4320DF893F10048EEEA /* PBXTextBookmark */ = 682FE4320DF893F10048EEEA /* PBXTextBookmark */;
+			682FE4330DF893F10048EEEA /* PBXTextBookmark */ = 682FE4330DF893F10048EEEA /* PBXTextBookmark */;
+			682FE4340DF8D5160048EEEA /* PBXTextBookmark */ = 682FE4340DF8D5160048EEEA /* PBXTextBookmark */;
+			682FE4350DF8D5160048EEEA /* PBXTextBookmark */ = 682FE4350DF8D5160048EEEA /* PBXTextBookmark */;
 			684552320D7C6FA40071CED1 = 684552320D7C6FA40071CED1 /* PBXTextBookmark */;
 			684552C10D7CB4A50071CED1 = 684552C10D7CB4A50071CED1 /* PBXTextBookmark */;
 			684553090D7CC11F0071CED1 = 684553090D7CC11F0071CED1 /* PBXTextBookmark */;
@@ -900,7 +907,7 @@
 		fRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1347";
 		rLen = 0;
-		rLoc = 50508;
+		rLoc = 50511;
 		rType = 0;
 		vrLen = 2048;
 		vrLoc = 47762;
@@ -910,7 +917,7 @@
 		fRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1302";
 		rLen = 0;
-		rLoc = 49618;
+		rLoc = 49621;
 		rType = 0;
 		vrLen = 2012;
 		vrLoc = 48007;
@@ -996,7 +1003,7 @@
 		fRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1302";
 		rLen = 0;
-		rLoc = 49618;
+		rLoc = 49621;
 		rType = 0;
 		vrLen = 1878;
 		vrLoc = 47933;
@@ -1053,7 +1060,7 @@
 		fRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1302";
 		rLen = 0;
-		rLoc = 49618;
+		rLoc = 49621;
 		rType = 0;
 		vrLen = 1878;
 		vrLoc = 47933;
@@ -1161,9 +1168,9 @@
 		path = "/Users/noonan/Desktop/FractalStream-cvs/FSEParseTree.m";
 		sourceTree = "<absolute>";
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {860, 29610}}";
-			sepNavSelRange = "{54950, 0}";
-			sepNavVisRange = "{53972, 1433}";
+			sepNavIntBoundsRect = "{{0, 0}, {860, 30226}}";
+			sepNavSelRange = "{56082, 0}";
+			sepNavVisRange = "{55403, 1044}";
 		};
 	};
 	682FE2AA0DB70D960048EEEA /* FSBrowser.m */ = {
@@ -1872,7 +1879,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1284";
 		rLen = 0;
-		rLoc = 47992;
+		rLoc = 47995;
 		rType = 0;
 		vrLen = 1942;
 		vrLoc = 47550;
@@ -1952,7 +1959,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1285";
 		rLen = 0;
-		rLoc = 48840;
+		rLoc = 48843;
 		rType = 0;
 		vrLen = 1386;
 		vrLoc = 47176;
@@ -1972,7 +1979,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1284";
 		rLen = 0;
-		rLoc = 47992;
+		rLoc = 47995;
 		rType = 0;
 		vrLen = 1942;
 		vrLoc = 47550;
@@ -2002,7 +2009,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1301";
 		rLen = 0;
-		rLoc = 49147;
+		rLoc = 49150;
 		rType = 0;
 		vrLen = 1723;
 		vrLoc = 47336;
@@ -2012,7 +2019,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1411";
 		rLen = 0;
-		rLoc = 52166;
+		rLoc = 52745;
 		rType = 0;
 		vrLen = 1404;
 		vrLoc = 52706;
@@ -2022,7 +2029,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1284";
 		rLen = 0;
-		rLoc = 47992;
+		rLoc = 47995;
 		rType = 0;
 		vrLen = 1816;
 		vrLoc = 47550;
@@ -2032,7 +2039,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1330";
 		rLen = 0;
-		rLoc = 50298;
+		rLoc = 50301;
 		rType = 0;
 		vrLen = 1621;
 		vrLoc = 48756;
@@ -2042,7 +2049,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1291";
 		rLen = 0;
-		rLoc = 48532;
+		rLoc = 48535;
 		rType = 0;
 		vrLen = 1807;
 		vrLoc = 47434;
@@ -2052,7 +2059,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 2090";
 		rLen = 0;
-		rLoc = 79189;
+		rLoc = 80034;
 		rType = 0;
 		vrLen = 1426;
 		vrLoc = 53897;
@@ -2062,7 +2069,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 2090";
 		rLen = 0;
-		rLoc = 79189;
+		rLoc = 80034;
 		rType = 0;
 		vrLen = 1426;
 		vrLoc = 53897;
@@ -2072,7 +2079,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1430";
 		rLen = 0;
-		rLoc = 54950;
+		rLoc = 55595;
 		rType = 0;
 		vrLen = 1379;
 		vrLoc = 53897;
@@ -2082,7 +2089,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1437";
 		rLen = 0;
-		rLoc = 55203;
+		rLoc = 55848;
 		rType = 0;
 		vrLen = 1502;
 		vrLoc = 53897;
@@ -2092,7 +2099,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1445";
 		rLen = 0;
-		rLoc = 55347;
+		rLoc = 55992;
 		rType = 0;
 		vrLen = 1429;
 		vrLoc = 53972;
@@ -2102,7 +2109,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1443";
 		rLen = 0;
-		rLoc = 55347;
+		rLoc = 55992;
 		rType = 0;
 		vrLen = 1430;
 		vrLoc = 53972;
@@ -2112,7 +2119,7 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1432";
 		rLen = 0;
-		rLoc = 54950;
+		rLoc = 55595;
 		rType = 0;
 		vrLen = 1440;
 		vrLoc = 53972;
@@ -2122,10 +2129,74 @@
 		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1432";
 		rLen = 0;
-		rLoc = 54950;
+		rLoc = 55595;
 		rType = 0;
 		vrLen = 1433;
 		vrLoc = 53972;
+	};
+	682FE42B0DF890BE0048EEEA /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */;
+	};
+	682FE42D0DF8930C0048EEEA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
+		name = "FSEParseTree.m: 1382";
+		rLen = 0;
+		rLoc = 52056;
+		rType = 0;
+		vrLen = 1610;
+		vrLoc = 51254;
+	};
+	682FE4300DF8930C0048EEEA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */;
+		name = "FSEParseNode.h: 76";
+		rLen = 0;
+		rLoc = 1394;
+		rType = 0;
+		vrLen = 990;
+		vrLoc = 543;
+	};
+	682FE4320DF893F10048EEEA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
+		name = "FSEParseTree.m: 1382";
+		rLen = 0;
+		rLoc = 52003;
+		rType = 0;
+		vrLen = 1614;
+		vrLoc = 51254;
+	};
+	682FE4330DF893F10048EEEA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */;
+		name = "FSEParseNode.h: 76";
+		rLen = 0;
+		rLoc = 1394;
+		rType = 0;
+		vrLen = 990;
+		vrLoc = 543;
+	};
+	682FE4340DF8D5160048EEEA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 682FE2A30DB70D550048EEEA /* FSEParseTree.m */;
+		name = "FSEParseTree.m: 1466";
+		rLen = 0;
+		rLoc = 56082;
+		rType = 0;
+		vrLen = 1044;
+		vrLoc = 55403;
+	};
+	682FE4350DF8D5160048EEEA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */;
+		name = "FSEParseNode.h: 76";
+		rLen = 0;
+		rLoc = 1394;
+		rType = 0;
+		vrLen = 864;
+		vrLoc = 0;
 	};
 	684552320D7C6FA40071CED1 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2486,7 +2557,7 @@
 		fRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */;
 		name = "FSEParseTree.m: 1347";
 		rLen = 0;
-		rLoc = 50508;
+		rLoc = 50511;
 		rType = 0;
 		vrLen = 2111;
 		vrLoc = 47699;
@@ -2801,9 +2872,9 @@
 	};
 	68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {827, 2016}}";
+			sepNavIntBoundsRect = "{{0, 0}, {534, 2058}}";
 			sepNavSelRange = "{1394, 0}";
-			sepNavVisRange = "{325, 702}";
+			sepNavVisRange = "{0, 864}";
 		};
 	};
 	68A35A7A0D5D79DB00FE5ACA /* FSECompiler.m */ = {
