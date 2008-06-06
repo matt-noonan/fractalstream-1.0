@@ -1276,7 +1276,7 @@
 	int* alias;
 	FSEOpStream* rprogram;
 	FSEOpStream rpr;
-	int i, j, nextreg;
+	int i, j, k, nextreg;
 	int* regusage;
 	FSEOp tmpop;
 	
@@ -1357,6 +1357,19 @@
 		if(program -> op[i].rhs >= 0) range[(range[0][program -> op[i].rhs] >= 0)? 1 : 0][program -> op[i].rhs] = i;
 		if(program -> op[i].result >= 0) range[(range[0][program -> op[i].result] >= 0)? 1 : 0][program -> op[i].result] = i;
 	}
+	for(i = 0; i < program -> registers; i++) {
+		// adjust variable ranges when they cross loop boundaries
+		if(range[0][i] == -1) continue;
+		for(j = range[0][i]; j < range[1][i]; j++) {
+			if(program -> op[j].type == (FSE_Command | FSE_LoopLabel)) {
+				if(((int) program -> op[j].aux[0]) > range[1][i]) range[1][i] = (int) program -> op[j].aux[0];
+				j = (int) program -> op[j].aux[0];
+			}
+			else if(program -> op[j].type == (FSE_Command | FSE_LoopJump)) {
+				if(((int) program -> op[j].aux[0]) < range[0][i]) range[0][i] = j = (int) program -> op[j].aux[0];
+			}
+		}
+	}
 	for(i = 0; i < program -> ops; i++)
 		if(program -> op[i].type == (FSE_Var | FSE_Variable))
 			range[1][program -> op[i].result] = program -> ops;
@@ -1391,6 +1404,10 @@
 		}
 		if(nextreg <= reg) {
 		}
+	}
+	
+	// double every loop
+	for(i = 0; i < program -> ops; i++) {
 	}
 	
 	// insert loads and stores to keep the register count within bounds
@@ -1445,11 +1462,15 @@
 			}
 		}
 	}
-
+	
+	// consolidate the doubled loops
+	for(i = 0; i < program -> ops; i++) {
+	}
+	
 }
 
 - (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program {
-	int here, i, nkids, c, rhs;
+	int here, i, nkids, c, rhs, ref;
 	FSEOp op;
 	here = h;
 	
@@ -1488,10 +1509,13 @@
 					break;
 				case FSE_Do:
 					op.type = FSE_Command | FSE_LoopLabel;
+					ref = program -> ops;
 					[self addOp: &op toOpStream: program];
 					[self linearizeFrom: node[here].firstChild intoOpStream: program];
 					[self linearizeFrom: node[node[here].firstChild].nextSibling intoOpStream: program];
 					op.type = FSE_Command | FSE_LoopJump;
+					op.aux[0] = (double) ref;
+					program -> op[ref].aux[0] = (double) program -> ops;
 					break;
 				case FSE_Report:
 					op.type = node[here].type;
