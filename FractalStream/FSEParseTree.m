@@ -1406,8 +1406,15 @@
 		}
 	}
 	
-	// double every loop
+	// double every loop, loop references in aux[0] are broken after this.
 	for(i = 0; i < program -> ops; i++) {
+		if(program -> op[i].type == (FSE_Command | FSE_LoopLabel)) {
+			int end;
+			k = i + 1;
+			end = (int) program -> op[i].aux[0] + 1;
+			while(program -> op[k - 1].type != (FSE_Command | FSE_LoopJump))
+				[self insertOp: &(program -> op[k++]) intoProgram: program atLocation: end++];
+		}
 	}
 	
 	// insert loads and stores to keep the register count within bounds

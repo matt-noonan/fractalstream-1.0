@@ -214,10 +214,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>682FE4350DF8D5160048EEEA</string>
+						<string>680079A30E0AA3AE00B1A41F</string>
 						<key>history</key>
 						<array>
-							<string>682FE42B0DF890BE0048EEEA</string>
+							<string>682FE4380DF9BDDD0048EEEA</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -374,7 +374,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>682FE4340DF8D5160048EEEA</string>
+										<string>680079A00E0AA3AE00B1A41F</string>
 										<key>history</key>
 										<array>
 											<string>680F37980CA06F0200F1F52E</string>
@@ -448,7 +448,7 @@
 											<string>682FE3630DC93F370048EEEA</string>
 											<string>682FE3640DC93F370048EEEA</string>
 											<string>682FE3650DC93F370048EEEA</string>
-											<string>682FE3660DC93F370048EEEA</string>
+											<string>682FE4370DF9BDDD0048EEEA</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -515,54 +515,9 @@
 											<string>68BFD8A00DAE529A00325B56</string>
 											<string>68BFD9820DAE6FBC00325B56</string>
 											<string>6864FD0A0DB16AB400740424</string>
-											<string>682FE28A0DB70BE40048EEEA</string>
-											<string>682FE28B0DB70BE40048EEEA</string>
-											<string>682FE28C0DB70BE40048EEEA</string>
-											<string>682FE28D0DB70BE40048EEEA</string>
 											<string>682FE28E0DB70BE40048EEEA</string>
 											<string>682FE28F0DB70BE40048EEEA</string>
-											<string>682FE3060DB711CB0048EEEA</string>
-											<string>682FE3070DB711CB0048EEEA</string>
-											<string>682FE3080DB711CB0048EEEA</string>
-											<string>682FE3090DB711CB0048EEEA</string>
-											<string>682FE30A0DB711CB0048EEEA</string>
-											<string>682FE30B0DB711CB0048EEEA</string>
-											<string>682FE30C0DB711CB0048EEEA</string>
-											<string>682FE30D0DB711CB0048EEEA</string>
-											<string>682FE30E0DB711CB0048EEEA</string>
-											<string>682FE30F0DB711CB0048EEEA</string>
-											<string>682FE3100DB711CB0048EEEA</string>
-											<string>682FE3110DB711CB0048EEEA</string>
-											<string>682FE3120DB711CB0048EEEA</string>
 											<string>682FE3130DB711CB0048EEEA</string>
-											<string>682FE3140DB711CB0048EEEA</string>
-											<string>682FE3150DB711CB0048EEEA</string>
-											<string>682FE3160DB711CB0048EEEA</string>
-											<string>682FE3170DB711CB0048EEEA</string>
-											<string>682FE3180DB711CB0048EEEA</string>
-											<string>682FE3190DB711CB0048EEEA</string>
-											<string>682FE31A0DB711CB0048EEEA</string>
-											<string>682FE31B0DB711CB0048EEEA</string>
-											<string>682FE31C0DB711CB0048EEEA</string>
-											<string>682FE31D0DB711CB0048EEEA</string>
-											<string>682FE31E0DB711CB0048EEEA</string>
-											<string>682FE34F0DB71B950048EEEA</string>
-											<string>682FE3580DB7B2400048EEEA</string>
-											<string>682FE3590DB7B2400048EEEA</string>
-											<string>682FE35A0DB7B2400048EEEA</string>
-											<string>682FE35B0DB7B2400048EEEA</string>
-											<string>682FE3670DC93F370048EEEA</string>
-											<string>682FE3680DC93F370048EEEA</string>
-											<string>682FE3690DC93F370048EEEA</string>
-											<string>682FE36A0DC93F370048EEEA</string>
-											<string>682FE36B0DC93F370048EEEA</string>
-											<string>682FE36C0DC93F370048EEEA</string>
-											<string>682FE36D0DC93F370048EEEA</string>
-											<string>682FE36E0DC93F370048EEEA</string>
-											<string>682FE36F0DC93F370048EEEA</string>
-											<string>682FE3700DC93F370048EEEA</string>
-											<string>682FE3710DC93F370048EEEA</string>
-											<string>682FE3720DC93F370048EEEA</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -620,9 +575,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>682FE25F0DB6592A0048EEEA</string>
+				<string>680079A10E0AA3AE00B1A41F</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>682FE2600DB6592A0048EEEA</string>
+				<string>680079A20E0AA3AE00B1A41F</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -754,15 +709,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>68BFD4240D9D779E00325B56</string>
-		<string>682FE3740DC93F370048EEEA</string>
-		<string>682FE3750DC93F370048EEEA</string>
-		<string>682FE3760DC93F370048EEEA</string>
-		<string>1C530D57069F1CE1000CFCEE</string>
-		<string>682FE3200DB711CB0048EEEA</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>68972ADD0D49B2BC00FBF09B</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>682FE42E0DF8930C0048EEEA</string>
 		<string>/Users/noonan/Desktop/FractalStream-cvs/FractalStream.xcodeproj</string>
 	</array>
