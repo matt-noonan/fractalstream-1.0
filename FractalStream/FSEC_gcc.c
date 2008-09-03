@@ -114,6 +114,13 @@ int emitSubtreeFrom(int node, FSEParseNode* tree, FILE* fp) {
 							fprintf(fp, "}\n");
 							fprintf(fp, "/* FSE_If ends here */\n");
 							break;
+						case FSE_Else:
+							fprintf(fp, "/* FSE_Else starts here */\n");
+							fprintf(fp, "else {");
+							emitSubtreeFrom(tree[node].firstChild, tree, fp);
+							fprintf(fp, "}\n");
+							fprintf(fp, "/* FSE_Else ends here */\n");
+							break;
 						case FSE_Iterate:
 							fprintf(fp, "/* FSE_Iterate starts here */\n");
 							fprintf(fp, "for(j[%i] = 0; j[%i] < maxiter; j[%i]++) {\n",

@@ -35,7 +35,7 @@
 		(c == 0x0085) || (c == 0x00a0) || (c == 0x1680) || (c == 0x180e) || ((c >= 0x2000) && (c <= 0x200a)) ||
 		(c == 0x2028) || (c == 0x2029) || (c == 0x202f) || (c == 0x205f) || (c == 0x3000)) return FSSymbol_WHITESPACE;
 	if((c == '(') || (c == ')') || (c == '[') || (c == ']')) return FSSymbol_PAREN;
-	if((c == '.') || (c == ',')) return FSSymbol_PUNCT;
+	if((c == '.') || (c == ',') || (c == ':')) return FSSymbol_PUNCT;
 	if((c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '|') || (c == '!')
 		|| (c == '&') || (c == '>') || (c == '<') || (c == '=') || (c == '^') 
 		|| (c == 0x2020)) return FSSymbol_OPERATOR;
@@ -108,7 +108,8 @@
 		if([self currentSymbolType] != FSSymbol_NUMBER) --index;
 		else type = FSSymbol_NUMBER;
 	}
-	while([self currentSymbolType] == type) { ++index; if(index >= max) break; }
+	if([self currentSymbolType] == FSSymbol_PUNCT) ++index;
+	while(([self currentSymbolType] == type) && ([self currentSymbolType] != FSSymbol_PUNCT)) { ++index; if(index >= max) break; }
 	if(index < max) if((type == FSSymbol_NUMBER)
 		&& ([source characterAtIndex: index] == 'i')) ++index;
 	range.location = oldindex; range.length = index - oldindex;
@@ -416,7 +417,7 @@
 	NSString *gcc, *ifile;
 	char gccC[256], ifileC[256];
 	int stack[512], stackptr, loopDepth;
-	BOOL reported;
+	BOOL reported, autopop;
 	FSEOpStream opstream;
 	
 	NSLog(@"compiling source:\n%@\n\n", source);
@@ -430,6 +431,7 @@
 	
 	stackptr = -1;
 	reported = NO;
+	autopop = NO;
 	savedcounter = 0;
 	nextvar = 0;
 	loopDepth = 0;
@@ -598,13 +600,25 @@
 			[self extractBoolBelowNode: node];
 			[self readNextSymbol];
 			if([symbol isEqualToString: @","] == YES) {
-				error = [NSString stringWithFormat: @"**** not yet implemented synax for if"];
+				stack[++stackptr] = codeblock;
+				codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+				autopop = 2;
 			}
 			else if([symbol isEqualToString: @"then"] == YES) {
 				stack[++stackptr] = codeblock;
 				codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+				autopop = 2;
 			}
-			else error = [NSString stringWithFormat: @"i do not know this syntax for if"];
+			else error = [NSString stringWithFormat: @"i do not know this syntax for if (symbol is %@)", symbol];
+		}
+		else if(([symbol isEqualToString: @"else"] == YES) || ([symbol isEqualToString: @"otherwise"] == YES)) {
+			node = [tree newNodeOfType: FSE_Command | FSE_Else at: codeblock];
+			stack[++stackptr] = codeblock;
+			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+			autopop = 2;
+		}
+		else if([symbol isEqualToString: @":"] == YES) {
+			autopop = 0;
 		}
 		else if([symbol isEqualToString: @"repeat"] == YES) {
 			int tnode;
@@ -703,9 +717,6 @@
 			}
 */
 		}
-		else if([symbol isEqualToString: @"otherwise"] == YES) {
-		
-		}
 		else if([symbol isEqualToString: @"par"] == YES) {
 			savedcounter = 2;
 			savednode = codeblock;
@@ -723,6 +734,8 @@
 			break;
 		}
 		if(error) return;
+		if(autopop == 1) codeblock = stack[stackptr--];
+		if(autopop > 0) autopop--;
 		[self readNextSymbol];
 		if(savedroot == codeblock) {
 			if(savedcounter == 1) { codeblock = savednode; }

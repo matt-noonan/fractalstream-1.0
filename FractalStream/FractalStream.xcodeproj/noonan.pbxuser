@@ -259,12 +259,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 235578275;
-			PBXWorkspaceStateSaveDate = 235578275;
+			PBXPerProjectTemplateStateSaveDate = 242090544;
+			PBXWorkspaceStateSaveDate = 242090544;
 		};
 		perUserProjectItems = {
-			680079A00E0AA3AE00B1A41F /* PBXTextBookmark */ = 680079A00E0AA3AE00B1A41F /* PBXTextBookmark */;
-			680079A30E0AA3AE00B1A41F /* PBXTextBookmark */ = 680079A30E0AA3AE00B1A41F /* PBXTextBookmark */;
+			680079A00E0AA3AE00B1A41F = 680079A00E0AA3AE00B1A41F /* PBXTextBookmark */;
+			680079A30E0AA3AE00B1A41F = 680079A30E0AA3AE00B1A41F /* PBXTextBookmark */;
 			680F37980CA06F0200F1F52E = 680F37980CA06F0200F1F52E /* PBXBookmark */;
 			680F37A10CA06F0200F1F52E = 680F37A10CA06F0200F1F52E /* PBXBookmark */;
 			680F37A40CA06F0200F1F52E = 680F37A40CA06F0200F1F52E /* PBXTextBookmark */;
@@ -1149,11 +1149,6 @@
 		name = FSEParseTree.m;
 		path = "/Users/noonan/Desktop/FractalStream-cvs/FSEParseTree.m";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {860, 29610}}";
-			sepNavSelRange = "{54040, 0}";
-			sepNavVisRange = "{54050, 1956}";
-		};
 	};
 	682FE2AA0DB70D960048EEEA /* FSBrowser.m */ = {
 		isa = PBXFileReference;
