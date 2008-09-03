@@ -139,6 +139,14 @@ int emitSubtreeFrom(int node, FSEParseNode* tree, FILE* fp) {
 							fprintf(fp, "}\n");
 							fprintf(fp, "/* FSE_Iterate ends here */\n");
 							break;
+						case FSE_Probe:
+							fprintf(fp, "/* FSE_Probe starts here */\n");
+							fprintf(fp, "if(probe == %i) {\n", tree[node].auxi[1]);
+							emitSubtreeFrom(tree[node].firstChild, tree, fp);
+							fprintf(fp, "return;\n");
+							fprintf(fp, "}\n");
+							fprintf(fp, "/* FSE_Probe ends here */\n");
+							break;
 						case FSE_Par:
 							if(mode == 2) {
 								fprintf(fp, "/* FSE_Par starts here */\n");
@@ -574,9 +582,10 @@ int emit(char* filename, FSEParseNode* tree, int stacksize) {
 	fprintf(fp, "#include <math.h>\n\n");
 	
 	fprintf(fp, "void kernel(int mode, double* in, int length, double* out, int maxiter, double maxnorm, double close) {\n");
-	fprintf(fp, "int i, j[16], k, n[%i], flag;\n", stacksize);
+	fprintf(fp, "int i, j[16], k, n[%i], flag, probe;\n", stacksize);
 	fprintf(fp, "double x[%i], step, r, cx, cy;\n", stacksize, stacksize);
 	fprintf(fp, "flag = 0;\n");
+	fprintf(fp, "probe = 0; if(length < 0) { probe = -length; length = 1; }\n");
 	fprintf(fp, "if(mode == -1) /* initialization */{\n");
 		emitSubtreeFrom(subtree, tree, fp); /* emit the prefix block */
 		subtree = tree[subtree].nextSibling;

@@ -26,6 +26,8 @@
 		return;
 	}
 	[browser setVariableNamesTo: [compiler parameters]];
+	[browser setProbeNamesTo: [compiler probeArray]];
+	NSLog(@"set probe names in the browser to %@\n", [compiler probeArray]);
 	[[browser session] setFlags: [compiler flagArray]];
 	[[browser session] readKernelFrom: tmp];
 	[[[browser session] root] dataPtr] -> program = [compiler isParametric]? 1 : 3;

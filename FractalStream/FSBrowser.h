@@ -46,6 +46,7 @@
 	NSArray* reducedVariableNames;
 	NSArray* realPart;
 	NSArray* imagPart;
+	NSArray* probeNames;
 	int uniqueVariableNames;
 	
 	BOOL configured;
@@ -59,6 +60,7 @@
 - (void) sendDefaultsToViewer;
 - (void) putCurrentDataIn: (FSViewerData*) p;
 - (void) refreshAll;
+- (void) setProbeNamesTo: (NSArray*) names;
 - (void) setVariableNamesTo: (NSArray*) names;
 - (void) setVariableValuesToReal: (NSArray*) rp imag: (NSArray*) ip;
 - (void) resetDefaults;
@@ -75,5 +77,5 @@
 - (NSArray*) namedVariables;
 - (NSArray*) namedVariablesRealParts;
 - (NSArray*) namedVariablesImagParts;
-
+- (NSArray*) namedProbes;
 @end

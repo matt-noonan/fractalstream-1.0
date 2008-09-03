@@ -45,6 +45,7 @@
 			[session setFlags: [colorizer names]];
 			[browser setVariableNamesTo: [savedData variableNames]];
 			[browser setVariableValuesToReal: [savedData variableReal] imag: [savedData variableImag]];
+			[browser setProbeNamesTo: [savedData probeNames]];
 			[browser reloadSession];
 			[mainTabView selectNextTabViewItem: self];
 		}
@@ -68,7 +69,7 @@
 	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 1) 
 		[save setType: @"editor" session: nil colorizer: nil editor: editor browser: nil];
 	else
-		[save setType: @"full session [26mar]" session: session colorizer: colorizer editor: editor browser: browser];
+		[save setType: @"full session [3sep]" session: session colorizer: colorizer editor: editor browser: browser];
     return [NSKeyedArchiver archivedDataWithRootObject: save];
 }
 

@@ -9,6 +9,7 @@
 	self = [super init];
 	flags = [[NSMutableArray alloc] init];
 	[flags addObject: [NSString stringWithString: @"Default Exit Condition"]];
+	probes = [[NSMutableArray alloc] init];
 	currentFlagID = 1;
 	source = symbol = title = nil;
 	usesC = 0;
@@ -96,6 +97,12 @@
 		lastRange = range;
 		return;
 	}
+	if(type == FSSymbol_PUNCT) {
+		range.location = index; range.length = 1; ++index;
+		symbol = [NSString stringWithString: [source substringWithRange: range]];
+		lastRange = range;
+		return;
+	}
 	if(type == FSSymbol_NUMBER) {
 		wasNumber = YES;
 		while([self currentSymbolType] == FSSymbol_NUMBER) {
@@ -108,8 +115,9 @@
 		if([self currentSymbolType] != FSSymbol_NUMBER) --index;
 		else type = FSSymbol_NUMBER;
 	}
-	if([self currentSymbolType] == FSSymbol_PUNCT) ++index;
-	while(([self currentSymbolType] == type) && ([self currentSymbolType] != FSSymbol_PUNCT)) { ++index; if(index >= max) break; }
+//	if([self currentSymbolType] == FSSymbol_PUNCT) ++index;
+//	while(([self currentSymbolType] == type) && ([self currentSymbolType] != FSSymbol_PUNCT)) { ++index; if(index >= max) break; }
+	while(([self currentSymbolType] == type)) { ++index; if(index >= max) break; }
 	if(index < max) if((type == FSSymbol_NUMBER)
 		&& ([source characterAtIndex: index] == 'i')) ++index;
 	range.location = oldindex; range.length = index - oldindex;
@@ -416,7 +424,7 @@
 	int prefixblock, codeblock, rootblock, t, savednode, tmpnode, savedcounter, savedroot;
 	NSString *gcc, *ifile;
 	char gccC[256], ifileC[256];
-	int stack[512], stackptr, loopDepth;
+	int stack[512], stackptr, loopDepth, probecount;
 	BOOL reported, autopop;
 	FSEOpStream opstream;
 	
@@ -433,6 +441,7 @@
 	reported = NO;
 	autopop = NO;
 	savedcounter = 0;
+	probecount = 0;
 	nextvar = 0;
 	loopDepth = 0;
 	
@@ -641,6 +650,24 @@
 			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
 			++loopDepth;
 		}
+		else if([symbol isEqualToString: @"probe"] == YES) {
+			NSString* name;
+			NSRange range;
+			int savedindex;
+			node = [tree newNodeOfType: FSE_Command | FSE_Probe at: codeblock];
+			stack[++stackptr] = node; // push fse_probe node
+			stack[++stackptr] = codeblock; // push current code block
+			savedindex = index;
+			while([source characterAtIndex: index] != ':') ++index;
+			range.location = savedindex; range.length = index - savedindex;
+			name = [NSString stringWithString: [literalSource substringWithRange: range]];
+			[self readNextSymbol];
+			[probes addObject: name];
+			[tree nodeAt: node] -> auxi[0] = loopDepth;
+			[tree nodeAt: node] -> auxi[1] = ++probecount;
+			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+			++loopDepth;
+		}
 		else if([symbol isEqualToString: @"until"] == YES) {
 			codeblock = stack[stackptr--];
 			node = stack[stackptr--];
@@ -756,7 +783,7 @@
 	[tree postprocessReserving: nextvar];
 //	[tree log];
 
-
+/*
 	NSLog(@"linearizing to opstream\n");
 	[tree linearizeTo: &opstream];
 	NSLog(@"logging opstream:\n");
@@ -764,7 +791,7 @@
 	NSLog(@"reducing to 8 registers\n");
 	[tree reduceOpStream: &opstream toRegisterCount: 8];
 	[tree logOpStream: &opstream];
-
+*/
 	
 //	NSLog(@"searching for subtree equivalences\n");
 //	[tree optimizeReserving: nextvar];
@@ -794,6 +821,12 @@
 - (NSArray*) flagArray { 
 	NSArray* ar;
 	ar = [[NSArray arrayWithArray: flags] retain];
+	return ar;
+}
+
+- (NSArray*) probeArray {
+	NSArray* ar;
+	ar = [[NSArray arrayWithArray: probes] retain];
 	return ar;
 }
 

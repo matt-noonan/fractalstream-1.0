@@ -74,6 +74,7 @@ typedef struct {
 #define FSE_Store		23
 #define FSE_Copy		24
 #define FSE_Else		25
+#define FSE_Probe		26
 
 #define FSE_Type_Mask	0xffffff00
 #define FSE_Arith		0x200

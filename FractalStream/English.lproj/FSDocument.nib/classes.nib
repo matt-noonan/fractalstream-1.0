@@ -392,6 +392,8 @@
 				<string>NSTextField</string>
 				<key>popupMenu</key>
 				<string>NSPopUpButton</string>
+				<key>probeTextField</key>
+				<string>NSTextField</string>
 				<key>stepsBox</key>
 				<string>NSTextField</string>
 				<key>theBrowser</key>

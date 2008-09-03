@@ -825,6 +825,16 @@
 	[glLock unlock];
 }
 
+- (void) probe: (int) probeNumber atPoint: (double*) p into: (double*) result {
+	double in[16];
+	in[0] = p[0]; in[1] = p[1];
+	in[2] = view->aspectRatio;
+	in[3] = view -> par[0]; in[4] = view -> par[1];
+	in[5] = view -> pixelSize; 
+
+	(view -> kernel)(view -> program, in, -probeNumber, result, view -> maxIters, view -> maxRadius, view -> minRadius);
+}
+
 - (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps {
 	double p[2];
 	double in[512], out[3], x, y;

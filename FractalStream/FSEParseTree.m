@@ -705,7 +705,7 @@
 							t = [self newNodeOfType: FSE_Func | FSE_Sin at: newNode];
 							[self cloneSubtreeFrom: x to: t];
 							t = [self newNodeOfType: FSE_Func | FSE_Cos at: newNode];
-							[self cloneSubtreeFrom: y to: t];
+							[self cloneSubtreeFrom: x to: t];
 						den = [self newNodeOfType: FSE_Arith | FSE_Add at: q];
 							t = [self newNodeOfType: FSE_Arith | FSE_Mul at: den];
 							t2 = [self newNodeOfType: FSE_Func | FSE_Cos at: t];
@@ -720,7 +720,7 @@
 						q = [self newNodeOfType: FSE_Arith | FSE_Div at: here];
 						newNode = [self newNodeOfType: FSE_Arith | FSE_Mul at: q];
 							t = [self newNodeOfType: FSE_Func | FSE_Sinh at: newNode];
-							[self cloneSubtreeFrom: x to: t];
+							[self cloneSubtreeFrom: y to: t];
 							t = [self newNodeOfType: FSE_Func | FSE_Cosh at: newNode];
 							[self cloneSubtreeFrom: y to: t];
 						[self cloneSubtreeFrom: den to: q];

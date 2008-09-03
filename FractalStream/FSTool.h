@@ -41,4 +41,5 @@
 - (void) setVariableNamesTo: (NSArray*) names;
 - (void) setVariableValuesToReal: (NSArray*) rp imag: (NSArray*) ip;
 - (void) resetDefaults;
+- (NSArray*) namedProbes;
 @end

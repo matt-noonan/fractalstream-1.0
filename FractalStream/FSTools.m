@@ -116,6 +116,7 @@
 				break;
 
 			default:
+				if([popupMenu indexOfSelectedItem] < builtInTools) break;
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] rightMouseDown: theEvent];
 				break;
 	}
@@ -128,6 +129,7 @@
 	float c[3];
 	int i; 
 	FSViewerItem item;
+	double probeResult[16];
 	
 	lastClick = [theEvent locationInWindow];
 	inDrag = NO;
@@ -157,6 +159,15 @@
 				break;
 							
 			default:
+				if([popupMenu indexOfSelectedItem] < builtInTools) {
+					[viewport convertLocation: [theEvent locationInWindow] toPoint: p];
+					[viewport
+						probe: [popupMenu indexOfSelectedItem] - 1
+						atPoint: p
+						into: probeResult
+					];
+					break;
+				}
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseDown: theEvent];
 				break;
 	}
@@ -219,6 +230,7 @@
 			break;
 
 		default:
+			if([popupMenu indexOfSelectedItem] < builtInTools) break;
 			[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseUp: theEvent];
 			break;
 	}
@@ -253,6 +265,7 @@
 			case 1:
 				break;
 			default:
+				if([popupMenu indexOfSelectedItem] < builtInTools) break;
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseDragged: theEvent];
 				break;
 		}
@@ -319,12 +332,15 @@
 		toolEnum = [tools objectEnumerator];
 		i = 0; while(aTool = [toolEnum nextObject]) tool[i++] = aTool;
 	}
-
-	[popupMenu removeAllItems];
 	
-	builtInTools = 2;
-	[popupMenu addItemWithTitle: @"Zoom"];
-	[popupMenu addItemWithTitle: @"Dynamics"];
+	probeTools = [[theBrowser namedProbes] count];
+	builtInTools = 2 + probeTools;
+	if(probeTools > 0) {
+		NSEnumerator* probeEnumerator;
+		NSString* probeName;
+		probeEnumerator = [[theBrowser namedProbes] objectEnumerator];
+		while(probeName = [probeEnumerator nextObject]) [popupMenu addItemWithTitle: probeName];
+	}
 	toolEnum = [tools objectEnumerator];
 	while(aTool = [toolEnum nextObject]) [popupMenu addItemWithTitle: [aTool menuName]];
 	

@@ -18,6 +18,7 @@
 - (NSArray*) variableNames { return names; }
 - (NSArray*) variableReal { return real; }
 - (NSArray*) variableImag { return imag; }
+- (NSArray*) probeNames { return probes; }
 
 
 
@@ -53,6 +54,18 @@
 		[coder encodeObject: [browser namedVariablesRealParts]];
 		[coder encodeObject: [browser namedVariablesImagParts]];
 	}
+	else if([type isEqualToString: @"full session [3sep]"]) {
+		NSLog(@"encoding full session\n");
+		[coder encodeObject: editor];
+		[coder encodeObject: session];
+		NSLog(@"encoding colorizer\n");
+		[coder encodeObject: colorizer];
+		NSLog(@"encoding defaults\n");
+		[coder encodeObject: [browser namedVariables]];
+		[coder encodeObject: [browser namedVariablesRealParts]];
+		[coder encodeObject: [browser namedVariablesImagParts]];
+		[coder encodeObject: [browser namedProbes]];
+	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 }
 
@@ -61,6 +74,7 @@
 	
 	NSLog(@"FSSave got initWithCoder\n");
 	type = [[coder decodeObject] retain];
+	NSLog(@"type is \"%@\"\n", type);
 	if([type isEqualToString: @"editor"]) {
 		editor = [[coder decodeObject] retain];
 		session = nil;
@@ -79,6 +93,15 @@
 		names = [[coder decodeObject] retain];
 		real = [[coder decodeObject] retain];
 		imag = [[coder decodeObject] retain];
+	}
+	else if([type isEqualToString: @"full session [3sep]"]) {
+		editor = [[coder decodeObject] retain];
+		session = [[coder decodeObject] retain];
+		colorizer = [[coder decodeObject] retain];
+		names = [[coder decodeObject] retain];
+		real = [[coder decodeObject] retain];
+		imag = [[coder decodeObject] retain];
+		probes = [[coder decodeObject] retain];
 	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 	

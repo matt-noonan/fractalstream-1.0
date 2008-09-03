@@ -166,6 +166,8 @@
 	NSLog(@"FSBrowser set variable names to %@ (%i unique names)\n", variableNames, uniqueVariableNames);
 }
 
+- (void) setProbeNamesTo: (NSArray*) names { probeNames = [[NSArray arrayWithArray: names] retain]; }
+
 - (void) setVariableValuesToReal: (NSArray*) rp imag: (NSArray*) ip {
 	realPart = [[NSArray arrayWithArray: rp] retain];
 	imagPart = [[NSArray arrayWithArray: ip] retain];
@@ -282,6 +284,7 @@
 }
 
 - (NSArray*) namedVariables { return variableNames; }
+- (NSArray*) namedProbes { return probeNames; }
 - (NSArray*) namedVariablesRealParts { return realPart; }
 - (NSArray*) namedVariablesImagParts { return imagPart; }
 

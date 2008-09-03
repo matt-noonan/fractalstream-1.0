@@ -26,6 +26,7 @@
 	IBOutlet FSViewer* viewport;
 	IBOutlet NSPopUpButton* popupMenu;
 	IBOutlet NSTextField* coordinates;
+	IBOutlet NSTextField* probeTextField;
 	IBOutlet FSSession* theSession;
 	IBOutlet id <FSBrowserProtocol> theBrowser;
 	IBOutlet NSTextField* periodField;
@@ -44,6 +45,7 @@
 	NSPoint lastTrace;
 	float wheel[8][3];
 	int builtInTools;
+	int probeTools;
 	
 	NSPoint lastClick;
 	NSCursor* currentCursor;

@@ -25,6 +25,7 @@ typedef struct {
 	NSString* literalSource;
 	NSString* error;
 	NSMutableArray* flags;
+	NSMutableArray* probes;
 	NSRange lastRange;
 	FSEParseTree *tree;
 #define FSECOMPILER_VARIABLES 1024
@@ -49,6 +50,7 @@ typedef struct {
 - (int) parameterNumberOfVariableAtIndex: (int) idx;
 - (void) setVariableWithName: (NSString*) name toType: (int) type;
 - (NSArray*) flagArray;
+- (NSArray*) probeArray;
 - (NSString*) errorMessage;
 - (NSRange) errorRange;
 - (NSArray*) parameters;

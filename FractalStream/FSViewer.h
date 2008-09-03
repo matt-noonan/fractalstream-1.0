@@ -115,6 +115,7 @@ typedef struct {
 - zoomFrom: (double*) start to: (double*) end scalingFrom: (double) startSize to: (double) endSize;
 - (void) drawTexture;
 - setDefaultsTo: (double*) def count: (int) n;
+- (void) probe: (int) probeNumber atPoint: (double*) p into: (double*) result;
 
 - (void) drawBoxFrom: (NSPoint) start to: (NSPoint) end withColor: (float*) rgb;
 - (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps;
