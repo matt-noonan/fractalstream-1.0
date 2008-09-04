@@ -36,7 +36,7 @@
 		(c == 0x0085) || (c == 0x00a0) || (c == 0x1680) || (c == 0x180e) || ((c >= 0x2000) && (c <= 0x200a)) ||
 		(c == 0x2028) || (c == 0x2029) || (c == 0x202f) || (c == 0x205f) || (c == 0x3000)) return FSSymbol_WHITESPACE;
 	if((c == '(') || (c == ')') || (c == '[') || (c == ']')) return FSSymbol_PAREN;
-	if((c == '.') || (c == ',') || (c == ':')) return FSSymbol_PUNCT;
+	if((c == '.') || (c == ',') || (c == ':') || (c == '\"')) return FSSymbol_PUNCT;
 	if((c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '|') || (c == '!')
 		|| (c == '&') || (c == '>') || (c == '<') || (c == '=') || (c == '^') 
 		|| (c == 0x2020)) return FSSymbol_OPERATOR;
@@ -431,7 +431,9 @@
 	NSLog(@"compiling source:\n%@\n\n", source);
 	error = nil;
 	[flags release];
+	[probes release];
 	flags = [[NSMutableArray alloc] init];
+	probes = [[NSMutableArray alloc] init];
 	[flags addObject: [NSString stringWithString: @"Default Exit Condition"]];
 	currentFlagID = 1;
 
@@ -566,7 +568,7 @@
 				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"default ____ to ____.\"), got \"%@\" instead.", symbol];
 			}
 		}
-		else if([symbol isEqualToString: @"report"] == YES) {
+		else if([symbol isEqualToString: @"report"] == YES) { 
 			reported = YES;
 			node = [tree newNodeOfType: FSE_Command | FSE_Report at: codeblock];
 			[self extractArithBelowNode: node];
@@ -594,12 +596,13 @@
 			if(flagid >= currentFlagID) { ++currentFlagID; [flags addObject: name]; }
 		}
 		else if([symbol isEqualToString: @"block"] == YES) {
-			stack[++stackptr] = codeblock;	
+			stack[++stackptr] = codeblock;
 			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: codeblock];
 		}
 		else if([symbol isEqualToString: @"end"] == YES) {
 			codeblock = stack[stackptr--];
 			[self readNextSymbol];
+			if(([symbol isEqualToString: @"repeat"] == YES) || ([symbol isEqualToString: @"loop"] == YES)) { --loopDepth; [self readNextSymbol]; }
 			if([symbol isEqualToString: @"."] == NO) {
 				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"end.\"), got \"%@\" instead.", symbol];
 			}
@@ -632,7 +635,7 @@
 		else if([symbol isEqualToString: @"repeat"] == YES) {
 			int tnode;
 			node = [tree newNodeOfType: FSE_Command | FSE_Repeat at: codeblock];
-			[tree nodeAt: node] -> auxi[0] = loopDepth;
+			[tree nodeAt: node] -> auxi[0] = loopDepth; 
 			tnode = [tree newNodeOfType: FSE_Func | FSE_Re at: node];
 			[self extractArithBelowNode: tnode];
 			[self readNextSymbol];
@@ -641,6 +644,7 @@
 				codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
 			}
 			else error = [NSString stringWithString: @"expected repeat command to end with \"times\""];
+			++loopDepth;
 		}
 		else if([symbol isEqualToString: @"do"] == YES) {
 			node = [tree newNodeOfType: FSE_Command | FSE_Do at: codeblock];
@@ -654,17 +658,30 @@
 			NSString* name;
 			NSRange range;
 			int savedindex;
+			double probetype;
+			savedindex = index;
+			[self readNextSymbol];
+			if([symbol isEqualToString: @"complex"] == YES) probetype = 0.0;
+			else if([symbol isEqualToString: @"real"] == YES) probetype = 1.0;
+			else if([symbol isEqualToString: @"rational"] == YES) probetype = 2.0;
+			else if([symbol isEqualToString: @"integer"] == YES) probetype = 3.0;
+			else { probetype = 0.0; index = savedindex; }
 			node = [tree newNodeOfType: FSE_Command | FSE_Probe at: codeblock];
 			stack[++stackptr] = node; // push fse_probe node
 			stack[++stackptr] = codeblock; // push current code block
+			[self readNextSymbol];
+			if([symbol isEqualToString: @"\""] == NO) {
+				error = [NSString stringWithFormat: @"error: expected the sentence to read (probe \"[probename]\"), got \"%@\" instead.", symbol];
+			}
 			savedindex = index;
-			while([source characterAtIndex: index] != ':') ++index;
+			while([source characterAtIndex: index] != '\"') ++index;
 			range.location = savedindex; range.length = index - savedindex;
 			name = [NSString stringWithString: [literalSource substringWithRange: range]];
 			[self readNextSymbol];
 			[probes addObject: name];
 			[tree nodeAt: node] -> auxi[0] = loopDepth;
 			[tree nodeAt: node] -> auxi[1] = ++probecount;
+			[tree nodeAt: node] -> auxf[0] = probetype;
 			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
 			++loopDepth;
 		}
@@ -761,7 +778,7 @@
 			break;
 		}
 		if(error) return;
-		if(autopop == 1) codeblock = stack[stackptr--];
+		if(autopop == 1) { codeblock = stack[stackptr--];  }
 		if(autopop > 0) autopop--;
 		[self readNextSymbol];
 		if(savedroot == codeblock) {
@@ -769,10 +786,18 @@
 			if(savedcounter > 0) savedcounter--;
 		}
 	}
+	
+	if(loopDepth != 0) {
+		error = [NSString stringWithString: @"loops did not close up, did you mean to use \"end loop\" or \"end repeat\"?"];
+		return;
+	}
+	/*** COME BACK TO THIS, SORT OF HACKED IN TO FSEC_gcc.c 
 	if(reported == NO) {
 		node = [tree newNodeOfType: (FSE_Var | FSE_Variable) at: [tree newNodeOfType: FSE_Command | FSE_Report at: codeblock]];
 		[tree nodeAt: node] -> auxi[0] = useComplexVars? [self indexOfVariableWithName: @"z"] : [self indexOfVariableWithName: @"x"];
 	}
+	***/
+	
 	[tree reorder];
 //	[tree log];
 	
