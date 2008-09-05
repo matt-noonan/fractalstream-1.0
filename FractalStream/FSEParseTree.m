@@ -953,6 +953,14 @@
 						return [self realifyFrom: here];
 					}
 					break;
+				case FSE_Report:
+					child1 = node[here].firstChild;
+					if(node[child1].type == (FSE_Var | FSE_Join)) {
+						[self cloneSubtreeFrom: node[child1].firstChild to: here];
+						[self cloneSubtreeFrom: node[node[child1].firstChild].nextSibling to: here];
+						[self deleteNodeAt: child1];
+					}
+					break;
 				case FSE_Set:
 					t = node[here].type;
 					child1 = node[here].firstChild; child2 = node[child1].nextSibling;

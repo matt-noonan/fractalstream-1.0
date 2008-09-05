@@ -162,10 +162,23 @@
 				if([popupMenu indexOfSelectedItem] < builtInTools) {
 					[viewport convertLocation: [theEvent locationInWindow] toPoint: p];
 					[viewport
-						probe: [popupMenu indexOfSelectedItem] - 1
-						atPoint: p
+						runAt: p
 						into: probeResult
+						probe: [popupMenu indexOfSelectedItem] - 1
 					];
+					if(probeResult[3] == 0.0)
+						[probeTextField setStringValue: [NSString
+							stringWithFormat: @"%1.4e + %1.4e i", probeResult[0], probeResult[1]]];
+					else if(probeResult[3] == 1.0)
+						[probeTextField setStringValue: [NSString
+							stringWithFormat: @"%1.4e", probeResult[0]]];
+					else if(probeResult[3] == 2.0)
+						[probeTextField setStringValue: [NSString
+							stringWithFormat: @"%i / %i", (int) probeResult[0], (int) probeResult[1]]];
+					else if(probeResult[3] == 3.0)
+						[probeTextField setStringValue: [NSString
+							stringWithFormat: @"%i", (int) probeResult[0]]];
+					else [probeTextField setStringValue: @"? ? ?"];
 					break;
 				}
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseDown: theEvent];
@@ -334,6 +347,9 @@
 	}
 	
 	probeTools = [[theBrowser namedProbes] count];
+	[popupMenu removeAllItems];
+	[popupMenu addItemWithTitle: @"Zoom"];
+	[popupMenu addItemWithTitle: @"Dynamics"];
 	builtInTools = 2 + probeTools;
 	if(probeTools > 0) {
 		NSEnumerator* probeEnumerator;
@@ -362,14 +378,14 @@
 	return;
 	toolEnum = [tools objectEnumerator];
 	if(isPar == YES) {
-		[[popupMenu itemWithTitle: @"Zoom"] setEnabled: NO];
-		[[popupMenu itemWithTitle: @"Dynamics"] setEnabled: NO];
+		[[popupMenu itemWithTitle: @"Zoom"] setEnabled: YES];
+		[[popupMenu itemWithTitle: @"Dynamics"] setEnabled: YES];
 		while(aTool = [toolEnum nextObject]) 
 			[[popupMenu itemWithTitle: [aTool menuName]] setEnabled: ([aTool is: FSTool_Parametric] == YES)? NO : YES];
 	}
 	if(isPar == NO) {
-		[[popupMenu itemWithTitle: @"Zoom"] setEnabled: NO];
-		[[popupMenu itemWithTitle: @"Dynamics"] setEnabled: YES];
+		[[popupMenu itemWithTitle: @"Zoom"] setEnabled: YES];
+		[[popupMenu itemWithTitle: @"Dynamics"] setEnabled: NO];
 		while(aTool = [toolEnum nextObject]) 
 			[[popupMenu itemWithTitle: [aTool menuName]] setEnabled: ([aTool is: FSTool_Dynamical] == YES)? NO : YES];
 	}
@@ -380,7 +396,16 @@
 	selected = [popupMenu indexOfSelectedItem];
 	if(selected != currentTool) {
 		if(currentTool >= builtInTools) [tool[currentTool - builtInTools] deactivate];
+		else if(currentTool > 1) {
+			[probeTextField setStringValue: @"-"];
+			[[probeTextField window] orderOut: self];
+		}
 		if(selected >= builtInTools) [tool[selected - builtInTools] activate];
+		else if(selected > 1) {
+			[probeTextField setStringValue: @"-"];
+			[[probeTextField window] setTitle: [NSString stringWithFormat: @"Probe: %@", [popupMenu titleOfSelectedItem]]];
+			[[probeTextField window] orderFront: self];
+		}
 		currentTool = selected;
 	}
 }

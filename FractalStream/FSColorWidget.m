@@ -30,9 +30,9 @@
 		shade = fill;
 		shade += 0.7;
 		fill = 0.0;
-		color[(8*3*j) + 3*i + 0] = r * shade + fill;
-		color[(8*3*j) + 3*i + 1] = g * shade + fill;
-		color[(8*3*j) + 3*i + 2] = b * shade + fill;
+		color[(8*3*j) + 3*((i+4)&7) + 0] = r * shade + fill;
+		color[(8*3*j) + 3*((i+4)&7) + 1] = g * shade + fill;
+		color[(8*3*j) + 3*((i+4)&7) + 2] = b * shade + fill;
 	}
 	return self;
 }
@@ -444,9 +444,9 @@
 				if(shade > 1.0) shade = 2.0 - shade;
 				shade *= 0.4;
 				shade += 0.7;
-				fullColorArray[c][j][i][0] = named_color[k].r * shade;
-				fullColorArray[c][j][i][1] = named_color[k].g * shade;
-				fullColorArray[c][j][i][2] = named_color[k].b * shade;
+				fullColorArray[c][j][(i+4)&7][0] = named_color[k].r * shade;
+				fullColorArray[c][j][(i+4)&7][1] = named_color[k].g * shade;
+				fullColorArray[c][j][(i+4)&7][2] = named_color[k].b * shade;
 			}
 		}
 	}

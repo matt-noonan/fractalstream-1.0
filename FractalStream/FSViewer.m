@@ -173,7 +173,7 @@
 	int i;
 	Debug(@"setDefaultsTo got count %i\n", n);
 	defaults = n;
-	if(n) for(i = 0; i < n; i++) { setting[i + 6] = def[i]; NSLog(@"viewer set default %i to %f\n", i, def[i]); }
+	if(n) for(i = 0; i < n; i++) { setting[i + 6] = def[i]; Debug(@"viewer set default %i to %f\n", i, def[i]); }
 }
 
 - (IBAction) renderEngine: (id) sender {
@@ -204,7 +204,7 @@
 		
 		for(loop = 0; loop < 3; loop++) { if(nodeChanged == YES) break; view -> detailLevel = detailLevel; detailLevel *= 2.0; 
 		[finishedLock lock];
-		NSLog(@"**** loop %i ****\n", loop);
+		Debug(@"**** loop %i ****\n", loop);
 		Debug(@"engine: holding lock, configured = %@\n", (configured == YES)? @"yes" : @"no");
 
 		autocolorAdded = NO;
@@ -436,7 +436,7 @@
 							else if(acCache[flag].used_entries < 16) {
 							
 							autocolorAdded = YES;
-							NSLog(@"------> autocolorAdded = %@\n", (autocolorAdded)? @"yes" : @"no");
+							Debug(@"------> autocolorAdded = %@\n", (autocolorAdded)? @"yes" : @"no");
 							if((oX*oX + oY*oY) < farR) [colorPicker
 								addFixpointWithX: oX
 								Y: oY 
@@ -825,14 +825,16 @@
 	[glLock unlock];
 }
 
-- (void) probe: (int) probeNumber atPoint: (double*) p into: (double*) result {
+- (void) runAt: (double*) p into: (double*) result probe: (int) pr {
 	double in[16];
 	in[0] = p[0]; in[1] = p[1];
-	in[2] = view->aspectRatio;
+	in[2] = view -> aspectRatio;
 	in[3] = view -> par[0]; in[4] = view -> par[1];
 	in[5] = view -> pixelSize; 
-
-	(view -> kernel)(view -> program, in, -probeNumber, result, view -> maxIters, view -> maxRadius, view -> minRadius);
+	int length; int it;
+	if(pr == 0) { length = 1; it = 1; }
+	else { length = -pr; it = view -> maxIters; }
+	(view -> kernel)(view -> program, in, length, result, it, view -> maxRadius, view -> minRadius);
 }
 
 - (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps {

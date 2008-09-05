@@ -239,14 +239,6 @@
 			<string>NSOpenGLView</string>
 		</dict>
 		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>goBackward</key>
@@ -295,6 +287,14 @@
 				<key>theViewer</key>
 				<string>FSViewer</string>
 			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
 		</dict>

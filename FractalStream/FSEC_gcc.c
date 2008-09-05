@@ -99,7 +99,13 @@ int emitSubtreeFrom(int node, FSEParseNode* tree, FILE* fp) {
 						case FSE_Report:
 							fprintf(fp, "/* FSE_Report starts here */\n");
 							i = emitSubtreeFrom(tree[node].firstChild, tree, fp);
-							fprintf(fp, "out[i] = x[%i]; out[i+1] = x[%i];\n", i, i+1);
+							fprintf(fp, "reportX = x[%i]; ", i);
+							if(tree[node].children > 1) {
+								i = emitSubtreeFrom(tree[tree[node].firstChild].nextSibling, tree, fp);
+								fprintf(fp, "reportY = x[%i];\n", i);
+							}
+							else fprintf(fp, "reportY = 0.0;\n");
+							fprintf(fp, "reported = 1;\n");
 							fprintf(fp, "/* FSE_Report ends here */\n");
 							break;
 						case FSE_If:
@@ -143,6 +149,9 @@ int emitSubtreeFrom(int node, FSEParseNode* tree, FILE* fp) {
 							fprintf(fp, "/* FSE_Probe starts here */\n");
 							fprintf(fp, "if(probe == %i) {\n", tree[node].auxi[1]);
 							emitSubtreeFrom(tree[node].firstChild, tree, fp);
+							fprintf(fp, "if(reported) { out[i] = reportX; out[i + 1] = reportY; }\n");
+							fprintf(fp, "else { out[i] = x[0]; out[i + 1] = x[1]; }\n");
+							fprintf(fp, "out[i + 3] = %f;\n", tree[node].auxf[0]);
 							fprintf(fp, "return;\n");
 							fprintf(fp, "}\n");
 							fprintf(fp, "/* FSE_Probe ends here */\n");
@@ -582,10 +591,10 @@ int emit(char* filename, FSEParseNode* tree, int stacksize) {
 	fprintf(fp, "#include <math.h>\n\n");
 	
 	fprintf(fp, "void kernel(int mode, double* in, int length, double* out, int maxiter, double maxnorm, double close) {\n");
-	fprintf(fp, "int i, j[16], k, n[%i], flag, probe;\n", stacksize);
-	fprintf(fp, "double x[%i], step, r, cx, cy;\n", stacksize, stacksize);
+	fprintf(fp, "int i, j[16], k, n[%i], flag, probe, reported;\n", stacksize);
+	fprintf(fp, "double x[%i], step, r, cx, cy, reportX, reportY;\n", stacksize, stacksize);
 	fprintf(fp, "flag = 0;\n");
-	fprintf(fp, "probe = 0; if(length < 0) { probe = -length; length = 1; }\n");
+	fprintf(fp, "reported = 0;\n");
 	fprintf(fp, "if(mode == -1) /* initialization */{\n");
 		emitSubtreeFrom(subtree, tree, fp); /* emit the prefix block */
 		subtree = tree[subtree].nextSibling;
@@ -599,12 +608,15 @@ int emit(char* filename, FSEParseNode* tree, int stacksize) {
 		fprintf(fp, "i = 0;\n");
 		emitSubtreeFrom(subtree, tree, fp);
 	fprintf(fp, "}\n");
+	fprintf(fp, "probe = 0; if(length < 0) { probe = -length; length = 1; }\n");
 	fprintf(fp, "if(mode == 1) { /* parameter plane */\n"); mode = 2;
 	fprintf(fp, "maxnorm *= maxnorm; close *= close;\n step = in[2];\n");
 	fprintf(fp, "cx = in[0]; cy = in[1];\n");
 	fprintf(fp, "for(i = 0; i < 3 * length; i += 3) {\nj[0] = 0;\n");
 	fprintf(fp, "flag = 0; x[0] = 0.0; x[1] = 0.0;\nx[2] = cx; x[3] = cy;\nx[4] = in[5]; x[5] = in[6];\n");
 		emitSubtreeFrom(subtree, tree, fp); /* emit the dynamics */	
+	fprintf(fp, "if(reported) { out[i] = reportX; out[i + 1] = reportY; }\n");
+	fprintf(fp, "else { out[i] = x[0]; out[i + 1] = x[1]; }\n");
 	fprintf(fp, "out[i + 2] = (double) ((j[0] << 8) | flag);\n");
 	fprintf(fp, "cx += step;\n");
 	fprintf(fp, "}\n");
@@ -615,6 +627,8 @@ int emit(char* filename, FSEParseNode* tree, int stacksize) {
 	fprintf(fp, "for(i = 0; i < 3 * length; i += 3) {\nj[0] = 0;\n");
 	fprintf(fp, "flag = 0; \nx[0] = in[0]; x[1] = in[1];\nx[2] = cx; x[3] = cy;\nx[4] = in[5]; x[5] = in[6];\n");
 		emitSubtreeFrom(subtree, tree, fp); /* emit the dynamics */
+	fprintf(fp, "if(reported) { out[i] = reportX; out[i + 1] = reportY; }\n");
+	fprintf(fp, "else { out[i] = x[0]; out[i + 1] = x[1]; }\n");
 	fprintf(fp, "out[i + 2] = (double) ((j[0] << 8) | flag);\n");
 	fprintf(fp, "in[0] += in[2];\n");
 	fprintf(fp, "}\n");

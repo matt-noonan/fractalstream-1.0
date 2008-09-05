@@ -35,7 +35,7 @@
 	if((c == ' ') || (c == '\n') || (c == '\t') || (c == '\r') || ((c >= 0x0009) && (c <= 0x000d)) ||
 		(c == 0x0085) || (c == 0x00a0) || (c == 0x1680) || (c == 0x180e) || ((c >= 0x2000) && (c <= 0x200a)) ||
 		(c == 0x2028) || (c == 0x2029) || (c == 0x202f) || (c == 0x205f) || (c == 0x3000)) return FSSymbol_WHITESPACE;
-	if((c == '(') || (c == ')') || (c == '[') || (c == ']')) return FSSymbol_PAREN;
+	if((c == '(') || (c == ')') || (c == '[') || (c == ']') || (c == '{') || (c == '}')) return FSSymbol_PAREN;
 	if((c == '.') || (c == ',') || (c == ':') || (c == '\"')) return FSSymbol_PUNCT;
 	if((c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '|') || (c == '!')
 		|| (c == '&') || (c == '>') || (c == '<') || (c == '=') || (c == '^') 
@@ -458,14 +458,14 @@
 	index = 0;
 	savednode = -1;
 	[self readNextSymbol];
-	if([symbol isEqualToString: @"("]) { 
+	if([symbol isEqualToString: @"{"]) { 
 		while(symbol != nil) {
 			[self readNextSymbol];
 			if([symbol isEqualToString: @"complex"]) useComplexVars = YES;
 			else if([symbol isEqualToString: @"real"]) useComplexVars = NO;
 			else break;
 		}
-		if([symbol isEqualToString: @")"] == NO) error = [NSString stringWithFormat: @"unknown option \"%@\".", symbol];
+		if([symbol isEqualToString: @"}"] == NO) error = [NSString stringWithFormat: @"unknown option \"%@\".", symbol];
 		else [self readNextSymbol];
 	}
 	if(useComplexVars) {
@@ -482,6 +482,16 @@
 	
 	while((symbol != nil) && (error == nil)) {
 		if([symbol isEqualToString: @"."] == YES) { }
+		else if([symbol isEqualToString: @"("] == YES) {
+			int pdepth;
+			++index; pdepth = 1;
+			while(pdepth > 0) {
+				if([source characterAtIndex: index] == '(') ++pdepth;
+				if([source characterAtIndex: index] == ')') --pdepth;
+				++index;
+				if(index >= [source length]) { error = @"runaway comment"; break; }
+			}
+		}
 		else if([symbol isEqualToString: @"parse"] == YES) {
 			[self extractArithBelowNode: node];
 			[self readNextSymbol];
@@ -584,7 +594,10 @@
 			NSString* testName;
 			int savedindex, flagid;
 			savedindex = index;
-			while([source characterAtIndex: index] != ']') ++index;
+			while([source characterAtIndex: index] != ']') {
+				++index;
+				if(index >= [source length]) { error = @"runaway flag"; break; }
+			}
 			range.location = savedindex; range.length = index - savedindex;
 			name = [NSString stringWithString: [literalSource substringWithRange: range]];
 			[self readNextSymbol];
@@ -674,7 +687,10 @@
 				error = [NSString stringWithFormat: @"error: expected the sentence to read (probe \"[probename]\"), got \"%@\" instead.", symbol];
 			}
 			savedindex = index;
-			while([source characterAtIndex: index] != '\"') ++index;
+			while([source characterAtIndex: index] != '\"') {
+				++index;
+				if(index >= [source length]) { error = @"runaway probe name"; break; }
+			}
 			range.location = savedindex; range.length = index - savedindex;
 			name = [NSString stringWithString: [literalSource substringWithRange: range]];
 			[self readNextSymbol];
@@ -683,7 +699,6 @@
 			[tree nodeAt: node] -> auxi[1] = ++probecount;
 			[tree nodeAt: node] -> auxf[0] = probetype;
 			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-			++loopDepth;
 		}
 		else if([symbol isEqualToString: @"until"] == YES) {
 			codeblock = stack[stackptr--];
