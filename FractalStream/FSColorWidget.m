@@ -442,8 +442,8 @@
 			for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
 				shade = (float) i / 4.0;
 				if(shade > 1.0) shade = 2.0 - shade;
-				shade *= 0.4;
-				shade += 0.7;
+				shade *= 0.5;
+				shade += 0.5;
 				fullColorArray[c][j][(i+4)&7][0] = named_color[k].r * shade;
 				fullColorArray[c][j][(i+4)&7][1] = named_color[k].g * shade;
 				fullColorArray[c][j][(i+4)&7][2] = named_color[k].b * shade;

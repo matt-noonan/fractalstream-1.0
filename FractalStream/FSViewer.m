@@ -825,6 +825,20 @@
 	[glLock unlock];
 }
 
+- (void) runAt: (double*) p into: (double*) result probe: (int) pr steps: (int) ns {
+	double in[16];
+	in[0] = p[0]; in[1] = p[1];
+	in[2] = view -> aspectRatio;
+	in[3] = view -> par[0]; in[4] = view -> par[1];
+	in[5] = view -> pixelSize; 
+	int length; int it;
+	if(pr == 0) { length = 1; it = 1; }
+	else { length = -pr; it = view -> maxIters; }
+	it = ns;
+	if(it > view -> maxIters) it = view -> maxIters;
+	(view -> kernel)(view -> program, in, length, result, it, view -> maxRadius, view -> minRadius);
+}
+
 - (void) runAt: (double*) p into: (double*) result probe: (int) pr {
 	double in[16];
 	in[0] = p[0]; in[1] = p[1];
