@@ -152,17 +152,21 @@
 	NSEnumerator* nameEnum;
 	NSString* curName;
 	NSString* prevName;
+	NSMutableArray* unique;
 	
+	unique = [[NSMutableArray alloc] init];
 	variableNames = [[NSArray arrayWithArray: names] retain];
 	nameEnum = [variableNames objectEnumerator];
 	curName = [nameEnum nextObject];
 	uniqueVariableNames = 0;
 	while(curName) {
 		++uniqueVariableNames;
+		[unique addObject: curName];
 		prevName = curName; curName = [nameEnum nextObject];
 		if([curName isEqualToString: prevName]) curName = [nameEnum nextObject];
 	}
-	
+	reducedVariableNames = [[NSArray arrayWithArray: unique] retain];
+	[unique release];	
 	NSLog(@"FSBrowser set variable names to %@ (%i unique names)\n", variableNames, uniqueVariableNames);
 }
 
@@ -205,7 +209,7 @@
 		}
 		else [im addObject: [NSNull null]];
 	}
-	NSLog(@"uniqueVariableNames = %i\n", uniqueVariableNames);
+	NSLog(@"uniqueVariableNames = %i, reducedVariableNames = %@\n", uniqueVariableNames, rvn);
 	free(defaults);
 	realPart = [[NSArray arrayWithArray: re] retain];
 	imagPart = [[NSArray arrayWithArray: im] retain];

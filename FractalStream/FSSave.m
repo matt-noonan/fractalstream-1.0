@@ -65,6 +65,13 @@
 		[coder encodeObject: [browser namedVariablesRealParts]];
 		[coder encodeObject: [browser namedVariablesImagParts]];
 		[coder encodeObject: [browser namedProbes]];
+		NSLog(@"encoded names = %@, real = %@, imag = %@, probes = %@\n",
+			[browser namedVariables],
+			[browser namedVariablesRealParts],
+			[browser namedVariablesImagParts],
+			[browser namedProbes]
+		);
+
 	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 }
@@ -102,6 +109,7 @@
 		real = [[coder decodeObject] retain];
 		imag = [[coder decodeObject] retain];
 		probes = [[coder decodeObject] retain];
+		NSLog(@"decoded names = %@, real = %@, imag = %@, probes = %@\n", names, real, imag, probes);
 	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 	

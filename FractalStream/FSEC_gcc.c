@@ -34,6 +34,10 @@ int emitSubtreeFrom(int node, FSEParseNode* tree, FILE* fp) {
 							}
 							fprintf(fp, "/* FSE_Block ends here */\n");
 							break;
+						case FSE_Dyn:
+						case FSE_Par:
+							emitSubtreeFrom(tree[node].firstChild, tree, fp);
+							break;
 						case FSE_Default:
 							if(mode == 0) ++defaultsCount;
 							if(mode == 1) {
@@ -77,6 +81,12 @@ int emitSubtreeFrom(int node, FSEParseNode* tree, FILE* fp) {
 							rhs = emitSubtreeFrom(tree[tree[node].firstChild].nextSibling, tree, fp);
 							fprintf(fp, "x[%i] = x[%i];\n", lhs, rhs);
 							fprintf(fp, "/* FSE_Set ends here */\n");
+							break;
+						case FSE_Succeed:
+							fprintf(fp, "j[%i] = 0;\n", tree[node].auxi[0]);
+							break;
+						case FSE_Fail:
+							fprintf(fp, "j[%i] = maxiter;\n", tree[node].auxi[0]);
 							break;
 						case FSE_Flag:
 							fprintf(fp, "flag = %i;\n", tree[node].auxi[0]);

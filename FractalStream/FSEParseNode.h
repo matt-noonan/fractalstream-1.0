@@ -75,6 +75,8 @@ typedef struct {
 #define FSE_Copy		24
 #define FSE_Else		25
 #define FSE_Probe		26
+#define FSE_Fail		27
+#define FSE_Succeed		28
 
 #define FSE_Type_Mask	0xffffff00
 #define FSE_Arith		0x200
@@ -108,6 +110,8 @@ typedef struct {
 #define FSE_Escapes		6
 #define FSE_Stops		7
 #define FSE_Vanishes	8
+#define FSE_Failed		9
+#define FSE_Succeeded	10
 
 #define FSE_Var			0x400
 #define FSE_Complex		0

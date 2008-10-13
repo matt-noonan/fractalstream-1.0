@@ -59,47 +59,97 @@
 - (void) encodeWithCoder: (NSCoder*) coder
 {
 	/* version 0 */
-	[coder encodeValueOfObjCType: @encode(double) at: &(upperLeft[0])];
+/*	[coder encodeValueOfObjCType: @encode(double) at: &(upperLeft[0])];
 	[coder encodeValueOfObjCType: @encode(double) at: &(upperLeft[1])];
 	[coder encodeValueOfObjCType: @encode(double) at: &(lowerRight[0])];
-	[coder encodeValueOfObjCType: @encode(double) at: &(lowerRight[1])];
-	[coder encodeValueOfObjCType: @encode(double) at: &scale];
-	[coder encodeValueOfObjCType: @encode(double) at: &(center[0])];
-	[coder encodeValueOfObjCType: @encode(double) at: &(center[1])];
-	[coder encodeValueOfObjCType: @encode(int) at: &program];
-	[coder encodeArrayOfObjCType: @encode(char) count: sizeof(FSViewerData) at: &data];
+	[coder encodeValueOfObjCType: @encode(double) at: &(lowerRight[1])];*/
+	[coder encodeObject: [NSNumber numberWithDouble: upperLeft[0]]];
+	[coder encodeObject: [NSNumber numberWithDouble: upperLeft[1]]];
+	[coder encodeObject: [NSNumber numberWithDouble: lowerRight[0]]];
+	[coder encodeObject: [NSNumber numberWithDouble: lowerRight[1]]];
+//	[coder encodeValueOfObjCType: @encode(double) at: &scale];
+	[coder encodeObject: [NSNumber numberWithDouble: scale]];
+//	[coder encodeValueOfObjCType: @encode(double) at: &(center[0])];
+//	[coder encodeValueOfObjCType: @encode(double) at: &(center[1])];
+	[coder encodeObject: [NSNumber numberWithDouble: center[0]]];
+	[coder encodeObject: [NSNumber numberWithDouble: center[1]]];
+//	[coder encodeValueOfObjCType: @encode(int) at: &program];
+	[coder encodeObject: [NSNumber numberWithInt: program]];
+
+//	[coder encodeArrayOfObjCType: @encode(char) count: sizeof(FSViewerData) at: &data];
+	[coder encodeObject: [NSNumber numberWithDouble: data.center[0]]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.center[1]]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.pixelSize]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.aspectRatio]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.detailLevel]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.par[0]]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.par[1]]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.data[0]]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.data[1]]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.data[2]]];
+	[coder encodeObject: [NSNumber numberWithInt: data.maxIters]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.maxRadius]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.minRadius]];
+	[coder encodeObject: [NSNumber numberWithInt: data.program]];
+
 	[coder encodeObject: title];
 	[coder encodeObject: notes];
-	[coder encodeValueOfObjCType: @encode(int) at: &children];
+	[coder encodeObject: [NSNumber numberWithInt: children]];
+	//[coder encodeValueOfObjCType: @encode(int) at: &children];
 	[coder encodeObject: nextSibling];
 	[coder encodeObject: previousSibling];
 	[coder encodeObject: parent];
 	[coder encodeObject: firstChild];
 	[coder encodeObject: favoredChild];
-	[coder encodeValueOfObjCType: @encode(int) at: &nodeNumber];
+	[coder encodeObject: [NSNumber numberWithInt: nodeNumber]];
+	//[coder encodeValueOfObjCType: @encode(int) at: &nodeNumber];
 }
 
 - (id) initWithCoder: (NSCoder*) coder {
 	self = [super init];
 	/* version 0 */
-	[coder decodeValueOfObjCType: @encode(double) at: &(upperLeft[0])];
+/*	[coder decodeValueOfObjCType: @encode(double) at: &(upperLeft[0])];
 	[coder decodeValueOfObjCType: @encode(double) at: &(upperLeft[1])];
 	[coder decodeValueOfObjCType: @encode(double) at: &(lowerRight[0])];
 	[coder decodeValueOfObjCType: @encode(double) at: &(lowerRight[1])];
 	[coder decodeValueOfObjCType: @encode(double) at: &scale];
 	[coder decodeValueOfObjCType: @encode(double) at: &(center[0])];
 	[coder decodeValueOfObjCType: @encode(double) at: &(center[1])];
-	[coder decodeValueOfObjCType: @encode(int) at: &program];
-	[coder decodeArrayOfObjCType: @encode(char) count: sizeof(FSViewerData) at: &data];
+	[coder decodeValueOfObjCType: @encode(int) at: &program];*/
+	upperLeft[0] = [[coder decodeObject] doubleValue];
+	upperLeft[1] = [[coder decodeObject] doubleValue];
+	lowerRight[0] = [[coder decodeObject] doubleValue];
+	lowerRight[1] = [[coder decodeObject] doubleValue];
+	scale = [[coder decodeObject] doubleValue];
+	center[0] = [[coder decodeObject] doubleValue];
+	center[1] = [[coder decodeObject] doubleValue];
+	program = [[coder decodeObject] intValue];
+//	[coder decodeArrayOfObjCType: @encode(char) count: sizeof(FSViewerData) at: &data];
+	data.center[0] = [[coder decodeObject] doubleValue];
+	data.center[1] = [[coder decodeObject] doubleValue];
+	data.pixelSize = [[coder decodeObject] doubleValue];
+	data.aspectRatio = [[coder decodeObject] doubleValue];
+	data.detailLevel = [[coder decodeObject] doubleValue];
+	data.par[0] = [[coder decodeObject] doubleValue];
+	data.par[1] = [[coder decodeObject] doubleValue];
+	data.data[0] = [[coder decodeObject] doubleValue];
+	data.data[1] = [[coder decodeObject] doubleValue];
+	data.data[2] = [[coder decodeObject] doubleValue];
+	data.maxIters = [[coder decodeObject] intValue];
+	data.maxRadius = [[coder decodeObject] doubleValue];
+	data.minRadius = [[coder decodeObject] doubleValue];
+	data.program = [[coder decodeObject] intValue];
+	
 	title = [[coder decodeObject] retain];
 	notes = [[coder decodeObject] retain];
-	[coder decodeValueOfObjCType: @encode(int) at: &children];
+	children = [[coder decodeObject] intValue];
 	nextSibling = [[coder decodeObject] retain];
 	previousSibling = [[coder decodeObject] retain];
 	parent = [[coder decodeObject] retain];
 	firstChild = [[coder decodeObject] retain];
 	favoredChild = [[coder decodeObject] retain];
-	[coder decodeValueOfObjCType: @encode(int) at: &nodeNumber];
+	nodeNumber = [[coder decodeObject] intValue];
+	//[coder decodeValueOfObjCType: @encode(int) at: &nodeNumber];
 	
 	NSLog(@"decoded FSSessionNode to %@\n", self);
 	return self;
@@ -208,7 +258,7 @@
 
 - (IBAction) goBackward: (id) sender
 {
-	if(currentNode -> parent != nil) currentNode = currentNode -> parent;
+	if(currentNode -> parent != root) currentNode = currentNode -> parent;
 	NSLog(@"going backward\n");
 }
 
@@ -359,7 +409,7 @@
 	[coder encodeObject: sessionProgram];
 	[coder encodeObject: sessionNotes];
 	[coder encodeObject: sessionKernel];
-	[coder encodeValueOfObjCType: @encode(BOOL) at: &kernelIsCached];
+	[coder encodeObject: [NSNumber numberWithBool: kernelIsCached]];
 }
 
 - (id) initWithCoder: (NSCoder*) coder
@@ -372,7 +422,7 @@
 	sessionProgram = [[coder decodeObject] retain];
 	sessionNotes = [[coder decodeObject] retain];
 	sessionKernel = [[coder decodeObject] retain];
-	[coder decodeValueOfObjCType: @encode(BOOL) at: &kernelIsCached];
+	kernelIsCached = [[coder decodeObject] boolValue];
 	NSLog(@"loaded session instance %@ has sessionKernel %@\n", self, sessionKernel);
 	return self;
 }

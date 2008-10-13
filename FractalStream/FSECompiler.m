@@ -522,6 +522,22 @@
 				error = [NSString stringWithFormat: @"error: expected the sentence to say \"begin.\", got \"%@\" instead.", symbol];
 			}
 		}
+		else if([symbol isEqualToString: @"fail"] == YES) {
+			node = [tree newNodeOfType: FSE_Command | FSE_Fail at: codeblock];
+			[tree nodeAt: node] -> auxi[0] = loopDepth;
+			[self readNextSymbol];
+			if([symbol isEqualToString: @"."] == NO) {
+				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"fail.\"), got \"%@\" instead.", symbol];
+			}
+		}
+		else if([symbol isEqualToString: @"succeed"] == YES) {
+			node = [tree newNodeOfType: FSE_Command | FSE_Succeed at: codeblock];
+			[tree nodeAt: node] -> auxi[0] = loopDepth;
+			[self readNextSymbol];
+			if([symbol isEqualToString: @"."] == NO) {
+				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"succeed.\"), got \"%@\" instead.", symbol];
+			}
+		}
 		else if([symbol isEqualToString: @"reduce"] == YES) {
 			node = [tree newNodeOfType: FSE_Command | FSE_Modulo at: codeblock];
 			[self extractArithBelowNode: node];
@@ -777,16 +793,16 @@
 */
 		}
 		else if([symbol isEqualToString: @"par"] == YES) {
-			savedcounter = 2;
-			savednode = codeblock;
 			node = [tree newNodeOfType: FSE_Command | FSE_Par at: codeblock];
-			codeblock = savedroot = node;
+			stack[++stackptr] = codeblock;
+			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+			autopop = 2;
 		}
 		else if([symbol isEqualToString: @"dyn"] == YES) {
-			savedcounter = 2;
-			savednode = codeblock;
 			node = [tree newNodeOfType: FSE_Command | FSE_Dyn at: codeblock];
-			codeblock = savedroot = node;
+			stack[++stackptr] = codeblock;
+			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+			autopop = 2;
 		}
 		else {
 			error = [NSString stringWithFormat: @"syntax error, symbol is \"%@\".", symbol];
@@ -814,7 +830,7 @@
 	***/
 	
 	[tree reorder];
-//	[tree log];
+	[tree log];
 	
 	[tree setTempVar: [self indexOfVariableWithName: @".temp"]];
 	error = [tree realifyFrom: FSE_RootNode];
@@ -838,7 +854,7 @@
 //	[tree log];
 	[self printVariableStack];
 
-	gcc = [NSString stringWithFormat: @"gcc -dynamiclib -O3 -o %@ %@.c", 
+	gcc = [NSString stringWithFormat: @"gcc -dynamiclib -arch ppc -arch i386 -O3 -o %@ %@.c", 
 		filename, filename
 	];
 	ifile = [NSString stringWithFormat: @"%@.c",filename];

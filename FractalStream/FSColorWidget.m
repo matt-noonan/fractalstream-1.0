@@ -497,7 +497,8 @@
 	NSLog(@"encoding names: %@\n", names);
 	[coder encodeObject: names];
 	NSLog(@"encoding an array of %i floats at %p\n", size, flat);
-	[coder encodeArrayOfObjCType: @encode(float) count: size at: flat];
+	for(i = 0; i < size; i++) [coder encodeObject: [NSNumber numberWithFloat: flat[i]]];
+//	[coder encodeArrayOfObjCType: @encode(float) count: size at: flat];
 	free(flat);
 }
 
@@ -512,7 +513,8 @@
 	NSLog(@"fscolorwidget initWithCoder found these names: %@\n", names);
 	size = 8 * 8 * 3 * [self numberOfColors];
 	flat = malloc(sizeof(float) * size);
-	[coder decodeArrayOfObjCType: @encode(float) count: size at: flat];
+//	[coder decodeArrayOfObjCType: @encode(float) count: size at: flat];
+	for(i = 0; i < size; i++) flat[i] = [[coder decodeObject] floatValue];
 	l = 0;
 	for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
 		fullColorArray[k][i][j][c] = flat[l++];

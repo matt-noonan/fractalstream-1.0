@@ -16,7 +16,7 @@
 	};
 	const int arith_postfix_ops = 3;
 	const FSEDict arith_postfix[] = {
-		{	@"#",	FSE_Conj	}, /* 0x2020 */
+		{	@"^*",	FSE_Conj	}, /* 0x2020 */
 		{	@"^^",  FSE_Square	}, /* 0x00b2 */
 		{	@"!",		FSE_Inv		},
 	};
@@ -31,6 +31,11 @@
 	const int bool_prefix_ops = 1;
 	const FSEDict bool_prefix[] = {
 		{	@"~",		FSE_Not		}
+	};
+	const int comp_command_ops = 2;
+	const FSEDict comp_command[] = {
+		{	@"failed",		FSE_Failed		},
+		{	@"succeeded",	FSE_Succeeded	},
 	};
 	const int comp_binary_ops = 8;
 	const FSEDict comp_binary[] = {
