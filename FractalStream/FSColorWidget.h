@@ -44,6 +44,8 @@ typedef struct {
 	IBOutlet NSButton* acDeleteButton;
 	IBOutlet NSButton* acDeleteAllButton;
 	IBOutlet NSButton* acLockButton;
+	IBOutlet NSButton* smoothnessBox;
+	IBOutlet NSTextField* smoothnessField;
 	
 	NSArray* names;
 	float colorArray[8][8][3];
@@ -54,6 +56,7 @@ typedef struct {
 	int namedColorCount;
 	
 	int currentColor;
+	int smoothness[64];
 }
 
 - (IBAction) reset: (id) sender;
@@ -73,6 +76,10 @@ typedef struct {
 - (void) setNamesTo: (NSArray*) newNames;
 - (void) setup;
 - (void) getColorsFrom: (FSColorWidget*) cw;
+- (NSArray*) smoothnessArray;
+- (void) readSmoothnessFrom: (NSArray*) smoothArray;
+- (IBAction) smoothnessChanged: (id) sender;
+- (int*) smoothnessPtr; 
 
 - (NSArray*) names;
 
@@ -93,6 +100,7 @@ typedef struct {
 
 - (NSColor*) color;
 - (BOOL) active;
+- (void) setnrColorToR: (float) r G: (float) g B: (float) b;
 - (void) setColorToR: (float) r G: (float) g B: (float) b;
 - (void) setColorWellTo: (NSColorWell*) cw;
 - (void) untoggle;

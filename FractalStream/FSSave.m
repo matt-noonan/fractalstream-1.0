@@ -71,7 +71,25 @@
 			[browser namedVariablesImagParts],
 			[browser namedProbes]
 		);
-
+	}
+	else if([type isEqualToString: @"full session [20oct]"]) {
+		NSLog(@"encoding full session\n");
+		[coder encodeObject: editor];
+		[coder encodeObject: session];
+		NSLog(@"encoding colorizer\n");
+		[coder encodeObject: colorizer];
+		NSLog(@"encoding defaults\n");
+		[coder encodeObject: [browser namedVariables]];
+		[coder encodeObject: [browser namedVariablesRealParts]];
+		[coder encodeObject: [browser namedVariablesImagParts]];
+		[coder encodeObject: [browser namedProbes]];
+		NSLog(@"encoded names = %@, real = %@, imag = %@, probes = %@\n",
+			[browser namedVariables],
+			[browser namedVariablesRealParts],
+			[browser namedVariablesImagParts],
+			[browser namedProbes]
+		);
+		[coder encodeObject: [colorizer smoothnessArray]];
 	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 }
@@ -110,6 +128,17 @@
 		imag = [[coder decodeObject] retain];
 		probes = [[coder decodeObject] retain];
 		NSLog(@"decoded names = %@, real = %@, imag = %@, probes = %@\n", names, real, imag, probes);
+	}
+	else if([type isEqualToString: @"full session [20oct]"]) {
+		editor = [[coder decodeObject] retain];
+		session = [[coder decodeObject] retain];
+		colorizer = [[coder decodeObject] retain];
+		names = [[coder decodeObject] retain];
+		real = [[coder decodeObject] retain];
+		imag = [[coder decodeObject] retain];
+		probes = [[coder decodeObject] retain];
+		NSLog(@"decoded names = %@, real = %@, imag = %@, probes = %@\n", names, real, imag, probes);
+		[colorizer readSmoothnessFrom: [coder decodeObject]];
 	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 	

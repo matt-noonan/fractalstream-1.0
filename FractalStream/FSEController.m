@@ -11,7 +11,7 @@
 	NSString* tmp;
 	NSString* errorMessage;
 	
-	tmp = [NSString stringWithFormat: @"%@/FSEtemp%i", NSTemporaryDirectory(), rand()];
+	tmp = [NSString stringWithFormat: @"%@FSEtemp%i", NSTemporaryDirectory(), rand()];
 	[compiler 
 		setTitle: [titleField stringValue]
 		source: [sourceView string]

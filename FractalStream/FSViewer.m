@@ -8,9 +8,6 @@
 
 #import "FSViewer.h"
 
-// smooth coloring still experimental 
-//#define SMOOTH_COLORING
-
 //#define DEBUGGING
 
 #ifndef DEBUGGING
@@ -296,9 +293,10 @@
 	int thisThread;
 	int x, y, height, width, xMax, yMax, k, phase, flag, i, j;
 	float c;
-	double step, X, Y, oX, oY;
-	float r, g, b;
+	double step, X, Y, oX, oY, loglog, golgol;
+	float r, g, b, or, og, ob;
 	double in[512], *out;
+	int* smoothness;
 	int startLine, endLine;
 	BOOL firstLoop;
 	float colorArray[64*8*8*3];
@@ -345,6 +343,7 @@
 				[colorPicker cacheAutocolor: i to: acCache[i].color X: acCache[i].x Y: acCache[i].y];
 			}
 		}
+		smoothness = [colorPicker smoothnessPtr];
 		[acLock unlock];
 		/*************************************/
 		
@@ -399,6 +398,19 @@
 				}
 				else {
 					BOOL useGrey;
+					if(smoothness[flag]) {
+						if(smoothness[flag] > 0)
+							loglog = (double)k + 
+								(log(2.0 * log((double) (view->maxRadius)))
+								- log(log(oX*oX + oY*oY) / 2.0)) / log((double) smoothness[flag]);
+						else
+							loglog = (double)k + 
+								(log(2.0 * log((double) (view->minRadius)))
+								- log(log(1.0/(oX*oX + oY*oY)) / 2.0)) / log((double) -smoothness[flag]); // crappy
+						k = (int) loglog;
+						loglog = loglog - floor(loglog);
+						golgol = 1.0 - loglog;
+					}
 					phase = 0;
 					if((oX > 0.0) && (oY > 0.0)) phase = 0;
 					if((oX < 0.0) && (oY > 0.0)) phase = 2;
@@ -407,7 +419,6 @@
 					if(((phase & 2)) && ((oY * oY) < (oX * oX))) phase += 1;
 					else if(((phase & 2) == 0) && ((oX * oX) < (oY * oY))) phase += 1; 
 
-#ifndef SMOOTH_COLORING
 					if(acCache[flag].active == NO) {
 						r = colorArray[(8*8*3)*flag + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 0];
 						g = colorArray[(8*8*3)*flag + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 1];
@@ -417,6 +428,22 @@
 							g += colorArray[(8*8*3)*flag + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 1];
 							b += colorArray[(8*8*3)*flag + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 2];
 							r /= 2.0; g /= 2.0; b /= 2.0;
+						}
+						if(smoothness[flag]) {
+							++k; or = r; og = g; ob = b;
+							r = colorArray[(8*8*3)*flag + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 0];
+							g = colorArray[(8*8*3)*flag + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 1];
+							b = colorArray[(8*8*3)*flag + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 2];
+							if(k & 1) {
+								r += colorArray[(8*8*3)*flag + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 0];
+								g += colorArray[(8*8*3)*flag + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 1];
+								b += colorArray[(8*8*3)*flag + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 2];
+								r /= 2.0; g /= 2.0; b /= 2.0;
+							}
+							--k;
+							r = golgol*or + loglog*r;
+							g = golgol*og + loglog*g;
+							b = golgol*ob + loglog*b;
 						}
 					}
 					else {
@@ -472,6 +499,22 @@
 								b += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 2];
 								r /= 2.0; g /= 2.0; b /= 2.0;
 							}
+							if(smoothness[flag]) {
+								++k; or = r; og = g; ob = b;
+								r = acCache[flag].color[(8*8*3)*i + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 0];
+								g = acCache[flag].color[(8*8*3)*i + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 1];
+								b = acCache[flag].color[(8*8*3)*i + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 2];
+								if(k & 1) {
+									r += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 0];
+									g += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 1];
+									b += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 2];
+									r /= 2.0; g /= 2.0; b /= 2.0;
+								}
+								--k;
+								r = golgol*or + loglog*r;
+								g = golgol*og + loglog*g;
+								b = golgol*ob + loglog*b;
+							}
 						}
 						else {
 							/* autocoloring, did not land on a known fixpoint.  Try to compute a color value anyway. */
@@ -501,6 +544,22 @@
 										b += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 2];
 										r /= 2.0; g /= 2.0; b /= 2.0;
 									}
+									if(smoothness[flag]) {
+										++k; or = r; og = g; ob = b;
+										r = acCache[flag].color[(8*8*3)*i + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 0];
+										g = acCache[flag].color[(8*8*3)*i + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 1];
+										b = acCache[flag].color[(8*8*3)*i + (phase*8*3) + (((k >> 1) & 0x7) * 3) + 2];
+										if(k & 1) {
+											r += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 0];
+											g += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 1];
+											b += acCache[flag].color[(8*8*3)*i + (phase*8*3) + ((((k+1) >> 1) & 0x7) * 3) + 2];
+											r /= 2.0; g /= 2.0; b /= 2.0;
+										}
+										--k;
+										r = golgol*or + loglog*r;
+										g = golgol*og + loglog*g;
+										b = golgol*ob + loglog*b;
+									}
 									dist = 1.0 / dist;
 									R += r * (dist / total);
 									G += g * (dist / total);
@@ -512,30 +571,6 @@
 					}
 					c = (k & 0xf) / 15.0; 
 					if(k & 0x10) c = 1.0 - c;
-#else
-					{ 
-						double lograd, dphase, fr, fp, pi;
-						pi = 3.1415926535897932385;
-						lograd = (log(2.0 * log((double) (view -> maxRadius))) - log(log(oX*oX + oY*oY) / 2.0)) / log(3.0);
-						dphase = 8.0 * (atan2(oY, oX) + pi) / (2.0 * pi);
-						phase = (int) floor(dphase);
-						fr = 1.0 - (lograd - floor(lograd));
-						fp = 1.0 - (dphase - floor(dphase));
-						r = g = b = 0.0;
-						r += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + ((k & 0x7) * 3) + 0] * fr * fp;
-						g += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + ((k & 0x7) * 3) + 1] * fr * fp;
-						b += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + ((k & 0x7) * 3) + 2] * fr * fp;
-						r += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + (((k+1) & 0x7) * 3) + 0] * (1.0 - fr) * fp;
-						g += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + (((k+1) & 0x7) * 3) + 1] * (1.0 - fr) * fp;
-						b += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + (((k+1) & 0x7) * 3) + 2] * (1.0 - fr) * fp;
-						r += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + ((k & 0x7) * 3) + 0] * fr * (1.0 - fp);
-						g += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + ((k & 0x7) * 3) + 1] * fr * (1.0 - fp);
-						b += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + ((k & 0x7) * 3) + 2] * fr * (1.0 - fp);
-						r += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + (((k+1) & 0x7) * 3) + 0] * (1.0 - fr) * (1.0 - fp);
-						g += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + (((k+1) & 0x7) * 3) + 1] * (1.0 - fr) * (1.0 - fp);
-						b += colorArray[(8*8*3)*flag + ((phase&7)*8*3) + (((k+1) & 0x7) * 3) + 2] * (1.0 - fr) * (1.0 - fp);
-					}
-#endif
 				}
 				if(nodeChanged == YES) break;
 				if((3 * x) + (y * 3 * xMax) + 2 < textureSize) {

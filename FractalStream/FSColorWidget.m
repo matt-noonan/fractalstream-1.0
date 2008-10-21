@@ -107,7 +107,7 @@
 
 	/* set up the color picker */
 	[colorMatrix setCellClass: [FSColorWidgetCell class]];
-	[colorMatrix setPrototype: nil];
+	[colorMatrix setPrototype: [FSColorWidgetCell new]];
 	[colorMatrix setCellSize: NSMakeSize(20.0, 20.0)];
 	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) [colorMatrix addColumn];
 	for(i = 0; i < 8; i++) [colorMatrix removeColumn: 0];
@@ -119,7 +119,7 @@
 	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
 		[[colorMatrix cellAtRow: i column: j] setColorWellTo: colorWell]; 
 		[[colorMatrix cellAtRow: i column: j] 
-			setColorToR: 0.0
+			setnrColorToR: 0.0
 			G: 0.0
 			B: 0.0
 		];
@@ -288,6 +288,10 @@
 	lockedAutocolor[[colorButton indexOfSelectedItem]] = ([acLockButton state] == NSOnState)? YES : NO;
 }
 
+- (IBAction) smoothnessChanged: (id) sender { smoothness[currentColor] = [smoothnessField intValue]; }
+
+- (int*) smoothnessPtr { return smoothness; }
+
 - (IBAction) change: (id) sender {
 	/* user selected a different color */
 	int newColor, i, j, k;
@@ -296,7 +300,8 @@
 	
 	newColor = [colorButton indexOfSelectedItem];
 	
-
+	smoothness[currentColor] = [smoothnessField intValue];
+	[smoothnessField setIntValue: smoothness[newColor]];
 	acChanged = usesAutocolor[currentColor];
 	usesAutocolor[currentColor] = ([autocolorBox state] == NSOnState)? YES : NO;
 	acChanged = (acChanged == usesAutocolor[currentColor])? NO : YES;
@@ -455,10 +460,11 @@
 - (void) setup {
 	NSEnumerator* namesEnumerator;
 	NSString* aName;
-	
+	int i;
+	i = 0;
 	namesEnumerator = [names objectEnumerator];
 	[colorButton removeAllItems];
-	while(aName = [namesEnumerator nextObject])[colorButton addItemWithTitle: aName];
+	while(aName = [namesEnumerator nextObject]) { [colorButton addItemWithTitle: aName]; smoothness[i++] = 0; }
 	[colorButton selectItemAtIndex: 0];
 	currentColor = 0;
 }
@@ -530,9 +536,21 @@
 - (id) tableView: (NSTableView*) tableView setObjectValue: (id) anObject forTableColumn: (NSTableColumn*) tableColumn row: (int) row {
 }
 
+- (NSArray*) smoothnessArray {
+	NSMutableArray* array;
+	int i;
+	array = [[NSMutableArray alloc] init];
+	for(i = 0; i < [self numberOfColors]; i++) [array addObject: [NSNumber numberWithInt: smoothness[i]]];
+}
 
-
-
+- (void) readSmoothnessFrom: (NSArray*) smoothArray {
+	NSEnumerator* en;
+	NSNumber* n;
+	int i;
+	en = [smoothArray objectEnumerator];
+	i = 0;
+	while(n = [en nextObject]) smoothness[i++] = [n intValue];
+}
 
 @end
 
@@ -561,6 +579,10 @@
 	color = [[NSColor colorWithCalibratedRed: r green: g blue: b alpha: 1.0] retain];	
 	active = NO;
 	return self;
+}
+
+- (void) setnrColorToR: (float) r G: (float) g B: (float) b {
+	color = [[NSColor colorWithCalibratedRed: r green: g blue: b alpha: 1.0] retain];
 }
 
 - (void) setColorToR: (float) r G: (float) g B: (float) b {

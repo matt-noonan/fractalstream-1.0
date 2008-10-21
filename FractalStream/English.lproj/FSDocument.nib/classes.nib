@@ -19,6 +19,8 @@
 				<string>id</string>
 				<key>reset</key>
 				<string>id</string>
+				<key>smoothnessChanged</key>
+				<string>id</string>
 				<key>submit</key>
 				<string>id</string>
 				<key>updateAutocolorLockState</key>
@@ -58,6 +60,10 @@
 				<string>NSButton</string>
 				<key>phaseShade</key>
 				<string>NSButton</string>
+				<key>smoothnessBox</key>
+				<string>NSButton</string>
+				<key>smoothnessField</key>
+				<string>NSTextField</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
@@ -239,6 +245,14 @@
 			<string>NSOpenGLView</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>goBackward</key>
@@ -287,14 +301,6 @@
 				<key>theViewer</key>
 				<string>FSViewer</string>
 			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
 		</dict>
