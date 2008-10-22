@@ -417,6 +417,8 @@
 	return expr;
 }
 
+- (BOOL) usesCustom { return useCustom; }
+- (NSString*) customPath { NSLog(@"customPath is \"%@\"\n", customPath); return customPath; }
 
 
 - (IBAction) compile: (id) sender
@@ -425,7 +427,7 @@
 	NSString *gcc, *ifile;
 	char gccC[256], ifileC[256];
 	int stack[512], stackptr, loopDepth, probecount;
-	BOOL reported, autopop;
+	BOOL reported, autopop, custom;
 	FSEOpStream opstream;
 	
 	NSLog(@"compiling source:\n%@\n\n", source);
@@ -442,6 +444,7 @@
 	stackptr = -1;
 	reported = NO;
 	autopop = NO;
+	custom = NO;
 	savedcounter = 0;
 	probecount = 0;
 	nextvar = 0;
@@ -463,11 +466,26 @@
 			[self readNextSymbol];
 			if([symbol isEqualToString: @"complex"]) useComplexVars = YES;
 			else if([symbol isEqualToString: @"real"]) useComplexVars = NO;
+			else if([symbol isEqualToString: @"custom"]) {
+				NSRange range;
+				int savedindex;
+				custom = YES;
+				savedindex = index + 1;
+				while([source characterAtIndex: index] != '}') {
+					++index;
+					if(index >= [source length]) { error = @"runaway flag"; break; }
+				}
+				range.location = savedindex; range.length = index - savedindex;
+				customPath = [[NSString stringWithFormat: @"%@/", [literalSource substringWithRange: range]] retain];
+				useCustom = YES;
+				NSLog(@"found custom path \"%@\"\n", customPath);
+			}
 			else break;
 		}
 		if([symbol isEqualToString: @"}"] == NO) error = [NSString stringWithFormat: @"unknown option \"%@\".", symbol];
 		else [self readNextSymbol];
 	}
+	
 	if(useComplexVars) {
 		[self indexOfVariableWithName: @"z"]; [self indexOfVariableWithName: @"c"];
 		var[[self indexOfVariableWithName: @"pixel"]].par = YES;

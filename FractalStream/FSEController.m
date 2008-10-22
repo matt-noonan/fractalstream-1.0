@@ -29,12 +29,17 @@
 	[browser setProbeNamesTo: [compiler probeArray]];
 	NSLog(@"set probe names in the browser to %@\n", [compiler probeArray]);
 	[[browser session] setFlags: [compiler flagArray]];
-	[[browser session] readKernelFrom: tmp];
+	if([compiler usesCustom] == YES) {
+		[[browser session] readKernelFrom: [NSString stringWithFormat: @"%@kernel", [compiler customPath]]];
+		[browser setAllowEditor: NO];
+	}
+	else [[browser session] readKernelFrom: tmp];
 	[[[browser session] root] dataPtr] -> program = [compiler isParametric]? 1 : 3;
 	[browser loadDataFromInterfaceTo: [[[browser session] root] dataPtr]];	
 	[browser reloadSessionWithoutRefresh];
 	[browser resetDefaults];
 	[browser refreshAll];
+	if([compiler usesCustom] == YES) [browser addTools: [[[NSFileWrapper alloc] initWithPath: [compiler customPath]] autorelease]];
 	[browser changeTo: @"testing!" X: 0.0 Y: 0.0 p1: 0.0 p2: 0.0 pixelSize: (4.0 / 512.0) parametric: [compiler isParametric]];
 	[enclosingView selectNextTabViewItem: self];
 }

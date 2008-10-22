@@ -7,6 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <stdlib.h>
+#import <string.h>
 #import "FSViewport.h"
 #import "FSCursors.h"
 #import "FSSession.h"
@@ -60,5 +62,6 @@
 - (IBAction) changeTool: (id) sender;
 - (void) setSession: (FSSession*) newSession;
 - (void) updateMenuForParametric: (BOOL) isPar;
+- (void) addTools: (NSFileWrapper*) toolWrapper;
 
 @end

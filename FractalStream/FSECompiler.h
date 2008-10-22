@@ -26,13 +26,14 @@ typedef struct {
 	NSString* error;
 	NSMutableArray* flags;
 	NSMutableArray* probes;
+	NSString* customPath;
 	NSRange lastRange;
 	FSEParseTree *tree;
 #define FSECOMPILER_VARIABLES 1024
 	FSEDict var[FSECOMPILER_VARIABLES];
 	int index, node, nextvar, orphan, currentFlagID;
 	int usesC;
-	BOOL useComplexVars;
+	BOOL useComplexVars, useCustom;
 }
 
 - (IBAction) compile: (id) sender;
@@ -57,5 +58,7 @@ typedef struct {
 - (void) printVariableStack;
 
 - (BOOL) isParametric;
+- (BOOL) usesCustom;
+- (NSString*) customPath;
 
 @end

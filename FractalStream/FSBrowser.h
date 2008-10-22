@@ -22,6 +22,8 @@
 	IBOutlet FSViewer* theViewer;
 	IBOutlet FSViewer* preview;
 	IBOutlet FSViewer* historyView;
+	IBOutlet NSButton* editorButton;
+	
 	FSViewerData viewerData;
 	FSViewerData previewData;
 	FSViewerData historyData;
@@ -42,7 +44,8 @@
 	IBOutlet NSTextField* aspectBox;
 	IBOutlet FSColorWidget* colorWidget;
 	
-	NSArray* variableNames;
+	NSFileWrapper* toolsWrapper;
+ 	NSArray* variableNames;
 	NSArray* reducedVariableNames;
 	NSArray* realPart;
 	NSArray* imagPart;
@@ -64,6 +67,11 @@
 - (void) setVariableNamesTo: (NSArray*) names;
 - (void) setVariableValuesToReal: (NSArray*) rp imag: (NSArray*) ip;
 - (void) resetDefaults;
+- (BOOL) editorDisabled;
+- (void) setAllowEditor: (BOOL) allow;
+- (void) addTools: (NSFileWrapper*) toolWrapper;
+- (NSFileWrapper*) extraTools;
+
 
 - (void) reloadSession;
 - (void) reloadSessionWithoutRefresh;

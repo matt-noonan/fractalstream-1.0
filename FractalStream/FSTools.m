@@ -371,6 +371,33 @@
 	currentCursor = [NSCursor crosshairCursor];
 }
 
+- (void) addTools: (NSFileWrapper*) toolWrapper {
+	NSEnumerator* en;
+	NSString* bundleName, *bundleDir, *filename;
+	NSBundle* toolBundle;
+	id <FSTool> aTool;
+	Class pclass;
+
+	bundleDir = [[NSString stringWithFormat: @"%@fstool%i/", NSTemporaryDirectory(), rand()] autorelease];
+	[toolWrapper writeToFile: bundleDir atomically: YES updateFilenames: NO];
+	en = [[NSBundle pathsForResourcesOfType: @"fstool" inDirectory: bundleDir] objectEnumerator];
+	while(bundleName = [en nextObject]) {
+		/* Write the tool bundle to a temp location, load the bundle, add menu items */
+		toolBundle = [NSBundle bundleWithPath: bundleName];
+		pclass = [toolBundle principalClass];
+		NSLog(@"Found an extra tool with class %@\n", pclass);
+		[toolClasses addObject: pclass];
+		[pclass preload: toolBundle];
+		aTool = [[pclass alloc] init];
+		[aTool setOwnerTo: viewport];
+		[aTool unfreeze];
+		[tools addObject: aTool];
+		[popupMenu addItemWithTitle: [aTool menuName]];
+		[[popupMenu itemWithTitle: [aTool menuName]] setKeyEquivalent: [aTool keyEquivalent]];
+	}
+	
+}
+
 - (void) updateMenuForParametric: (BOOL) isPar {
 	NSEnumerator* toolEnum;
 	id <FSTool> aTool;

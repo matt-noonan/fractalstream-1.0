@@ -68,10 +68,17 @@
 
 @implementation FSColorWidget
 
+- (id) init {
+	self = [super init];
+	return self;
+}
+
 - (void) awakeFromNib {
 	int c, i, j;
 	float shade, fill, r, g, b;
 	
+	[smoothnessField setIntValue: smoothness[0]]; 
+
 	c = 0;
 	while(named_color[c].name) ++c;
 	namedColorCount = c;
@@ -301,7 +308,7 @@
 	newColor = [colorButton indexOfSelectedItem];
 	
 	smoothness[currentColor] = [smoothnessField intValue];
-	[smoothnessField setIntValue: smoothness[newColor]];
+	[smoothnessField setIntValue: smoothness[newColor]]; 
 	acChanged = usesAutocolor[currentColor];
 	usesAutocolor[currentColor] = ([autocolorBox state] == NSOnState)? YES : NO;
 	acChanged = (acChanged == usesAutocolor[currentColor])? NO : YES;
@@ -464,9 +471,10 @@
 	i = 0;
 	namesEnumerator = [names objectEnumerator];
 	[colorButton removeAllItems];
-	while(aName = [namesEnumerator nextObject]) { [colorButton addItemWithTitle: aName]; smoothness[i++] = 0; }
+	while(aName = [namesEnumerator nextObject]) { [colorButton addItemWithTitle: aName]; }
 	[colorButton selectItemAtIndex: 0];
 	currentColor = 0;
+	[smoothnessField setIntValue: smoothness[currentColor]]; 
 }
 
 - (void) getColorsFrom: (FSColorWidget*) cw {
@@ -482,7 +490,7 @@
 		[[colorMatrix cellAtRow: i column: j] untoggle];
 		[colorMatrix drawCellAtRow: i column: j];		
 	}
-	
+	for(i = 0; i < 64; i++) smoothness[i] = (cw->smoothness)[i];
 }
 
 - (void) encodeWithCoder: (NSCoder*) coder
@@ -491,20 +499,13 @@
 	float* flat;
 	
 	// version 0
-	NSLog(@"FSColorWidget %@ encodeWithCoder\n", self);
-	NSLog(@"colors: %@\n", names);
-	NSLog(@"number of colors: %i\n", [self numberOfColors]);
 	size = 8 * 8 * 3 * [self numberOfColors];
 	flat = malloc(sizeof(float) * size);
 	l = 0;
-	NSLog(@"flat = %p\n", flat);
 	for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
 		flat[l++] = fullColorArray[k][i][j][c];
-	NSLog(@"encoding names: %@\n", names);
 	[coder encodeObject: names];
-	NSLog(@"encoding an array of %i floats at %p\n", size, flat);
 	for(i = 0; i < size; i++) [coder encodeObject: [NSNumber numberWithFloat: flat[i]]];
-//	[coder encodeArrayOfObjCType: @encode(float) count: size at: flat];
 	free(flat);
 }
 
@@ -516,15 +517,14 @@
 
 	// version 0
 	names = [[coder decodeObject] retain];
-	NSLog(@"fscolorwidget initWithCoder found these names: %@\n", names);
 	size = 8 * 8 * 3 * [self numberOfColors];
 	flat = malloc(sizeof(float) * size);
-//	[coder decodeArrayOfObjCType: @encode(float) count: size at: flat];
 	for(i = 0; i < size; i++) flat[i] = [[coder decodeObject] floatValue];
 	l = 0;
 	for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
 		fullColorArray[k][i][j][c] = flat[l++];
 	free(flat);
+	[self clearSmoothnessArray];
 	return self;
 }
 
@@ -539,8 +539,9 @@
 - (NSArray*) smoothnessArray {
 	NSMutableArray* array;
 	int i;
-	array = [[NSMutableArray alloc] init];
+	array = [[[NSMutableArray alloc] init] autorelease];
 	for(i = 0; i < [self numberOfColors]; i++) [array addObject: [NSNumber numberWithInt: smoothness[i]]];
+	return array;
 }
 
 - (void) readSmoothnessFrom: (NSArray*) smoothArray {
@@ -550,6 +551,11 @@
 	en = [smoothArray objectEnumerator];
 	i = 0;
 	while(n = [en nextObject]) smoothness[i++] = [n intValue];
+}
+
+- (void) clearSmoothnessArray {
+	int i;
+	for(i = 0; i < 64; i++) smoothness[i] = 0;
 }
 
 @end

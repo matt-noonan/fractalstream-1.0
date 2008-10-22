@@ -276,6 +276,8 @@
 				<string>FSColorWidget</string>
 				<key>detailBox</key>
 				<string>NSButton</string>
+				<key>editorButton</key>
+				<string>NSButton</string>
 				<key>historyView</key>
 				<string>FSViewer</string>
 				<key>iterBox</key>

@@ -19,6 +19,8 @@
 		FSColorWidget* colorizer;
 		FSBrowser* browser;
 		NSArray *names, *real, *imag, *probes;
+		id tools;
+		BOOL disableEditor;
 }
 
 - (NSString*) type;
@@ -29,6 +31,9 @@
 - (NSArray*) variableReal;
 - (NSArray*) variableImag;
 - (NSArray*) probeNames;
+- (BOOL) allowEditor;
+- (BOOL) hasTools;
+- (NSFileWrapper*) customTools;
 - (void) setType: (NSString*) newType session: (FSSession*) sess colorizer: (FSColorWidget*) col editor: (FSEController*) edit browser: (FSBrowser*) browser;
 
 - (void) encodeWithCoder: (NSCoder*) coder;

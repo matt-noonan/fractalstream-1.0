@@ -80,6 +80,7 @@ typedef struct {
 - (void) readSmoothnessFrom: (NSArray*) smoothArray;
 - (IBAction) smoothnessChanged: (id) sender;
 - (int*) smoothnessPtr; 
+- (void) clearSmoothnessArray;
 
 - (NSArray*) names;
 

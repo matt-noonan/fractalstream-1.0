@@ -33,12 +33,8 @@
 {
     [super windowControllerDidLoadNib:aController];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
-//	[configSheet configureSession: self];
-//	[toolkit setupMenu: self];
-	NSLog(@"windowControllerDidLoadNib\n");
 	if(newSession == NO) { 
 		[editor restoreFrom: [savedData editor]];
-		NSLog(@"[savedData session] = %@\n", [savedData session]);
 		if([savedData session] != nil) {
 			[colorizer getColorsFrom: [savedData colorizer]];
 			[session getSessionFrom: [savedData session]];
@@ -46,7 +42,9 @@
 			[browser setVariableNamesTo: [savedData variableNames]];
 			[browser setVariableValuesToReal: [savedData variableReal] imag: [savedData variableImag]];
 			[browser setProbeNamesTo: [savedData probeNames]];
+			[browser setAllowEditor: [savedData allowEditor]];
 			[browser reloadSession];
+			if([savedData hasTools]) [browser addTools: [savedData customTools]];
 			[mainTabView selectNextTabViewItem: self];
 		}
 	}
@@ -66,10 +64,11 @@
 	FSSave* save;
 	
 	save = [[FSSave alloc] init];
-	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 1) 
+	NSLog(@"about to set type, going to send to object %@", save);
+	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 3) 
 		[save setType: @"editor" session: nil colorizer: nil editor: editor browser: nil];
 	else
-		[save setType: @"full session [3sep]" session: session colorizer: colorizer editor: editor browser: browser];
+		[save setType: @"full session [22oct]" session: session colorizer: colorizer editor: editor browser: browser];
     return [NSKeyedArchiver archivedDataWithRootObject: save];
 }
 

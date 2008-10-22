@@ -5,6 +5,12 @@
 
 @implementation FSBrowser
 
+- (id) init {
+	self = [super init];
+	toolsWrapper = nil;
+	return self;
+}
+
 - (void) awakeFromNib {
 	NSString* path;
 	void* loadedModule;
@@ -62,12 +68,18 @@
 	
 }
 
+- (BOOL) editorDisabled { return ([editorButton isEnabled] == YES)? NO : YES; }
+- (void) setAllowEditor: (BOOL) allow { [editorButton setEnabled: allow]; }
+
 - (void) reloadSession {
 	[self reloadSessionWithoutRefresh];
 	[theTools setupMenu: self];
 	[colorWidget setNamesTo: [theSession flagNames]];
 	[self refresh: self];
 }
+
+- (void) addTools: (NSFileWrapper*) toolWrapper { toolsWrapper = [toolWrapper retain]; [theTools addTools: toolWrapper]; }
+- (NSFileWrapper*) extraTools { return toolsWrapper; }
 
 - (void) refreshAll { 
 	[theTools setupMenu: self];
