@@ -117,6 +117,7 @@ typedef struct {
 - setDefaultsTo: (double*) def count: (int) n;
 - (void) runAt: (double*) p into: (double*) result probe: (int) pr;
 - (void) runAt: (double*) p into: (double*) result probe: (int) pr steps: (int) ns;
+- (void) runAt: (double*) p withParameter: (double*) q into: (double*) result probe: (int) pr steps: (int) ns;
 
 - (void) drawBoxFrom: (NSPoint) start to: (NSPoint) end withColor: (float*) rgb;
 - (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps;

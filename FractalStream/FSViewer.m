@@ -878,6 +878,20 @@
 	[self runAt: p into: result probe: pr steps: view -> maxIters];
 }
 
+- (void) runAt: (double*) p withParameter: (double*) q into: (double*) result probe: (int) pr steps: (int) ns {
+	double in[512];
+	int i;
+	int length; int it;
+	for(i = 0; i < 512; i++) in[i] = setting[i];
+	in[0] = p[0]; in[1] = p[1];
+	in[2] = view -> aspectRatio;
+	in[3] = q[0]; in[4] = q[1];
+	in[5] = view -> pixelSize; 
+	if(pr == 0) { length = 1; it = ns; }
+	else { length = -pr; it = view -> maxIters; }
+	(view -> kernel)(3, in, length, result, it, view -> maxRadius, view -> minRadius);
+}
+
 - (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps {
 	double p[2];
 	double in[512], out[3], x, y;

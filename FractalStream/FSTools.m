@@ -93,7 +93,6 @@
 	inDrag = NO;
 	ignoreMouseUp = NO;
 	
-	NSLog(@"indexOfSelectedItem: %i\n", [popupMenu indexOfSelectedItem]);
 	switch([popupMenu indexOfSelectedItem]) {
 
 			case 0: /* zoom tool */
@@ -135,14 +134,12 @@
 	inDrag = NO;
 	ignoreMouseUp = NO;
 	
-	NSLog(@"indexOfSelectedItem: %i\n", [popupMenu indexOfSelectedItem]);
 	switch([popupMenu indexOfSelectedItem]) {
 
 			case 0: /* zoom tool */
 				break;
 			
 			case 1: /* dynamical plane */
-				NSLog(@"dyn click down\n");
 				[viewport convertLocation: [theEvent locationInWindow] toPoint: p];
 				[theBrowser changeTo: [NSString stringWithFormat: @"Dynamical Plane for C = %f + %fi", x, y]
 					X: 0.0 Y: 0.0
@@ -181,7 +178,9 @@
 					else [probeTextField setStringValue: @"? ? ?"];
 					break;
 				}
+				NSLog(@"-> mouseDown to tool %i (%@)\n", [popupMenu indexOfSelectedItem] - builtInTools, tool[[popupMenu indexOfSelectedItem] - builtInTools]);
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseDown: theEvent];
+				NSLog(@"<- mouseDown to tool %i (%@)\n", [popupMenu indexOfSelectedItem] - builtInTools, tool[[popupMenu indexOfSelectedItem] - builtInTools]);
 				break;
 	}
 }
@@ -192,26 +191,19 @@
 	double size, x, y;
 	FSViewerData theData;
 	
-	NSLog(@"mouseUp\n");
 	if(ignoreMouseUp == YES) ignoreMouseUp = NO;
 	else switch([popupMenu indexOfSelectedItem]) {
 
 		case 0: /* zoom tool */
 			if(inDrag) {
-				NSLog(@"(in drag!)\n");
 				center.x = (lastClick.x + [theEvent locationInWindow].x) / 2;
 				center.y = (lastClick.y + [theEvent locationInWindow].y) / 2;
 				x = fabs((float)(lastClick.x - [theEvent locationInWindow].x) / [viewport bounds].size.width);
 				y = fabs((float)(lastClick.y - [theEvent locationInWindow].y) / [viewport bounds].size.height);
 				size = sqrt(x*y);
-				NSLog(@"about to memmove, theBrowser is %@\n", theBrowser);
 				[theBrowser putCurrentDataIn: &theData];
-				NSLog(@"size is %f\n", size);
 				if(size < 0.001) break;
 				[viewport convertLocation: center toPoint: p];
-				NSLog(@"ready to change to a new zoom\n");
-				NSLog(@"FSTools think that size is %f and pixelSize is currently %f\n", size, theData.pixelSize);
-				NSLog(@"X: %f Y: %f\n", p[0], p[1]);
 				[theBrowser changeTo: @"zoomed"
 					X: p[0] Y: p[1]
 					p1: theData.par[0] p2: theData.par[1]
@@ -377,6 +369,7 @@
 	NSBundle* toolBundle;
 	id <FSTool> aTool;
 	Class pclass;
+	int i;
 
 	bundleDir = [[NSString stringWithFormat: @"%@fstool%i/", NSTemporaryDirectory(), rand()] autorelease];
 	[toolWrapper writeToFile: bundleDir atomically: YES updateFilenames: NO];
@@ -395,7 +388,9 @@
 		[popupMenu addItemWithTitle: [aTool menuName]];
 		[[popupMenu itemWithTitle: [aTool menuName]] setKeyEquivalent: [aTool keyEquivalent]];
 	}
-	
+	tool = (id*) malloc([tools count] * sizeof(id));
+	en = [tools objectEnumerator];
+	i = 0; while(aTool = [en nextObject]) tool[i++] = aTool;
 }
 
 - (void) updateMenuForParametric: (BOOL) isPar {
@@ -427,7 +422,10 @@
 			[probeTextField setStringValue: @"-"];
 			[[probeTextField window] orderOut: self];
 		}
-		if(selected >= builtInTools) [tool[selected - builtInTools] activate];
+		if(selected >= builtInTools) {
+			NSLog(@"Activating tool %@\n", tool[selected - builtInTools]);
+			[tool[selected - builtInTools] activate];
+		}
 		else if(selected > 1) {
 			[probeTextField setStringValue: @"-"];
 			[[probeTextField window] setTitle: [NSString stringWithFormat: @"Probe: %@", [popupMenu titleOfSelectedItem]]];
