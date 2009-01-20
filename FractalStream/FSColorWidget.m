@@ -70,6 +70,7 @@
 
 - (id) init {
 	self = [super init];
+	cachedColorArrayNeedsUpdate = YES;
 	return self;
 }
 
@@ -77,6 +78,7 @@
 	int c, i, j;
 	float shade, fill, r, g, b;
 	
+	cachedColorArrayNeedsUpdate = YES;
 	[smoothnessField setIntValue: smoothness[0]]; 
 
 	c = 0;
@@ -275,12 +277,21 @@
 		[[colorMatrix cellAtRow: i column: j] untoggle];
 		[colorMatrix drawCellAtRow: i column: j];		
 	}
+	cachedColorArrayNeedsUpdate = YES;	
 }
 
 - (void) colorArrayValue: (float*) cA {
 	int c, i, j, k;
 	for(c = 0; c < 64; c++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++)
 		cA[(8*8*3*c) + (i*8*3) + (j * 3) + k] = fullColorArray[c][i][j][k];
+}
+
+- (float*) colorArrayPtr {
+	if(cachedColorArrayNeedsUpdate == YES) {
+		[self colorArrayValue: cachedColorArray];
+		cachedColorArrayNeedsUpdate = NO;
+	}
+	return cachedColorArray;
 }
 
 - (BOOL) useAutocolorForColor: (int) c {
@@ -491,6 +502,7 @@
 		[colorMatrix drawCellAtRow: i column: j];		
 	}
 	for(i = 0; i < 64; i++) smoothness[i] = (cw->smoothness)[i];
+	cachedColorArrayNeedsUpdate = YES;	
 }
 
 - (void) encodeWithCoder: (NSCoder*) coder
@@ -525,6 +537,7 @@
 		fullColorArray[k][i][j][c] = flat[l++];
 	free(flat);
 	[self clearSmoothnessArray];
+	cachedColorArrayNeedsUpdate = YES;	
 	return self;
 }
 

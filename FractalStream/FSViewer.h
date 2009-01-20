@@ -6,38 +6,18 @@
 #import <sys/time.h>
 #import "FSViewerData.h"
 #import "FSColorWidget.h"
+#import "FSRenderOperation.h"
+#import "FSColorizer.h"
 
 #ifndef GL_TEXTURE_RECTANGLE_EXT
 #define GL_TEXTURE_RECTANGLE_EXT            0x84F5
 #endif
 
-#define nTasks				2
-#define TasksStartedMask	0x03
-#define TasksEndedMask		0x0f
-#define FSViewer_Infinity   1.23456789e10000
+#define nTasks				1
+#define TasksStartedMask	0x01
+#define TasksEndedMask		0x03
 
-typedef struct {
-	int type;
-		#define FSVO_Point	0
-		#define FSVO_Dot	1
-		#define FSVO_Line	2
-		#define FSVO_Circle	3
-		#define FSVO_Box	4
-	double point[2][2];
-	float color[2][4];
-	int batch;
-	BOOL visible;
-} FSViewerItem;
 
-typedef struct {
-	float* color;
-	double* x;
-	double* y;
-	BOOL active;
-	BOOL locked;
-	int allocated_entries;
-	int used_entries;
-} FSViewer_Autocolor_Cache;
 
 @interface FSViewerObject : NSObject { FSViewerItem item; }
 - (FSViewerItem*) itemPtr;
@@ -86,7 +66,7 @@ typedef struct {
 	NSMutableArray* displayList;
 	int currentBatch;
 
-	volatile double setting[512];
+	double setting[512];
 	int defaults;
 	
 	IBOutlet NSButton* boxButton;
@@ -95,8 +75,10 @@ typedef struct {
 	IBOutlet FSColorWidget* colorPicker;
 	IBOutlet NSButton* denormalButton;
 	IBOutlet NSTextField* timerField;
+	FSColorizer* viewerColorizer;
 	volatile BOOL autocolorAdded;
 	BOOL useFakeZoom;
+	NSOperationQueue* workQueue;
 	
 	FSViewer_Autocolor_Cache acCache[64];
 	
@@ -118,6 +100,7 @@ typedef struct {
 - (void) runAt: (double*) p into: (double*) result probe: (int) pr;
 - (void) runAt: (double*) p into: (double*) result probe: (int) pr steps: (int) ns;
 - (void) runAt: (double*) p withParameter: (double*) q into: (double*) result probe: (int) pr steps: (int) ns;
+- (void) renderOperationFinished: (id) op;
 
 - (void) drawBoxFrom: (NSPoint) start to: (NSPoint) end withColor: (float*) rgb;
 - (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps;

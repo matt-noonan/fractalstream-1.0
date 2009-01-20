@@ -432,8 +432,8 @@
 	
 	NSLog(@"compiling source:\n%@\n\n", source);
 	error = nil;
-	[flags release];
-	[probes release];
+	[flags release], flags = nil;
+	[probes release], probes = nil;
 	flags = [[NSMutableArray alloc] init];
 	probes = [[NSMutableArray alloc] init];
 	[flags addObject: [NSString stringWithString: @"Default Exit Condition"]];

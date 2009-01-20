@@ -7,27 +7,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
-/*
-@interface FSColorizerElement : NSObject {
-	float color[8*8*3];
-	NSString* name;
-	int ident;
-}
-
-- (float*) color;
-- (id) init;
-
-@end
+#import "FSViewerData.h"
+#import "FSRenderUnit.h"
+#import "FSColorWidget.h"
 
 @interface FSColorizer : NSObject {
-	float* colorCache;
-	NSArray* color;
+	int acMax;
+	FSViewer_Autocolor_Cache* acCache;
+	FSColorWidget* colorPicker;
 }
 
-- (NSDictionary*) colorDictionary;
-- (void) setColorWithName: (NSString*) name to: (FSColorizerArray*) newColor;
-- (void) addColor: (FSColorizerArray*) newColor withName: (NSString*) name andIdentifier: (int) ident;
 - (id) init;
+- (void) dealloc;
+
+- (void) colorUnit: (FSRenderUnit*) unit;
+- (void) setColorWidget: (FSColorWidget*) picker autocolorCache: (FSViewer_Autocolor_Cache*) acc;
 
 @end
-*/

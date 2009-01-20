@@ -50,6 +50,8 @@ typedef struct {
 	NSArray* names;
 	float colorArray[8][8][3];
 	float fullColorArray[64][8][8][3];
+	float cachedColorArray[64*8*8*3];
+	BOOL cachedColorArrayNeedsUpdate;
 	BOOL usesAutocolor[64];
 	BOOL lockedAutocolor[64];
 	NSMutableArray* autocolor[64];
@@ -81,6 +83,7 @@ typedef struct {
 - (IBAction) smoothnessChanged: (id) sender;
 - (int*) smoothnessPtr; 
 - (void) clearSmoothnessArray;
+- (float*) colorArrayPtr;
 
 - (NSArray*) names;
 

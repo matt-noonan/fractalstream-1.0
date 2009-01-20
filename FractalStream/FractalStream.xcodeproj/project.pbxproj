@@ -113,6 +113,7 @@
 		6882595B0F25ABDC00D86B76 /* FSRenderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSRenderOperation.m; sourceTree = "<group>"; };
 		6882595D0F25ABF800D86B76 /* FSColorOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorOperation.h; sourceTree = "<group>"; };
 		6882595E0F25ABF800D86B76 /* FSColorOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColorOperation.m; sourceTree = "<group>"; };
+		68825AEC0F266FD300D86B76 /* FSRenderUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRenderUnit.h; sourceTree = "<group>"; };
 		68A35A770D5D79DB00FE5ACA /* FSECompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSECompiler.h; sourceTree = "<group>"; };
 		68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEParseTree.m; sourceTree = "<group>"; };
 		68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEParseNode.h; sourceTree = "<group>"; };
@@ -195,8 +196,11 @@
 				68FAB4FB0D5ADA07004ABF7A /* FSRenderer.m */,
 				684E65980CF91D8600BAB5A5 /* FSViewer.h */,
 				684E65990CF91D8700BAB5A5 /* FSViewer.m */,
+				68825AEC0F266FD300D86B76 /* FSRenderUnit.h */,
 				6882595A0F25ABDC00D86B76 /* FSRenderOperation.h */,
 				6882595B0F25ABDC00D86B76 /* FSRenderOperation.m */,
+				685F90F80D3D764C00C82447 /* FSColorizer.h */,
+				685F90F90D3D764C00C82447 /* FSColorizer.m */,
 				6882595D0F25ABF800D86B76 /* FSColorOperation.h */,
 				6882595E0F25ABF800D86B76 /* FSColorOperation.m */,
 			);
@@ -307,8 +311,6 @@
 			isa = PBXGroup;
 			children = (
 				6817ACA80D6D0A3500DE08B0 /* FSCWNamedColors.H */,
-				685F90F80D3D764C00C82447 /* FSColorizer.h */,
-				685F90F90D3D764C00C82447 /* FSColorizer.m */,
 				6846D46B0D3C254B003A46AF /* FSColorWidget.h */,
 				6846D46C0D3C254B003A46AF /* FSColorWidget.m */,
 			);
@@ -693,7 +695,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Development;
@@ -714,7 +716,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -731,7 +733,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Default;

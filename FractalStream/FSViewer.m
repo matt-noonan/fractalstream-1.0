@@ -8,7 +8,7 @@
 
 #import "FSViewer.h"
 
-//#define DEBUGGING
+#define DEBUGGING
 
 #ifndef DEBUGGING
 	void inline Debug(NSString* s, ...) { }
@@ -55,8 +55,9 @@
 		acCache[i].x = malloc(sizeof(double) * 16);
 		acCache[i].y = malloc(sizeof(double) * 16);
 	}
-
-
+	
+	viewerColorizer = [[FSColorizer alloc] init];
+	workQueue = [[NSOperationQueue alloc] init];
 	return self;
 }
 
@@ -65,6 +66,8 @@
 	
 	
 	Debug(@"FSViewer %@ is awaking from nib\n", self);
+	[viewerColorizer setColorWidget: colorPicker autocolorCache: acCache];
+
 	renderingFinishedObject = nil;
 	[renderLock lock]; // lock the rendering engine.  unlocking will then cause the engine to render a new frame.
 	currentBatch = 0;
@@ -140,6 +143,8 @@
 
 - (IBAction) render: (id) sender {
 	int i; float detailLevel; 
+	FSRenderUnit unit;
+	FSRenderOperation* op;
 	if(glConfigured == NO) {
 		[[self openGLContext] makeCurrentContext];
 		glEnable(GL_TEXTURE_2D);
@@ -157,12 +162,51 @@
 		return;
 	}
 	Debug(@"render: dropping\n");
+/*
 	[finishedLock lock];
 	[finishedLock unlock];
 
 	[progress startAnimation: self];
 	[renderLock unlock];
+*/
+	unit.viewerData = view;
+	unit.origin[0] = view -> center[0] - ((double) [self bounds].size.width * view -> pixelSize * view -> aspectRatio / 2.0);
+	unit.origin[1] = view -> center[1] + ((double) [self bounds].size.height * view -> pixelSize / 2.0);
+	unit.offset[0] = 0.0;
+	unit.offset[1] = 0.0;
+	unit.step[0] = view -> pixelSize * view -> aspectRatio;
+	unit.step[1] = -view -> pixelSize;
+	unit.dimension[0] = [self bounds].size.width;		/* note: this ignores detailLevel */
+	unit.dimension[1] = [self bounds].size.height;
+	unit.owner = self;
+	unit.freeResults = YES;
+	unit.setting = setting;
+	unit.settings = defaults;
+
+	op = [[FSRenderOperation alloc] initWithUnit: unit colorizer: viewerColorizer];
+	[workQueue addOperation: op];
+	[op release];
 }
+
+- (void) renderOperationFinished: (id) op {
+	NSLog(@"got a renderOperationFinished message from %@\n", op);
+	finalX = (int)([op unit] -> dimension[0] + 0.5);
+	finalY = (int)([op unit] -> dimension[1] + 0.5);
+	[glLock lock];
+		Debug(@"rendering engine creating OpenGL texture of size (%f, %f)\n", finalX, finalY);
+		[[self openGLContext] makeCurrentContext];
+		glEnable(GL_TEXTURE_RECTANGLE_EXT);
+		glBindTexture(GL_TEXTURE_RECTANGLE_EXT, textureHandle);
+		glTexParameterf(GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_RECTANGLE_EXT, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_EXT, 0, 3, finalX, finalY, 0, GL_RGB, GL_FLOAT, (float*) ([op unit] -> result));
+		readyToDisplay = YES;
+	[glLock unlock];
+	Debug(@"texture created.\n");
+	rendering = NO;
+	[self setNeedsDisplay: YES];
+}
+
 
 - setRenderCompletedMessage: (SEL) message forObject: (id) obj { renderingFinished = message; renderingFinishedObject = obj; }
 
@@ -283,7 +327,7 @@
 		];
 		[progress stopAnimation: self];
 		if(renderingFinishedObject != nil) [renderingFinishedObject performSelector: renderingFinished];
-		[pool release];
+		[pool release], pool = nil;
 	}
 }
 
@@ -623,7 +667,7 @@
 	[syncLock lock];
 	activeSubtasks |= (1 << (nTasks + thisThread));
 	[syncLock unlock];
-	[pool release];
+	[pool release], pool = nil;
 	 }
 }
 
@@ -736,22 +780,24 @@
 	NSMutableData* buffer;
 	
 	size = [self bounds].size;
-	buffer = [NSMutableData dataWithLength:size.width*size.height*3];
+	buffer = [[NSMutableData dataWithLength:size.width*size.height*3] retain];
 	glReadBuffer(GL_BACK);
 	glReadPixels(0, 0, size.width, size.height, GL_RGB, GL_UNSIGNED_BYTE, [buffer mutableBytes]);
 	planes[0] = [buffer mutableBytes];
-	bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
+	bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
 		pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
 		samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
 		colorSpaceName: NSDeviceRGBColorSpace bytesPerRow: (size.width * 3)
 		bitsPerPixel: 24
-	];
-	image = [[NSImage alloc] initWithSize: size];
+	] retain];
+	image = [[[NSImage alloc] initWithSize: size] autorelease];
 	[image setFlipped:YES];
 	[image lockFocus];
 	[bitmap drawInRect: NSMakeRect(0, 0, size.width, size.height)];
 	[image unlockFocus];
-	return [image autorelease];
+	[bitmap release];
+	[buffer release];
+	return image;
 }
 
 - (void) drawDotAt: (NSPoint) P withColor: (float*) rgb 

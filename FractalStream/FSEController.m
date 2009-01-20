@@ -39,7 +39,7 @@
 	[browser reloadSessionWithoutRefresh];
 	[browser resetDefaults];
 	[browser refreshAll];
-	if([compiler usesCustom] == YES) [browser addTools: [[[NSFileWrapper alloc] initWithPath: [compiler customPath]] autorelease]];
+	if([compiler usesCustom] == YES) [browser addTools: [[NSFileWrapper alloc] initWithPath: [compiler customPath]]];
 	[browser changeTo: @"testing!" X: 0.0 Y: 0.0 p1: 0.0 p2: 0.0 pixelSize: (4.0 / 512.0) parametric: [compiler isParametric]];
 	[enclosingView selectNextTabViewItem: self];
 }

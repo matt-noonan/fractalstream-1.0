@@ -371,7 +371,7 @@
 	Class pclass;
 	int i;
 
-	bundleDir = [[NSString stringWithFormat: @"%@fstool%i/", NSTemporaryDirectory(), rand()] autorelease];
+	bundleDir = [NSString stringWithFormat: @"%@fstool%i/", NSTemporaryDirectory(), rand()];
 	[toolWrapper writeToFile: bundleDir atomically: YES updateFilenames: NO];
 	en = [[NSBundle pathsForResourcesOfType: @"fstool" inDirectory: bundleDir] objectEnumerator];
 	while(bundleName = [en nextObject]) {

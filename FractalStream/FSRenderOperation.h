@@ -8,25 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 #import "FSViewerData.h"
-
-typedef struct {
-	FSViewerData* viewerData;
-	double origin[2];
-	double offset[2];
-	double step[2];
-	int dimension[2];
-	id owner;
-	BOOL freeResults;
-	double* setting;
-	int settings;
-	double* result;
-} FSRenderUnit;
+#import "FSRenderUnit.h"
+#import "FSColorizer.h"
 
 @interface FSRenderOperation : NSOperation {
 	FSRenderUnit unit;
+	FSColorizer* colorizer;
 }
 
-- (id) init;
+- (id) initWithUnit: (FSRenderUnit) newUnit colorizer: (FSColorizer*) col;
+- (FSRenderUnit*) unit;
 - (void) dealloc;
 
 @end

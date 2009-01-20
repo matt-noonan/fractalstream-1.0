@@ -39,7 +39,7 @@
 	[minRadiusBox setFloatValue: rootData.minRadius];
 	[aspectBox setFloatValue: rootData.aspectRatio];
 	rootData.eventManager = theTools;
-	tmp = [[NSString stringWithFormat: @"%@fskernel%i", NSTemporaryDirectory(), rand()] autorelease];
+	tmp = [NSString stringWithFormat: @"%@fskernel%i", NSTemporaryDirectory(), rand()];
 	if([[theSession kernelWrapper] writeToFile: tmp atomically: YES updateFilenames: NO] == NO) {
 		NSLog(@"writeToFile failed with session %@ and data %@ writing to %@\n", theSession, [theSession kernelWrapper], tmp);
 	}
@@ -178,7 +178,7 @@
 		if([curName isEqualToString: prevName]) curName = [nameEnum nextObject];
 	}
 	reducedVariableNames = [[NSArray arrayWithArray: unique] retain];
-	[unique release];	
+	[unique release], unique = nil;	
 	NSLog(@"FSBrowser set variable names to %@ (%i unique names)\n", variableNames, uniqueVariableNames);
 }
 
