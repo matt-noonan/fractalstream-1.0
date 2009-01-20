@@ -49,6 +49,8 @@
 		687AEF560D75C9CC00998D23 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 018241CB09C89E9E00CDFD3F /* OpenGL.framework */; };
 		687AEF8A0D75CAA300998D23 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
 		687AEF8B0D75CAA800998D23 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */; };
+		6882595C0F25ABDC00D86B76 /* FSRenderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6882595B0F25ABDC00D86B76 /* FSRenderOperation.m */; };
+		6882595F0F25ABF800D86B76 /* FSColorOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6882595E0F25ABF800D86B76 /* FSColorOperation.m */; };
 		68A35A810D5D79DB00FE5ACA /* FSEParseTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */; };
 		68A35A820D5D79DB00FE5ACA /* FSECompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7A0D5D79DB00FE5ACA /* FSECompiler.m */; };
 		68A35A830D5D79DB00FE5ACA /* FSEC_gcc.c in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7B0D5D79DB00FE5ACA /* FSEC_gcc.c */; };
@@ -107,6 +109,10 @@
 		685F90F90D3D764C00C82447 /* FSColorizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColorizer.m; sourceTree = "<group>"; };
 		687AEF5C0D75C9CC00998D23 /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		687AEF5E0D75C9CC00998D23 /* Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info copy.plist"; sourceTree = "<group>"; };
+		6882595A0F25ABDC00D86B76 /* FSRenderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRenderOperation.h; sourceTree = "<group>"; };
+		6882595B0F25ABDC00D86B76 /* FSRenderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSRenderOperation.m; sourceTree = "<group>"; };
+		6882595D0F25ABF800D86B76 /* FSColorOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorOperation.h; sourceTree = "<group>"; };
+		6882595E0F25ABF800D86B76 /* FSColorOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColorOperation.m; sourceTree = "<group>"; };
 		68A35A770D5D79DB00FE5ACA /* FSECompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSECompiler.h; sourceTree = "<group>"; };
 		68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEParseTree.m; sourceTree = "<group>"; };
 		68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEParseNode.h; sourceTree = "<group>"; };
@@ -189,6 +195,10 @@
 				68FAB4FB0D5ADA07004ABF7A /* FSRenderer.m */,
 				684E65980CF91D8600BAB5A5 /* FSViewer.h */,
 				684E65990CF91D8700BAB5A5 /* FSViewer.m */,
+				6882595A0F25ABDC00D86B76 /* FSRenderOperation.h */,
+				6882595B0F25ABDC00D86B76 /* FSRenderOperation.m */,
+				6882595D0F25ABF800D86B76 /* FSColorOperation.h */,
+				6882595E0F25ABF800D86B76 /* FSColorOperation.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -460,6 +470,8 @@
 				68A35A840D5D79DB00FE5ACA /* FSEController.m in Sources */,
 				68A35BA40D5FBD7B00FE5ACA /* FSSave.m in Sources */,
 				68BFD8340DADB86800325B56 /* FSDocument.m in Sources */,
+				6882595C0F25ABDC00D86B76 /* FSRenderOperation.m in Sources */,
+				6882595F0F25ABF800D86B76 /* FSColorOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
