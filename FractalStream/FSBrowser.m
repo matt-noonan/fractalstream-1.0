@@ -32,7 +32,7 @@
 	NSString* tmp;
 	FSViewerData d;
 
-	d = [[theSession root] data];
+	d = [[theSession currentNode] data];
 	memmove(&rootData, &d, sizeof(FSViewerData));
 	[iterBox setIntValue: rootData.maxIters];
 	[radiusBox setFloatValue: rootData.maxRadius];

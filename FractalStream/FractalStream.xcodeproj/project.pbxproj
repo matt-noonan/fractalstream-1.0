@@ -79,7 +79,7 @@
 
 /* Begin PBXFileReference section */
 		0182416A09C892C500CDFD3F /* julia.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = julia.icns; sourceTree = "<group>"; };
-		018241CB09C89E9E00CDFD3F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		018241CB09C89E9E00CDFD3F /* OpenGL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		01DD1B6909CB653900A43FB5 /* FSTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTools.h; sourceTree = "<group>"; };
 		01DD1B6A09CB653900A43FB5 /* FSTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSTools.m; sourceTree = "<group>"; };
 		01DD1CE309CC945700A43FB5 /* FSCursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCursors.h; sourceTree = "<group>"; };
