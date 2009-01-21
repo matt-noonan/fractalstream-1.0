@@ -1,13 +1,14 @@
-/* FSViewer class, controls the display of dynamical systems.  This version is designed for output in OpenGL views. */
+/* FSViewer class, controls the display of dynamical systems.   */
 
 #import <Cocoa/Cocoa.h>
-#import <OpenGL/gl.h>
+/*#import <OpenGL/gl.h>*/
 #import <math.h>
 #import <sys/time.h>
 #import "FSViewerData.h"
 #import "FSColorWidget.h"
 #import "FSRenderOperation.h"
 #import "FSColorizer.h"
+#import "FSThreading.h"
 
 #ifndef GL_TEXTURE_RECTANGLE_EXT
 #define GL_TEXTURE_RECTANGLE_EXT            0x84F5
@@ -24,42 +25,19 @@
 - (void) setItem: (FSViewerItem) newItem;
 @end
 
-@interface FSViewer : NSOpenGLView {
+@interface FSViewer : NSView {
 
 	FSViewerData* view;
 	FSViewerData fakeview;
 	
-	float* texture;
-	int textureSize;
-	int textureBounds[2];
-	GLuint textureHandle;
-
 	BOOL awake;
 	BOOL displayLocked;
-	BOOL textureReady;
-	BOOL glConfigured;
 	float finalX, finalY;
 	volatile BOOL nodeChanged;
 	volatile BOOL readyToRender;
 	volatile BOOL rendering;
-	volatile BOOL readyToDisplay;
-	volatile float* volatile subtexture[4];
-	volatile int subtextureSize[4];
-	int subtextureOffset[4];
-	BOOL changed[4];
-	GLuint subtextureHandle[4];
-	BOOL subtextureReady[4];
-	NSLock* renderLock;
-	NSLock* glLock;
-	NSLock* finishedLock;
-	NSLock* textureReadyLock;
-	NSLock* modificationLock[4];
-	NSLock* subtextureLock[4];
-	NSLock* syncLock;
-	NSLock* acLock;
+	BOOL readyToDisplay;
 	NSTrackingRectTag coordinateTracker;
-	volatile int activeSubtasks;
-	int threadCount;
 	SEL renderingFinished;
 	id renderingFinishedObject;
 	
@@ -76,11 +54,13 @@
 	IBOutlet NSButton* denormalButton;
 	IBOutlet NSTextField* timerField;
 	FSColorizer* viewerColorizer;
-	volatile BOOL autocolorAdded;
 	BOOL useFakeZoom;
 	NSOperationQueue* workQueue;
+	NSString* drawing;
 	
+	NSImage* background;
 	FSViewer_Autocolor_Cache acCache[64];
+	int renderQueueEntries;
 	
 	BOOL configured;
 }

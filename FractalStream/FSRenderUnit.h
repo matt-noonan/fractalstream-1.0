@@ -15,6 +15,8 @@ typedef struct {
 	double offset[2];
 	double step[2];
 	int dimension[2];
+	float location[2];
+	int multiplier;
 	id owner;
 	BOOL freeResults;
 	double* setting;

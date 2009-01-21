@@ -28,7 +28,7 @@
 
 
 - (void) colorUnit: (FSRenderUnit*) unit {
-	float* texture;
+	unsigned char* texture;
 	double oX, oY;
 	int k;
 	int x, y, flag;
@@ -41,9 +41,7 @@
 	double nearR, farR;
 	int prog;
 	
-	NSLog(@"colorizer %@ starting work.  colorPicker is %@\n", self, colorPicker);
-	
-	texture = (float*) (unit -> result);
+	texture = (unsigned char*) (unit -> result);   /**** have to mix down to 8-bit integer with NSBitmapImageRep?? ***/
 	xMax = unit -> dimension[0];
 	yMax = unit -> dimension[1];
 	colorArray = [colorPicker colorArrayPtr];
@@ -116,7 +114,7 @@
 						b = golgol*ob + loglog*b;
 					}
 				}
-				else @synchronized(colorPicker) {
+				else {
 					/* this color scheme uses autocoloring.  MAKE THIS THREAD-SAFE!!!! */
 					int i;
 					i = 0;
@@ -125,7 +123,7 @@
 						if(((oX - acCache[flag].x[i])*(oX - acCache[flag].x[i]) + (oY - acCache[flag].y[i])*(oY - acCache[flag].y[i])) < nearR) break;
 						if((acCache[flag].x[i] == FSViewer_Infinity) && ((oX*oX + oY*oY) > farR)) break;
 					}
-					if(i == acCache[flag].used_entries) {
+					if(i == acCache[flag].used_entries) @synchronized(colorPicker) {
 						int acCount;
 						/* hit a new fixpoint */
 
@@ -238,9 +236,12 @@
 					}
 				}
 			}
-			texture[(3 * x) + (y * 3 * xMax) + 0] = r;
-			texture[(3 * x) + (y * 3 * xMax) + 1] = g;
-			texture[(3 * x) + (y * 3 * xMax) + 2] = b;
+			if(r > 1.0) r = 1.0; if(g > 1.0) g = 1.0; if(b > 1.0) b = 1.0;
+			if(r < 0.0) r = 0.0; if(g < 0.0) g = 0.0; if(b < 0.0) b = 0.0;
+			texture[(4 * x) + (y * 4 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
+			texture[(4 * x) + (y * 4 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
+			texture[(4 * x) + (y * 4 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
+			texture[(4 * x) + (y * 4 * xMax) + 3] = 0;
 		}
 	}
 			

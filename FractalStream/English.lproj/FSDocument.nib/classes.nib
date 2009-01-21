@@ -232,8 +232,6 @@
 				<string>NSButton</string>
 				<key>linesButton</key>
 				<string>NSButton</string>
-				<key>pixelBox</key>
-				<string>NSButton</string>
 				<key>progress</key>
 				<string>NSProgressIndicator</string>
 				<key>renderingFinishedObject</key>
@@ -242,7 +240,7 @@
 				<string>NSTextField</string>
 			</dict>
 			<key>SUPERCLASS</key>
-			<string>NSOpenGLView</string>
+			<string>NSView</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>

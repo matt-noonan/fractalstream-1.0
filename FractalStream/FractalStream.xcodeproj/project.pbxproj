@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0182416B09C892C500CDFD3F /* julia.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0182416A09C892C500CDFD3F /* julia.icns */; };
-		018241CC09C89E9E00CDFD3F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 018241CB09C89E9E00CDFD3F /* OpenGL.framework */; };
 		01DD1B6B09CB653900A43FB5 /* FSTools.h in Resources */ = {isa = PBXBuildFile; fileRef = 01DD1B6909CB653900A43FB5 /* FSTools.h */; };
 		01DD1B6C09CB653900A43FB5 /* FSTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 01DD1B6A09CB653900A43FB5 /* FSTools.m */; };
 		01DD1CE509CC945700A43FB5 /* FSCursors.h in Resources */ = {isa = PBXBuildFile; fileRef = 01DD1CE309CC945700A43FB5 /* FSCursors.h */; };
@@ -46,11 +45,11 @@
 		687AEF520D75C9CC00998D23 /* FSEController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7E0D5D79DB00FE5ACA /* FSEController.m */; };
 		687AEF530D75C9CC00998D23 /* FSSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35BA30D5FBD7B00FE5ACA /* FSSave.m */; };
 		687AEF550D75C9CC00998D23 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
-		687AEF560D75C9CC00998D23 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 018241CB09C89E9E00CDFD3F /* OpenGL.framework */; };
 		687AEF8A0D75CAA300998D23 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
 		687AEF8B0D75CAA800998D23 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */; };
 		6882595C0F25ABDC00D86B76 /* FSRenderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6882595B0F25ABDC00D86B76 /* FSRenderOperation.m */; };
 		6882595F0F25ABF800D86B76 /* FSColorOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6882595E0F25ABF800D86B76 /* FSColorOperation.m */; };
+		68825F940F27B9AC00D86B76 /* FSThreading.m in Sources */ = {isa = PBXBuildFile; fileRef = 68825F930F27B9AC00D86B76 /* FSThreading.m */; };
 		68A35A810D5D79DB00FE5ACA /* FSEParseTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */; };
 		68A35A820D5D79DB00FE5ACA /* FSECompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7A0D5D79DB00FE5ACA /* FSECompiler.m */; };
 		68A35A830D5D79DB00FE5ACA /* FSEC_gcc.c in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7B0D5D79DB00FE5ACA /* FSEC_gcc.c */; };
@@ -81,7 +80,6 @@
 
 /* Begin PBXFileReference section */
 		0182416A09C892C500CDFD3F /* julia.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = julia.icns; sourceTree = "<group>"; };
-		018241CB09C89E9E00CDFD3F /* OpenGL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		01DD1B6909CB653900A43FB5 /* FSTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTools.h; sourceTree = "<group>"; };
 		01DD1B6A09CB653900A43FB5 /* FSTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSTools.m; sourceTree = "<group>"; };
 		01DD1CE309CC945700A43FB5 /* FSCursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCursors.h; sourceTree = "<group>"; };
@@ -114,6 +112,8 @@
 		6882595D0F25ABF800D86B76 /* FSColorOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorOperation.h; sourceTree = "<group>"; };
 		6882595E0F25ABF800D86B76 /* FSColorOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColorOperation.m; sourceTree = "<group>"; };
 		68825AEC0F266FD300D86B76 /* FSRenderUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRenderUnit.h; sourceTree = "<group>"; };
+		68825F910F27B83600D86B76 /* FSThreading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSThreading.h; sourceTree = "<group>"; };
+		68825F930F27B9AC00D86B76 /* FSThreading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSThreading.m; sourceTree = "<group>"; };
 		68A35A770D5D79DB00FE5ACA /* FSECompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSECompiler.h; sourceTree = "<group>"; };
 		68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEParseTree.m; sourceTree = "<group>"; };
 		68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEParseNode.h; sourceTree = "<group>"; };
@@ -148,7 +148,6 @@
 				687AEF550D75C9CC00998D23 /* Cocoa.framework in Frameworks */,
 				687AEF8A0D75CAA300998D23 /* Foundation.framework in Frameworks */,
 				687AEF8B0D75CAA800998D23 /* AppKit.framework in Frameworks */,
-				687AEF560D75C9CC00998D23 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,7 +156,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
-				018241CC09C89E9E00CDFD3F /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +201,8 @@
 				685F90F90D3D764C00C82447 /* FSColorizer.m */,
 				6882595D0F25ABF800D86B76 /* FSColorOperation.h */,
 				6882595E0F25ABF800D86B76 /* FSColorOperation.m */,
+				68825F910F27B83600D86B76 /* FSThreading.h */,
+				68825F930F27B9AC00D86B76 /* FSThreading.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -300,7 +300,6 @@
 		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				018241CB09C89E9E00CDFD3F /* OpenGL.framework */,
 				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
 			);
@@ -474,6 +473,7 @@
 				68BFD8340DADB86800325B56 /* FSDocument.m in Sources */,
 				6882595C0F25ABDC00D86B76 /* FSRenderOperation.m in Sources */,
 				6882595F0F25ABF800D86B76 /* FSColorOperation.m in Sources */,
+				68825F940F27B9AC00D86B76 /* FSThreading.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

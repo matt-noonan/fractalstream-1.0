@@ -64,7 +64,7 @@
 - (IBAction) resetTrace: (id) sender {
 	traces = 0;
 	traceSteps = [stepsBox intValue];
-	NSLog(@"traceSteps = %i, found in object %@ with value %@\n", traceSteps, stepsBox, [stepsBox objectValue]);
+//	NSLog(@"traceSteps = %i, found in object %@ with value %@\n", traceSteps, stepsBox, [stepsBox objectValue]);
 }
 
 - (IBAction) registerTrace: (id) sender {
@@ -178,9 +178,9 @@
 					else [probeTextField setStringValue: @"? ? ?"];
 					break;
 				}
-				NSLog(@"-> mouseDown to tool %i (%@)\n", [popupMenu indexOfSelectedItem] - builtInTools, tool[[popupMenu indexOfSelectedItem] - builtInTools]);
+//				NSLog(@"-> mouseDown to tool %i (%@)\n", [popupMenu indexOfSelectedItem] - builtInTools, tool[[popupMenu indexOfSelectedItem] - builtInTools]);
 				[tool[[popupMenu indexOfSelectedItem] - builtInTools] mouseDown: theEvent];
-				NSLog(@"<- mouseDown to tool %i (%@)\n", [popupMenu indexOfSelectedItem] - builtInTools, tool[[popupMenu indexOfSelectedItem] - builtInTools]);
+//				NSLog(@"<- mouseDown to tool %i (%@)\n", [popupMenu indexOfSelectedItem] - builtInTools, tool[[popupMenu indexOfSelectedItem] - builtInTools]);
 				break;
 	}
 }
@@ -330,7 +330,7 @@
 				[aTool setOwnerTo: viewport];
 				[aTool unfreeze];
 				[tools addObject: aTool];
-				NSLog(@"added tool %@ of class %@ found at %@\n", [aTool name], pclass, pluginPath);
+//				NSLog(@"added tool %@ of class %@ found at %@\n", [aTool name], pclass, pluginPath);
 			}
 		}
 		tool = (id*) malloc([tools count] * sizeof(id));
@@ -378,7 +378,7 @@
 		/* Write the tool bundle to a temp location, load the bundle, add menu items */
 		toolBundle = [NSBundle bundleWithPath: bundleName];
 		pclass = [toolBundle principalClass];
-		NSLog(@"Found an extra tool with class %@\n", pclass);
+//		NSLog(@"Found an extra tool with class %@\n", pclass);
 		[toolClasses addObject: pclass];
 		[pclass preload: toolBundle];
 		aTool = [[pclass alloc] init];
@@ -423,7 +423,6 @@
 			[[probeTextField window] orderOut: self];
 		}
 		if(selected >= builtInTools) {
-			NSLog(@"Activating tool %@\n", tool[selected - builtInTools]);
 			[tool[selected - builtInTools] activate];
 		}
 		else if(selected > 1) {

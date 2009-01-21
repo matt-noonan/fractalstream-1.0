@@ -10,8 +10,9 @@
 #import "FSViewerData.h"
 #import "FSRenderUnit.h"
 #import "FSColorizer.h"
+#import "FSThreading.h"
 
-@interface FSRenderOperation : NSOperation {
+@interface FSRenderOperation : FSOperation {
 	FSRenderUnit unit;
 	FSColorizer* colorizer;
 }
