@@ -123,7 +123,7 @@
 						if(((oX - acCache[flag].x[i])*(oX - acCache[flag].x[i]) + (oY - acCache[flag].y[i])*(oY - acCache[flag].y[i])) < nearR) break;
 						if((acCache[flag].x[i] == FSViewer_Infinity) && ((oX*oX + oY*oY) > farR)) break;
 					}
-					if(i == acCache[flag].used_entries) @synchronized(colorPicker) {
+					if(i == acCache[flag].used_entries) synchronizeTo(colorPicker) {
 						int acCount;
 						/* hit a new fixpoint */
 

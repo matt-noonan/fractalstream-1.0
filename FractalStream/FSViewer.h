@@ -55,7 +55,7 @@
 	IBOutlet NSTextField* timerField;
 	FSColorizer* viewerColorizer;
 	BOOL useFakeZoom;
-	NSOperationQueue* workQueue;
+	FSOperationQueue* workQueue;
 	NSString* drawing;
 	
 	NSImage* background;

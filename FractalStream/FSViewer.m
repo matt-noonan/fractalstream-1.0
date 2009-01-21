@@ -53,7 +53,7 @@
 	}
 	
 	viewerColorizer = [[FSColorizer alloc] init];
-	workQueue = [[NSOperationQueue alloc] init];
+	workQueue = [[FSOperationQueue alloc] init];
 	[workQueue setMaxConcurrentOperationCount: NSOperationQueueDefaultMaxConcurrentOperationCount];
 	drawing = [[NSString stringWithString: @"drawing"] retain];
 	[viewerColorizer setColorWidget: colorPicker autocolorCache: acCache];
@@ -220,6 +220,7 @@
 			unit.offset[1] -= dy;
 		}
 	}
+	[workQueue go]; /* no-op if using NSOperation */
 }
 
 - (void) renderOperationFinished: (id) op {
@@ -240,7 +241,7 @@
 		bytesPerRow: (size.width * 4)
 		bitsPerPixel: 32
 	];
-	@synchronized(drawing) {
+	synchronizeTo(drawing) {
 		finalX = (int)([op unit] -> dimension[0] + 0.5);
 		finalY = (int)([op unit] -> dimension[1] + 0.5);
 		p.x = [op unit] -> location[0];
@@ -254,7 +255,7 @@
 		[bitmap release];
 		readyToDisplay = YES;
 	}
-	@synchronized(workQueue) {
+	synchronizeTo(workQueue) {
 		--renderQueueEntries;
 		if(renderQueueEntries == 0) {
 			if(renderingFinishedObject != nil)
@@ -286,7 +287,7 @@
 
 - (int) getBatchNumber { 
 	int r;
-	@synchronized(displayList) { r = currentBatch; ++currentBatch; }
+	synchronizeTo(displayList) { r = currentBatch; ++currentBatch; }
 	return r;
 }
 
@@ -294,7 +295,7 @@
 	NSEnumerator* objEnum;
 	FSViewerObject* theObj;
 	NSArray* oldDisplayList;
-	@synchronized(displayList) {
+	synchronizeTo(displayList) {
 		oldDisplayList = [NSArray arrayWithArray: displayList];
 		[displayList release];
 		displayList = [[NSMutableArray alloc] init];
@@ -307,7 +308,7 @@
 	NSEnumerator* objEnum;
 	FSViewerObject* theObj;
 	
-	@synchronized(displayList) {
+	synchronizeTo(displayList) {
 		objEnum = [displayList objectEnumerator];
 		while(theObj = [objEnum nextObject]) if([theObj batch] == batch) [theObj itemPtr] -> batch = newBatch;
 	}
@@ -317,14 +318,14 @@
 	NSEnumerator* objEnum;
 	FSViewerObject* theObj;
 	
-	@synchronized(displayList) {
+	synchronizeTo(displayList) {
 		objEnum = [displayList objectEnumerator];
 		while(theObj = [objEnum nextObject]) if([theObj batch] == batch) [theObj itemPtr] -> visible = vis;
 	}
 }
 
 - (void) drawObject: (FSViewerObject*) newObject {
-	@synchronized(displayList) {
+	synchronizeTo(displayList) {
 		[displayList addObject: newObject];
 	}
 } 
@@ -425,7 +426,7 @@
 	float t;
 	NSPoint point[2];
 	
-	@synchronized(displayList) {
+	synchronizeTo(displayList) {
 		objEnum = [displayList objectEnumerator];
 		while(obj = [objEnum nextObject]) {
 			item = [obj itemPtr];
@@ -567,7 +568,7 @@
 			[self bounds].size.width / zoom,
 			[self bounds].size.height / zoom
 		);
-		@synchronized(drawing) {
+		synchronizeTo(drawing) {
 			[background lockFocus];
 			[backgroundCopy drawInRect: [self bounds] fromRect: rect operation: NSCompositeCopy fraction: 1.0];
 			[background unlockFocus];
@@ -588,7 +589,7 @@
 			[self bounds].size.height * zoom
 		);
 	
-		@synchronized(drawing) {
+		synchronizeTo(drawing) {
 			[background lockFocus];
 			[[NSColor grayColor] set];
 			NSRectFill([self bounds]);
@@ -611,7 +612,7 @@
 	NSRect backgroundRect;
 	backgroundRect.origin.x = 0.0;
 	backgroundRect.origin.y = 0.0;
-	@synchronized(drawing) {
+	synchronizeTo(drawing) {
 		backgroundRect.size = [background size];
 		[background drawInRect: [self bounds] fromRect: backgroundRect operation: NSCompositeCopy fraction: 1.0];
 	}

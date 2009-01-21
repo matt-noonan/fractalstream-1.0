@@ -10,6 +10,7 @@
 #import "FSViewerData.h"
 #import "FSRenderUnit.h"
 #import "FSColorWidget.h"
+#import "FSThreading.h"
 
 @interface FSColorizer : NSObject {
 	int acMax;
