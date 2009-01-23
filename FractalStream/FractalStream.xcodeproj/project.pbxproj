@@ -59,6 +59,7 @@
 		68B7323A0D3B01560021E000 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D15AC360486D014006FF6A4 /* Info.plist */; };
 		68BFD8340DADB86800325B56 /* FSDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 68BFD8330DADB86800325B56 /* FSDocument.m */; };
 		68FAB4FC0D5ADA07004ABF7A /* FSRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 68FAB4FB0D5ADA07004ABF7A /* FSRenderer.m */; };
+		68FEC5590F27D43E00A5A8FC /* FSKernel.M in Sources */ = {isa = PBXBuildFile; fileRef = 68FEC5580F27D43E00A5A8FC /* FSKernel.M */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2D0486D014006FF6A4 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B6FDCFA73011CA2CEA /* MainMenu.nib */; };
 		8D15AC2E0486D014006FF6A4 /* FSDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B4FDCFA73011CA2CEA /* FSDocument.nib */; };
@@ -136,6 +137,8 @@
 		68BFD8330DADB86800325B56 /* FSDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSDocument.m; sourceTree = "<group>"; };
 		68FAB4FA0D5ADA07004ABF7A /* FSRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRenderer.h; sourceTree = "<group>"; };
 		68FAB4FB0D5ADA07004ABF7A /* FSRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSRenderer.m; sourceTree = "<group>"; };
+		68FEC5570F27D43E00A5A8FC /* FSKernel.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FSKernel.H; sourceTree = "<group>"; };
+		68FEC5580F27D43E00A5A8FC /* FSKernel.M */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FSKernel.M; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -175,6 +178,8 @@
 				68A35A7B0D5D79DB00FE5ACA /* FSEC_gcc.c */,
 				68A35A800D5D79DB00FE5ACA /* FSEController.h */,
 				68A35A7E0D5D79DB00FE5ACA /* FSEController.m */,
+				68FEC5570F27D43E00A5A8FC /* FSKernel.H */,
+				68FEC5580F27D43E00A5A8FC /* FSKernel.M */,
 			);
 			name = "Program Editor";
 			sourceTree = "<group>";
@@ -474,6 +479,7 @@
 				6882595C0F25ABDC00D86B76 /* FSRenderOperation.m in Sources */,
 				6882595F0F25ABF800D86B76 /* FSColorOperation.m in Sources */,
 				68825F940F27B9AC00D86B76 /* FSThreading.m in Sources */,
+				68FEC5590F27D43E00A5A8FC /* FSKernel.M in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,12 +694,13 @@
 					i386,
 				);
 				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_OBJC_GC = NO;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_FAST_MATH = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 3;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;

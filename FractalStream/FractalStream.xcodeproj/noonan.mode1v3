@@ -214,10 +214,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>68FEC5560F27CBDE00A5A8FC</string>
+						<string>6888A58E0F2A75B600724593</string>
 						<key>history</key>
 						<array>
-							<string>68825FE10F27C2DA00D86B76</string>
+							<string>68FEC5F40F2903FD00A5A8FC</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -270,6 +270,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -308,6 +310,7 @@
 								<string>2A37F4AAFDCFA73011CA2CEA</string>
 								<string>2A37F4ABFDCFA73011CA2CEA</string>
 								<string>6846D4680D3C250D003A46AF</string>
+								<string>019EAF500A2600A000E2AC05</string>
 								<string>019EAFBD0A26095100E2AC05</string>
 								<string>2A37F4B8FDCFA73011CA2CEA</string>
 								<string>2A37F4C3FDCFA73011CA2CEA</string>
@@ -316,9 +319,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>28</integer>
-									<integer>8</integer>
-									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -353,14 +353,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>FSThreading.h</string>
+								<string>FSViewer.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -368,11 +366,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>FSThreading.h</string>
+										<string>FSViewer.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>68FEC5550F27CBDE00A5A8FC</string>
+										<string>6888A58B0F2A75B600724593</string>
 										<key>history</key>
 										<array>
 											<string>680F37980CA06F0200F1F52E</string>
@@ -383,9 +381,7 @@
 											<string>68BFD5A70DA5E72200325B56</string>
 											<string>68BFD7430DAD893C00325B56</string>
 											<string>68BFD7FB0DADB7C800325B56</string>
-											<string>68BFD8EE0DAE568200325B56</string>
 											<string>682FE3560DB7B2400048EEEA</string>
-											<string>682FE3640DC93F370048EEEA</string>
 											<string>68E5ABFD0E89F40E00076A15</string>
 											<string>68E5AC040E89F40E00076A15</string>
 											<string>68E5ACB20EAD63F200076A15</string>
@@ -419,9 +415,13 @@
 											<string>68FEC5310F27C99C00A5A8FC</string>
 											<string>68FEC5320F27C99C00A5A8FC</string>
 											<string>68FEC5330F27C99C00A5A8FC</string>
-											<string>68FEC5340F27C99C00A5A8FC</string>
 											<string>68FEC5490F27CB7100A5A8FC</string>
-											<string>68FEC54A0F27CB7100A5A8FC</string>
+											<string>68FEC5DE0F284B8200A5A8FC</string>
+											<string>68FEC5DF0F284B8200A5A8FC</string>
+											<string>68FEC5E00F284B8200A5A8FC</string>
+											<string>68FEC5E10F284B8200A5A8FC</string>
+											<string>68FEC5E20F284B8200A5A8FC</string>
+											<string>68FEC5F30F2903FD00A5A8FC</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -473,69 +473,8 @@
 											<string>68825B1A0F26773A00D86B76</string>
 											<string>68825F9E0F27BA6A00D86B76</string>
 											<string>68825FB10F27BA6A00D86B76</string>
-											<string>68FEC4ED0F27C7D500A5A8FC</string>
-											<string>68FEC4EE0F27C7D500A5A8FC</string>
-											<string>68FEC4EF0F27C7D500A5A8FC</string>
-											<string>68FEC4F00F27C7D500A5A8FC</string>
-											<string>68FEC4F10F27C7D500A5A8FC</string>
-											<string>68FEC4F20F27C7D500A5A8FC</string>
-											<string>68FEC4F30F27C7D500A5A8FC</string>
-											<string>68FEC4F40F27C7D500A5A8FC</string>
-											<string>68FEC4F50F27C7D500A5A8FC</string>
-											<string>68FEC4F60F27C7D500A5A8FC</string>
-											<string>68FEC4F70F27C7D500A5A8FC</string>
-											<string>68FEC4F80F27C7D500A5A8FC</string>
-											<string>68FEC4F90F27C7D500A5A8FC</string>
-											<string>68FEC4FA0F27C7D500A5A8FC</string>
-											<string>68FEC4FB0F27C7D500A5A8FC</string>
-											<string>68FEC4FC0F27C7D500A5A8FC</string>
-											<string>68FEC4FD0F27C7D500A5A8FC</string>
-											<string>68FEC4FE0F27C7D500A5A8FC</string>
-											<string>68FEC4FF0F27C7D500A5A8FC</string>
-											<string>68FEC5000F27C7D500A5A8FC</string>
-											<string>68FEC5010F27C7D500A5A8FC</string>
-											<string>68FEC5020F27C7D500A5A8FC</string>
-											<string>68FEC5030F27C7D500A5A8FC</string>
-											<string>68FEC5040F27C7D500A5A8FC</string>
-											<string>68FEC5050F27C7D500A5A8FC</string>
-											<string>68FEC5060F27C7D500A5A8FC</string>
-											<string>68FEC5070F27C7D500A5A8FC</string>
-											<string>68FEC5080F27C7D500A5A8FC</string>
-											<string>68FEC5090F27C7D500A5A8FC</string>
-											<string>68FEC50A0F27C7D500A5A8FC</string>
-											<string>68FEC50B0F27C7D500A5A8FC</string>
-											<string>68FEC50C0F27C7D500A5A8FC</string>
-											<string>68FEC50D0F27C7D500A5A8FC</string>
-											<string>68FEC50E0F27C7D500A5A8FC</string>
-											<string>68FEC50F0F27C7D500A5A8FC</string>
-											<string>68FEC5100F27C7D500A5A8FC</string>
-											<string>68FEC5110F27C7D500A5A8FC</string>
-											<string>68FEC5120F27C7D500A5A8FC</string>
-											<string>68FEC5130F27C7D500A5A8FC</string>
-											<string>68FEC5140F27C7D500A5A8FC</string>
-											<string>68FEC5370F27C99C00A5A8FC</string>
-											<string>68FEC5380F27C99C00A5A8FC</string>
-											<string>68FEC5390F27C99C00A5A8FC</string>
-											<string>68FEC53A0F27C99C00A5A8FC</string>
-											<string>68FEC53B0F27C99C00A5A8FC</string>
-											<string>68FEC53C0F27C99C00A5A8FC</string>
-											<string>68FEC53D0F27C99C00A5A8FC</string>
-											<string>68FEC53E0F27C99C00A5A8FC</string>
-											<string>68FEC53F0F27C99C00A5A8FC</string>
-											<string>68FEC5400F27C99C00A5A8FC</string>
-											<string>68FEC5410F27C99C00A5A8FC</string>
-											<string>68FEC5420F27C99C00A5A8FC</string>
-											<string>68FEC5430F27C99C00A5A8FC</string>
-											<string>68FEC5440F27C99C00A5A8FC</string>
-											<string>68FEC5450F27C99C00A5A8FC</string>
-											<string>68FEC54B0F27CB7100A5A8FC</string>
-											<string>68FEC54C0F27CB7100A5A8FC</string>
-											<string>68FEC54D0F27CB7100A5A8FC</string>
-											<string>68FEC54E0F27CB7100A5A8FC</string>
-											<string>68FEC54F0F27CB7100A5A8FC</string>
-											<string>68FEC5500F27CB7100A5A8FC</string>
-											<string>68FEC5510F27CB7100A5A8FC</string>
-											<string>68FEC5520F27CB7100A5A8FC</string>
+											<string>68FEC5E40F284B8200A5A8FC</string>
+											<string>68FEC5E60F284B8200A5A8FC</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -593,9 +532,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>68FEC5160F27C7D500A5A8FC</string>
+				<string>6888A58C0F2A75B600724593</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>68FEC5170F27C7D500A5A8FC</string>
+				<string>6888A58D0F2A75B600724593</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -727,14 +666,7 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>68FEC5190F27C7D600A5A8FC</string>
-		<string>68FEC51A0F27C7D600A5A8FC</string>
-		<string>68FEC51B0F27C7D600A5A8FC</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>68BFD4240D9D779E00325B56</string>
 		<string>68825B8F0F26773A00D86B76</string>
-		<string>68972ADD0D49B2BC00FBF09B</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>/Users/noonan/Desktop/FractalStream-svn/FractalStream.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -754,12 +686,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>FSThreading.m</string>
+								<string>FSViewer.m</string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -776,8 +710,6 @@
 							<string>444pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXBuildLogShowsTranscriptDefaultKey</key>
@@ -830,7 +762,7 @@
 			<key>WindowToolGUID</key>
 			<string>68972ADD0D49B2BC00FBF09B</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
