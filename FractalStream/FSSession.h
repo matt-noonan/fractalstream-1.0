@@ -101,6 +101,8 @@
 - (FSSessionNode*) addChildWithData: (FSViewerData) theData andMakeCurrent: (BOOL) makeCurrent;
 - (FSSessionNode*) root;
 
+- (BOOL) kernelIsCached;
+
 // required methods for NSOutlineView
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (FSSessionNode*) item;
 - (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (FSSessionNode*) item;

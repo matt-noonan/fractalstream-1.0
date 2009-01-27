@@ -23,9 +23,12 @@
 		BOOL disableEditor;
 }
 
++ (BOOL) usesMiniLoads;
++ (void) useMiniLoads: (BOOL) ml;
 - (NSString*) type;
 - (FSSession*) session;
 - (NSArray*) editor;
+- (NSArray*) minidata;
 - (FSColorWidget*) colorizer;
 - (NSArray*) variableNames;
 - (NSArray*) variableReal;

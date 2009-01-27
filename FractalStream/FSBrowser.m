@@ -41,22 +41,22 @@
 	[minRadiusBox setFloatValue: rootData.minRadius];
 	[aspectBox setFloatValue: rootData.aspectRatio];
 	rootData.eventManager = theTools;
-	tmp = [NSString stringWithFormat: @"%@fskernel%i", NSTemporaryDirectory(), rand()];
-	if([[theSession kernelWrapper] writeToFile: tmp atomically: YES updateFilenames: NO] == NO) {
-		NSLog(@"writeToFile failed with session %@ and data %@ writing to %@\n", theSession, [theSession kernelWrapper], tmp);
-	}
-	NSLog(@"Trying dlopen on \"%@\"\n", tmp);
 
-#ifdef __WIN32__
-	NSLog(@"-----> NO SUPPORT FOR DYNAMIC LOADING ON WINDOWS YET!!!\n");
-	loadedModule = kernel = NULL;
-	return;
-#else
-	NSLog(@"trying to get loadedModule from %@\n", theKernel);
-	[theKernel buildKernelFromCompiler: theCompiler];
-	//[theKernel loadKernelFromFile: tmp];
+	if([theSession kernelIsCached]) {
+		tmp = [NSString stringWithFormat: @"%@fskernel%i", NSTemporaryDirectory(), rand()];
+		if([[theSession kernelWrapper] writeToFile: tmp atomically: YES updateFilenames: NO] == NO) {
+			NSLog(@"writeToFile failed with session %@ and data %@ writing to %@\n", theSession, [theSession kernelWrapper], tmp);
+		}
+		NSLog(@"Trying dlopen on \"%@\"\n", tmp);
+		[theKernel loadKernelFromFile: tmp];
+	}
+	else {
+		NSLog(@"going to try to build from script\n");
+		[theCompiler buildScript: [theSession program]];
+		[theKernel buildKernelFromCompiler: theCompiler];
+	}
+	NSLog(@"getting kernel pointer\n");
 	kernel = [theKernel kernelPtr];
-#endif
 	if(kernel == NULL) {
 		NSLog(@"could not extract kernel routine\n");
 		return;
@@ -159,6 +159,7 @@
 }
 
 - (FSSession*) session { return theSession; }
+- (FSViewer*) viewer { return theViewer; }
 
 - (void) setVariableNamesTo: (NSArray*) names {
 	NSEnumerator* nameEnum;

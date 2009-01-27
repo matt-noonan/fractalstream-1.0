@@ -67,6 +67,10 @@
 		6888A6750F2AB45100724593 /* LLVMX86AsmPrinter.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6650F2AB45100724593 /* LLVMX86AsmPrinter.o */; };
 		6888A6760F2AB45100724593 /* libLLVMAsmPrinter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6660F2AB45100724593 /* libLLVMAsmPrinter.a */; };
 		6888A6770F2AB45100724593 /* libLLVMSelectionDAG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6670F2AB45100724593 /* libLLVMSelectionDAG.a */; };
+		6888AE180F2EAFA500724593 /* FSJitter.M in Sources */ = {isa = PBXBuildFile; fileRef = 6888AE170F2EAFA500724593 /* FSJitter.M */; };
+		6888B0AF0F2EECB400724593 /* FSScriptLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6888B0AE0F2EECB400724593 /* FSScriptLibraryController.m */; };
+		6888B0B20F2EECCD00724593 /* FSColorLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6888B0B10F2EECCD00724593 /* FSColorLibraryController.m */; };
+		6888B26B0F2FB47F00724593 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 6888B26A0F2FB47F00724593 /* folder.png */; };
 		68A35A810D5D79DB00FE5ACA /* FSEParseTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */; };
 		68A35A820D5D79DB00FE5ACA /* FSECompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7A0D5D79DB00FE5ACA /* FSECompiler.m */; };
 		68A35A830D5D79DB00FE5ACA /* FSEC_gcc.c in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7B0D5D79DB00FE5ACA /* FSEC_gcc.c */; };
@@ -149,6 +153,13 @@
 		6888A6650F2AB45100724593 /* LLVMX86AsmPrinter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMX86AsmPrinter.o; path = /opt/local/lib/LLVMX86AsmPrinter.o; sourceTree = "<absolute>"; };
 		6888A6660F2AB45100724593 /* libLLVMAsmPrinter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMAsmPrinter.a; path = /opt/local/lib/libLLVMAsmPrinter.a; sourceTree = "<absolute>"; };
 		6888A6670F2AB45100724593 /* libLLVMSelectionDAG.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMSelectionDAG.a; path = /opt/local/lib/libLLVMSelectionDAG.a; sourceTree = "<absolute>"; };
+		6888AE160F2EAFA500724593 /* FSJitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSJitter.h; sourceTree = "<group>"; };
+		6888AE170F2EAFA500724593 /* FSJitter.M */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FSJitter.M; sourceTree = "<group>"; };
+		6888B0AD0F2EECB400724593 /* FSScriptLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSScriptLibraryController.h; sourceTree = "<group>"; };
+		6888B0AE0F2EECB400724593 /* FSScriptLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSScriptLibraryController.m; sourceTree = "<group>"; };
+		6888B0B00F2EECCD00724593 /* FSColorLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorLibraryController.h; sourceTree = "<group>"; };
+		6888B0B10F2EECCD00724593 /* FSColorLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColorLibraryController.m; sourceTree = "<group>"; };
+		6888B26A0F2FB47F00724593 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder.png; sourceTree = "<group>"; };
 		68A35A770D5D79DB00FE5ACA /* FSECompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSECompiler.h; sourceTree = "<group>"; };
 		68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEParseTree.m; sourceTree = "<group>"; };
 		68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEParseNode.h; sourceTree = "<group>"; };
@@ -229,6 +240,8 @@
 				68A35A7E0D5D79DB00FE5ACA /* FSEController.m */,
 				6888A6510F2AB41300724593 /* FSKernel.h */,
 				6888A6520F2AB41300724593 /* FSKernel.M */,
+				6888AE160F2EAFA500724593 /* FSJitter.h */,
+				6888AE170F2EAFA500724593 /* FSJitter.M */,
 			);
 			name = "Program Editor";
 			sourceTree = "<group>";
@@ -317,6 +330,7 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6888B0AC0F2EEC7900724593 /* Library */,
 				6846D4680D3C250D003A46AF /* Color Editor */,
 				019EAFC20A26098300E2AC05 /* Document */,
 				019EAF500A2600A000E2AC05 /* Program Editor */,
@@ -343,6 +357,7 @@
 				2A37F4B6FDCFA73011CA2CEA /* MainMenu.nib */,
 				2A37F4B4FDCFA73011CA2CEA /* FSDocument.nib */,
 				01DD1D7009CC9DE000A43FB5 /* ZoomIn.tiff */,
+				6888B26A0F2FB47F00724593 /* folder.png */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				684E67E30CF958A800BAB5A5 /* MyDocument-saved.nib */,
@@ -391,6 +406,17 @@
 				6888A6670F2AB45100724593 /* libLLVMSelectionDAG.a */,
 			);
 			name = "llvm Libraries";
+			sourceTree = "<group>";
+		};
+		6888B0AC0F2EEC7900724593 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				6888B0AD0F2EECB400724593 /* FSScriptLibraryController.h */,
+				6888B0AE0F2EECB400724593 /* FSScriptLibraryController.m */,
+				6888B0B00F2EECCD00724593 /* FSColorLibraryController.h */,
+				6888B0B10F2EECCD00724593 /* FSColorLibraryController.m */,
+			);
+			name = Library;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -486,6 +512,7 @@
 				01DD1D7109CC9DE000A43FB5 /* ZoomIn.tiff in Resources */,
 				680F378C0CA06E3300F1F52E /* programList in Resources */,
 				684E67E50CF958A800BAB5A5 /* MyDocument-saved.nib in Resources */,
+				6888B26B0F2FB47F00724593 /* folder.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +579,9 @@
 				6882595F0F25ABF800D86B76 /* FSColorOperation.m in Sources */,
 				68825F940F27B9AC00D86B76 /* FSThreading.m in Sources */,
 				6888A6530F2AB41300724593 /* FSKernel.M in Sources */,
+				6888AE180F2EAFA500724593 /* FSJitter.M in Sources */,
+				6888B0AF0F2EECB400724593 /* FSScriptLibraryController.m in Sources */,
+				6888B0B20F2EECCD00724593 /* FSColorLibraryController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

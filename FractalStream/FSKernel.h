@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "FSECompiler.h"
+#import "FSJitter.h"
 
 #define LLVMi32(x) ConstantInt::get(IntegerType::get(32), (x), true)
 #define LLVMu32(x) ConstantInt::get(IntegerType::get(32), (x), false)
@@ -22,9 +23,7 @@
 	void** val;
 	void (*kernelPtr)(int, double*, int, double*, int, double, double);
 	void* module;
-	void* jit;
 	void* bldr;
-	void (*llvmPtr)(int, double*, int, double*, int, double, double);
 	
 	void* _llvmKernel;					// (Function*) llvmKernel
 	void *_inputP, *_outputP;	// (Value*) _inputP etc
@@ -40,6 +39,7 @@
 	double eSF_const_x;
 	double eSF_const_y;
 	
+	FSJitter* jitter;
 }
 
 - (void) test;

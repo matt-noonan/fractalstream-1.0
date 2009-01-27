@@ -80,6 +80,7 @@
 - (FSSession*) session;
 - (void) setVariableNamesTo: (NSArray*) names;
 - (void) loadDataFromInterfaceTo: (FSViewerData*) theData;
+- (FSViewer*) viewer;
 
 - (int) numberOfRowsInTableView: (NSTableView*) tableView;
 - (id) tableView: (NSTableView*) tableView objectValueForTableColumn: (NSTableColumn*) tableColumn row: (int) row;

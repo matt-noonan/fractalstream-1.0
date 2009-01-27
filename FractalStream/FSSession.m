@@ -398,6 +398,8 @@
 - (void) setFlags: (NSArray*) flagArray { flagNames = [NSArray arrayWithArray: flagArray]; }
 - (NSArray*) flagNames { return flagNames; }
 
+- (BOOL) kernelIsCached { return kernelIsCached; }
+
 + (void) initialize { [FSSession setVersion: 0]; }
 
 - (void) encodeWithCoder: (NSCoder*) coder
@@ -408,7 +410,8 @@
 	[coder encodeObject: sessionTitle];
 	[coder encodeObject: sessionProgram];
 	[coder encodeObject: sessionNotes];
-	[coder encodeObject: sessionKernel];
+	if(kernelIsCached) [coder encodeObject: sessionKernel];
+	else [coder encodeObject: [NSNull null]];
 	[coder encodeObject: [NSNumber numberWithBool: kernelIsCached]];
 }
 

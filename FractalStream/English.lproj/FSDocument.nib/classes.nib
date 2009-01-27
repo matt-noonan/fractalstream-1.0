@@ -121,6 +121,35 @@
 			<string>NSOpenGLView</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>FSDocument</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>browser</key>
+				<string>FSBrowser</string>
+				<key>colorizer</key>
+				<string>FSColorWidget</string>
+				<key>editor</key>
+				<string>FSEController</string>
+				<key>iterationBox</key>
+				<string>NSTextField</string>
+				<key>mainTabView</key>
+				<string>NSTabView</string>
+				<key>radiusBox</key>
+				<string>NSTextField</string>
+				<key>session</key>
+				<string>FSSession</string>
+				<key>toolkit</key>
+				<string>FSTools</string>
+				<key>viewport</key>
+				<string>FSViewport</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSDocument</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>compile</key>
@@ -159,32 +188,6 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
-				<key>configureSession</key>
-				<string>id</string>
-				<key>endConfiguration</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FSConfigurationSheet</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>configureSheet</key>
-				<string>id</string>
-				<key>kernelLoader</key>
-				<string>FSProgramList</string>
-				<key>parentController</key>
-				<string>id</string>
-				<key>parentWindow</key>
-				<string>id</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindowController</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
 				<key>cloneCurrentNode</key>
 				<string>id</string>
 				<key>deleteCurrentChildren</key>
@@ -208,6 +211,34 @@
 			<dict>
 				<key>historyView</key>
 				<string>NSOutlineView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>editScript</key>
+				<string>id</string>
+				<key>newScript</key>
+				<string>id</string>
+				<key>openScript</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FSScriptLibraryController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>description</key>
+				<string>NSTextView</string>
+				<key>outline</key>
+				<string>NSOutlineView</string>
+				<key>previewer</key>
+				<string>NSImageView</string>
+				<key>theDoc</key>
+				<string>FSDocument</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
@@ -307,39 +338,6 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
-			<key>CLASS</key>
-			<string>MyDocument</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>browser</key>
-				<string>FSBrowser</string>
-				<key>colorizer</key>
-				<string>FSColorWidget</string>
-				<key>configSheet</key>
-				<string>FSConfigurationSheet</string>
-				<key>editor</key>
-				<string>FSEController</string>
-				<key>iterationBox</key>
-				<string>NSTextField</string>
-				<key>kernelLoader</key>
-				<string>FSProgramList</string>
-				<key>mainTabView</key>
-				<string>NSTabView</string>
-				<key>radiusBox</key>
-				<string>NSTextField</string>
-				<key>session</key>
-				<string>FSSession</string>
-				<key>toolkit</key>
-				<string>FSTools</string>
-				<key>viewport</key>
-				<string>FSViewport</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSDocument</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>compile</key>
@@ -349,24 +347,6 @@
 			<string>FSECompiler</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>loadKernel</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FSProgramList</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>listView</key>
-				<string>NSOutlineView</string>
-			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
 		</dict>

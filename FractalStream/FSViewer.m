@@ -98,6 +98,7 @@
 	readyToRender = YES;
 	nodeChanged = YES;
 	
+	if((configured == YES) && (view -> program != newData -> program)) [self lockAllAutocolor];
 	/* If everything in the new view is the same except for zoom level / center, we can reuse the old texture as an approximation */
 	if(
 			(configured == YES) &&
@@ -525,6 +526,13 @@
 			}
 			if(item -> batch == 0) item -> visible = NO;  // batch 0 items only drawn once
 		}
+	}
+}
+
+- (void) lockAllAutocolor {
+	int i;
+	for(i = 0; i < 64; i++) { 
+		if([colorPicker useAutocolorForColor: i]) [colorPicker setAutocolor: i toLocked: YES];
 	}
 }
 

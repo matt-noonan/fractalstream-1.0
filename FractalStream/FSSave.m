@@ -11,9 +11,15 @@
 
 @implementation FSSave
 
+static BOOL miniLoads = YES;
+
++ (BOOL) usesMiniLoads { return miniLoads; }
++ (void) useMiniLoads: (BOOL) ml { miniLoads = ml; }
+
 - (NSString*) type { return type; }
 - (FSSession*) session { return session; }
 - (NSArray*) editor { return editor; }
+- (NSArray*) minidata { return editor; }
 - (FSColorWidget*) colorizer { return colorizer; }
 - (NSArray*) variableNames { return names; }
 - (NSArray*) variableReal { return real; }
@@ -132,7 +138,7 @@
 	tools = [NSNull null];
 	disableEditor = NO;
 	type = [[coder decodeObject] retain];
-	if([type isEqualToString: @"editor"]) {
+	if([type isEqualToString: @"editor"] || [FSSave usesMiniLoads]) {
 		editor = [[coder decodeObject] retain];
 		session = nil;
 		colorizer = nil;
@@ -142,6 +148,7 @@
 		editor = [[coder decodeObject] retain];
 		session = [[coder decodeObject] retain];
 		colorizer = [[coder decodeObject] retain];
+		NSLog(@"saved with old version");
 	}
 	else if([type isEqualToString: @"full session [26mar]"]) {
 		editor = [[coder decodeObject] retain];
@@ -150,6 +157,7 @@
 		names = [[coder decodeObject] retain];
 		real = [[coder decodeObject] retain];
 		imag = [[coder decodeObject] retain];
+		NSLog(@"saved with old version: 26mar");
 	}
 	else if([type isEqualToString: @"full session [3sep]"]) {
 		editor = [[coder decodeObject] retain];
@@ -159,6 +167,7 @@
 		real = [[coder decodeObject] retain];
 		imag = [[coder decodeObject] retain];
 		probes = [[coder decodeObject] retain];
+		NSLog(@"saved with old version: 3sep");
 	}
 	else if([type isEqualToString: @"full session [20oct]"]) {
 		editor = [[coder decodeObject] retain];
@@ -169,6 +178,7 @@
 		imag = [[coder decodeObject] retain];
 		probes = [[coder decodeObject] retain];
 		[colorizer readSmoothnessFrom: [coder decodeObject]];
+		NSLog(@"saved with old version: 20oct");
 	}
 	else if([type isEqualToString: @"full session [22oct]"]) {
 		editor = [[coder decodeObject] retain];

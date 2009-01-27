@@ -26,7 +26,6 @@
 	BOOL newSession;
 	FSSave* savedData;
 	
-	IBOutlet FSViewport* viewport;
 	IBOutlet FSEController* editor;
 	IBOutlet FSColorWidget* colorizer;
 	IBOutlet FSTools* toolkit;
@@ -39,5 +38,6 @@
 - (void) completeConfiguration;
 - (void) iterations: (int*) it;
 - (void) radius: (double*) rad;
+- (void) doDocumentLoadWithLibrary: (BOOL) lib;
 
 @end

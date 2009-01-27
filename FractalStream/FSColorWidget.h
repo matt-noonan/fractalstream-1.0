@@ -74,6 +74,7 @@ typedef struct {
 - (void) cacheAutocolor: (int) c to: (float*) cache X: (double*) x Y: (double*) y;
 - (BOOL) useAutocolorForColor: (int) c;
 - (BOOL) useLockForColor: (int) c;
+- (void) setAutocolor: (int) c toLocked: (BOOL) lk;
 - (void) colorArrayValue: (float*) cA;
 - (void) setNamesTo: (NSArray*) newNames;
 - (void) setup;

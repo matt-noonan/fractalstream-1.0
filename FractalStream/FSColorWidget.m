@@ -302,6 +302,10 @@
 	return lockedAutocolor[c];
 }
 
+- (void) setAutocolor: (int) c toLocked: (BOOL) lk {
+	lockedAutocolor[c] = lk;
+}
+
 - (IBAction) updateAutocolorLockState: (id) sender {
 	lockedAutocolor[[colorButton indexOfSelectedItem]] = ([acLockButton state] == NSOnState)? YES : NO;
 }

@@ -17,6 +17,8 @@
 	return self;
 }
 
+- awakeFromNib { NSLog(@"FSECompiler %@ woke from nib\n", self); }
+
 #define FSSymbol_NIL		-1
 #define FSSymbol_WHITESPACE 0
 #define FSSymbol_COMMAND	1
@@ -882,7 +884,7 @@
 	***/
 	
 	[tree reorder];
-	[tree log];
+//	[tree log];
 	
 	[tree setTempVar: [self indexOfVariableWithName: @".temp"]];
 	error = [tree realifyFrom: FSE_RootNode];
@@ -905,14 +907,14 @@
 //	[tree log];
 	[self printVariableStack];
 
-	gcc = [NSString stringWithFormat: @"gcc -dynamiclib -arch ppc -arch i386 -O3 -o %@ %@.c", 
-		filename, filename
-	];
-	ifile = [NSString stringWithFormat: @"%@.c",filename];
-	[gcc getCString: gccC]; [ifile getCString: ifileC];
-	NSLog(@"writing to \"%@\", compiling with command \"%@\".\n", ifile, gcc);
+//	gcc = [NSString stringWithFormat: @"gcc -dynamiclib -arch ppc -arch i386 -O3 -o %@ %@.c", 
+//		filename, filename
+//	];
+//	ifile = [NSString stringWithFormat: @"%@.c",filename];
+//	[gcc getCString: gccC]; [ifile getCString: ifileC];
+//	NSLog(@"writing to \"%@\", compiling with command \"%@\".\n", ifile, gcc);
 	//emit(ifileC, [tree nodeAt: 0], [tree size]); /*** hack ***/
-	if(system(gccC)) error = [NSString stringWithString: @"gcc error, check console log for details."];
+//	if(system(gccC)) error = [NSString stringWithString: @"gcc error, check console log for details."];
 	symbol = nil;
 }
 
@@ -923,6 +925,16 @@
 	source = [NSString stringWithString: [newSource lowercaseString]];
 	literalSource = [NSString stringWithString: newSource];
 //	if(description != nil) [description release]; description = [newDescription retain];
+}
+
+- (void) buildScript: (NSString*) newSource {
+	NSLog(@"Compiler is going to build script \"%@\"\n", newSource);
+	[self 
+		setTitle: @""
+		source: newSource
+		andDescription: @""
+	];
+	[self compile: self];
 }
 
 - (NSArray*) flagArray { 

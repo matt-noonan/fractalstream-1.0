@@ -17,6 +17,7 @@
 		source: [sourceView string]
 		andDescription: [descriptionView textStorage]
 	];
+	[[browser session] setProgram: [sourceView string]];
 	[compiler setOutputFilename: tmp];
 	[compiler compile: sender];
 	errorMessage = [compiler errorMessage];
@@ -64,6 +65,7 @@
 - (NSArray*) state {
 	NSMutableArray* savedState;
 	NSRange range;
+	NSImage* img;
 	
 	savedState = [[NSMutableArray alloc] init];
 	[savedState addObject: [titleField stringValue]];
@@ -73,8 +75,15 @@
 	[savedState addObject: [descriptionView RTFDFromRange: range]];
 	range.length = 0;
 	[descriptionView setSelectedRange: range];
+	img = [[browser viewer] snapshot];
+	if(img) {
+		[img setScalesWhenResized: YES];
+		[img setSize: NSMakeSize(128, 128)];
+		[savedState addObject: img];
+	}
 	[savedState retain];
 	return savedState;
 }
+
 
 @end

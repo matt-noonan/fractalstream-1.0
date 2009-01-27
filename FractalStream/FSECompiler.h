@@ -37,6 +37,7 @@ typedef struct {
 }
 
 - (IBAction) compile: (id) sender;
+- (void) buildScript: (NSString*) script;
 
 - (int) extractArithBelowNode: (int) node;
 - (int) extractBoolBelowNode: (int) node;

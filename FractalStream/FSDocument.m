@@ -32,7 +32,11 @@
 - (void)windowControllerDidLoadNib:(NSWindowController *) aController
 {
     [super windowControllerDidLoadNib:aController];
+	[self doDocumentLoadWithLibrary: YES];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
+}
+
+- (void) doDocumentLoadWithLibrary: (BOOL) lib {
 	if(newSession == NO) { 
 		[editor restoreFrom: [savedData editor]];
 		if([savedData session] != nil) {
@@ -45,16 +49,16 @@
 			[browser setAllowEditor: [savedData allowEditor]];
 			[browser reloadSession];
 			if([savedData hasTools]) [browser addTools: [savedData customTools]];
-			[mainTabView selectNextTabViewItem: self];
+			[mainTabView selectTabViewItemAtIndex: 1];
 		}
+		else [mainTabView selectTabViewItemAtIndex: 0];
 	}
+	else [mainTabView selectTabViewItemAtIndex: (lib == YES)? 3 : 0];
 }
 
 
 - (void) completeConfiguration 
 {
-//	[viewport linkToKernel: [kernelLoader kernel]];
-//	[[viewport window] makeKeyAndOrderFront: self];
 }
 
 - (NSString*) fileType { return @"fs"; }
@@ -65,7 +69,7 @@
 	
 	save = [[FSSave alloc] init];
 	NSLog(@"about to set type, going to send to object %@", save);
-	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 3) 
+	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 0) 
 		[save setType: @"editor" session: nil colorizer: nil editor: editor browser: nil];
 	else
 		[save setType: @"full session [22oct]" session: session colorizer: colorizer editor: editor browser: browser];
@@ -75,6 +79,7 @@
 - (BOOL)loadDataRepresentation:(NSData *)data ofType:(NSString *)aType
 {
 	NSLog(@"##### start NSKeyedUnarchiver, type is %@\n", aType);
+	[FSSave useMiniLoads: NO];
 	savedData = [[NSKeyedUnarchiver unarchiveObjectWithData: data] retain];
 	NSLog(@"##### NSKeyedUnarchiver finished\n");
 	newSession = NO;

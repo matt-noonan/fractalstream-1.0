@@ -7,14 +7,14 @@
 //
 
 #import "FSKernel.h"
-#include "llvm/Module.h"
 #include "llvm/Constants.h"
 #include "llvm/DerivedTypes.h"
 #include "llvm/Instructions.h"
 #include "llvm/Function.h"
 #include "llvm/CallingConv.h"
-#include "llvm/ModuleProvider.h"
 #include "llvm/Analysis/Verifier.h"
+#include "llvm/Module.h"
+#include "llvm/ModuleProvider.h"
 #include "llvm/ExecutionEngine/JIT.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/Support/raw_ostream.h"
@@ -32,6 +32,7 @@ using namespace llvm;
 
 - (BOOL) buildKernelFromCompiler: (FSECompiler*) newComp {
 	compiler = newComp;
+	jitter = [FSJitter jitter];
 	[self buildLLVMKernel];
 	return YES;
 }
@@ -529,7 +530,6 @@ using namespace llvm;
 						eSF_was_const = 1;
 						eSF_const_x = tree[node].auxf[0];
 						eSF_const_y = 0.0;
-						NSLog(@"built a constant %f\n", tree[node].auxf[0]);
 						break;
 					default:
 						break;
@@ -736,9 +736,6 @@ using namespace llvm;
 
 		mathf = Function::Create(ft, Function::ExternalLinkage,   "tanh", mod);
 		mathf -> setCallingConv(CallingConv::C);				_f_tanh = (void*) mathf;
-
-		mathf = Function::Create(ft2, Function::ExternalLinkage,  "atan2", mod);
-		mathf -> setCallingConv(CallingConv::C);				_f_atan2 = (void*) mathf;
 
 		mathf = Function::Create(ft2, Function::ExternalLinkage,  "atan2", mod);
 		mathf -> setCallingConv(CallingConv::C);				_f_atan2 = (void*) mathf;
@@ -1054,12 +1051,13 @@ using namespace llvm;
 
 	if(verifyModule(*mod, PrintMessageAction)) { NSLog(@"module did not verify\n"); llvmKernel -> dump(); return; }
 	else NSLog(@"module verified\n");
-	ExecutionEngine* engine = ExecutionEngine::create(mod);
-
-	PassManager PM;
 
 
-	PM.add(new TargetData(*engine -> getTargetData()));
+	ExistingModuleProvider* MP = new ExistingModuleProvider(mod);
+	[jitter addModuleProvider: (void*) MP];
+	
+	PassManager PM;	
+	PM.add(new TargetData(*((TargetData*) [jitter targetData])));
 	PM.add(createPromoteMemoryToRegisterPass());
 	PM.add(createInstructionCombiningPass());
 	PM.add(createGVNPREPass());
@@ -1068,15 +1066,10 @@ using namespace llvm;
 
 	PM.run(*mod);
 
-	llvmKernel -> dump();
-
-	jit = (void*) engine;
-	NSLog(@"ExecutionEngine is %p\n", engine);
+//	llvmKernel -> dump();
 	
-	llvmPtr = (void (*)(int, double*, int, double*, int, double, double))  engine -> getPointerToFunction(llvmKernel);
+	kernelPtr = (void (*)(int, double*, int, double*, int, double, double)) [jitter getPointerToFunction: (void*) llvmKernel];
 	
-	NSLog(@"llvmPtr is %p\n", (void*) llvmPtr);
-		
 }
 
 #undef thisBlock
@@ -1092,13 +1085,11 @@ using namespace llvm;
 }
 
 - (void) runKernelWithMode: (int) mde input: (double*) input ofLength: (int) length output: (double*) output maxIter: (int) maxIter maxNorm: (double) maxNorm minNorm: (double) minNorm {
-	//kernelPtr(mode, input, length, output, maxIter, maxNorm, minNorm);
-	llvmPtr(mde, input, length, output, maxIter, maxNorm, minNorm);
+	kernelPtr(mde, input, length, output, maxIter, maxNorm, minNorm);
 }
 
 - (void*) kernelPtr { 
-//	return (void*) kernelPtr;
-	return (void*) llvmPtr;
+	return (void*) kernelPtr;
 }
 
 
