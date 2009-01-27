@@ -163,16 +163,16 @@
 						into: probeResult
 						probe: [popupMenu indexOfSelectedItem] - 1
 					];
-					if(probeResult[3] == 0.0)
+					if(probeResult[2] == 0.0)
 						[probeTextField setStringValue: [NSString
 							stringWithFormat: @"%1.4e + %1.4e i", probeResult[0], probeResult[1]]];
-					else if(probeResult[3] == 1.0)
+					else if(probeResult[2] == 1.0)
 						[probeTextField setStringValue: [NSString
 							stringWithFormat: @"%1.4e", probeResult[0]]];
-					else if(probeResult[3] == 2.0)
+					else if(probeResult[2] == 2.0)
 						[probeTextField setStringValue: [NSString
 							stringWithFormat: @"%i / %i", (int) probeResult[0], (int) probeResult[1]]];
-					else if(probeResult[3] == 3.0)
+					else if(probeResult[2] == 3.0)
 						[probeTextField setStringValue: [NSString
 							stringWithFormat: @"%i", (int) probeResult[0]]];
 					else [probeTextField setStringValue: @"? ? ?"];
@@ -255,6 +255,11 @@
 	[viewport convertLocation: [theEvent locationInWindow] toPoint: p];	
 	[coordinates setStringValue: [NSString stringWithFormat: @"%1.4e + %1.4ei", p[0], p[1]]];
 }
+
+- (void) scrollWheel: (NSEvent*) theEvent {
+	/* eat scrolling, at least for now. */
+}
+
 
 - (void) mouseDragged: (NSEvent*) theEvent
 {

@@ -294,6 +294,8 @@
 				<string>NSPopUpButton</string>
 				<key>radiusBox</key>
 				<string>NSTextField</string>
+				<key>theCompiler</key>
+				<string>id</string>
 				<key>theSession</key>
 				<string>FSSession</string>
 				<key>theTools</key>

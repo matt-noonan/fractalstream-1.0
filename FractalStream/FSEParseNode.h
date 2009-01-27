@@ -9,6 +9,7 @@ typedef struct {
 	int cloneOf;
 	int cachedAt;
 	int cachePass;
+	void* value;
 	double hash;
 	int hashed;
 	int nparents;

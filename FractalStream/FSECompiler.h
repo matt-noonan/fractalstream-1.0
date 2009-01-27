@@ -56,6 +56,9 @@ typedef struct {
 - (NSRange) errorRange;
 - (NSArray*) parameters;
 - (void) printVariableStack;
+- (int) numberOfVariables;
+- (int) maximumLoopDepth;
+- (FSEParseTree*) tree;
 
 - (BOOL) isParametric;
 - (BOOL) usesCustom;

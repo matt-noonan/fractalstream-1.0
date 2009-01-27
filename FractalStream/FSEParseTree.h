@@ -44,5 +44,7 @@
 - (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program;
 - (void) reduceOpStream: (FSEOpStream*) program toRegisterCount: (int) reg;
 - (void) insertOp: (FSEOp*) op intoProgram: (FSEOpStream*) program atLocation: (int) loc;
+- (FSEParseNode*) nodeAt: (int) index;
+
 
 @end

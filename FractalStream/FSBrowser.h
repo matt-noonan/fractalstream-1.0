@@ -16,13 +16,14 @@
 #import "FSTools.h"
 #import "FSViewer.h"
 #import "FSSession.h"
-
+#import "FSKernel.h"
 
 @interface FSBrowser : NSObject {
 	IBOutlet FSViewer* theViewer;
 	IBOutlet FSViewer* preview;
 	IBOutlet FSViewer* historyView;
 	IBOutlet NSButton* editorButton;
+	IBOutlet id theCompiler;
 	
 	FSViewerData viewerData;
 	FSViewerData previewData;
@@ -51,6 +52,7 @@
 	NSArray* imagPart;
 	NSArray* probeNames;
 	int uniqueVariableNames;
+	FSKernel* theKernel;
 	
 	BOOL configured;
 }
@@ -71,7 +73,7 @@
 - (void) setAllowEditor: (BOOL) allow;
 - (void) addTools: (NSFileWrapper*) toolWrapper;
 - (NSFileWrapper*) extraTools;
-
+- (FSKernel*) kernel;
 
 - (void) reloadSession;
 - (void) reloadSessionWithoutRefresh;

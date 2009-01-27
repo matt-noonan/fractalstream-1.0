@@ -30,11 +30,11 @@
 	int row, i;
 	double in[512];	
 	
-	for(i = 0; i < unit.settings; i++) in[6 + i] = unit.setting[i];
+	for(i = 0; i < unit.settings + 6; i++) in[i] = unit.setting[i];
 	for(row = 0; row < unit.dimension[1]; row++) {
 		in[0] = unit.origin[0] + unit.offset[0];
 		in[1] = unit.origin[1] + unit.offset[1] + unit.step[1] * (double) row;
-		in[2] = unit.step[0];
+		in[2] = unit.step[0] * unit.viewerData -> aspectRatio;
 		in[3] = unit.viewerData -> par[0];
 		in[4] = unit.viewerData -> par[1];
 		in[5] = unit.viewerData -> pixelSize;

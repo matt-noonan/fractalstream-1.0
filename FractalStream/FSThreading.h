@@ -7,7 +7,8 @@
  *
  */
 
-/* Undefine the following symbol to target 10.4 and older, Cocotron, etc. */
+/* Undefine the following symbol to target 10.4 and older, Cocotron, etc.
+	Re-implement FSOperation classes using pthreads or NSThread for GNUStep. */
 #define FS_USE_THREADING
 
 #ifdef FS_USE_THREADING

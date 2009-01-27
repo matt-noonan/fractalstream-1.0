@@ -151,7 +151,7 @@
 	nodeNumber = [[coder decodeObject] intValue];
 	//[coder decodeValueOfObjCType: @encode(int) at: &nodeNumber];
 	
-	NSLog(@"decoded FSSessionNode to %@\n", self);
+//	NSLog(@"decoded FSSessionNode to %@\n", self);
 	return self;
 }
 
@@ -179,11 +179,11 @@
 - (void) setNotes: (NSData*) notes { sessionNotes = notes; }
 - (void) setProgram: (NSString*) program { sessionProgram = program; }
 - (void) readKernelFrom: (NSString*) path {
-	NSLog(@"reading kernel from %@\n", path);
+//	NSLog(@"reading kernel from %@\n", path);
 	sessionKernel = [[NSFileWrapper alloc] init];
 	sessionKernel = [sessionKernel initWithPath: path];
 	if([sessionKernel isRegularFile] == NO) sessionKernel = nil;
-	NSLog(@"kernel has been read.\n");
+//	NSLog(@"kernel has been read.\n");
 }
 - (void) setKernelIsCached: (BOOL) isCached { kernelIsCached = isCached; }
 - (NSString*) title { return sessionTitle; }
@@ -212,7 +212,7 @@
 
 - (IBAction) cloneCurrentNode: (id) sender { 
 	FSSessionNode* node;
-	NSLog(@"cloneCurrentNode\n");
+//	NSLog(@"cloneCurrentNode\n");
 	
 	node = currentNode; currentNode = currentNode -> parent;
 	[self addChildNode: currentNode andMakeCurrent: YES]; // not right, make a copy of currentNode
@@ -223,7 +223,7 @@
 - (IBAction) deleteCurrentNode: (id) sender {
 	FSSessionNode* node;
 
-	NSLog(@"deleteCurrentNode\n");
+//	NSLog(@"deleteCurrentNode\n");
 
 	currentNode -> parent -> children--;
 	if(currentNode -> children > 0) {
@@ -242,7 +242,7 @@
 }
 
 - (IBAction) deleteCurrentChildren: (id) sender {
-	NSLog(@"deleteCurrentChildren\n");
+//	NSLog(@"deleteCurrentChildren\n");
 
 	currentNode -> children = 0;
 	// code to recursively destroy children here
@@ -253,20 +253,20 @@
 - (IBAction) goForward: (id) sender
 {
 	if(currentNode -> favoredChild != nil) currentNode = currentNode -> favoredChild;
-	NSLog(@"going forward\n");
+//	NSLog(@"going forward\n");
 }
 
 - (IBAction) goBackward: (id) sender
 {
 	if(currentNode -> parent != root) currentNode = currentNode -> parent;
-	NSLog(@"going backward\n");
+//	NSLog(@"going backward\n");
 }
 
 - (FSSessionNode*) addChildNode: (FSSessionNode*) child andMakeCurrent: (BOOL) makeCurrent
 {
 	FSSessionNode* sibling;
 
-	NSLog(@"adding a new child, this child thinks that pixelSize is %f\n", (child -> data).pixelSize);
+//	NSLog(@"adding a new child, this child thinks that pixelSize is %f\n", (child -> data).pixelSize);
 
 	if(currentNode -> children == 0) {
 		[child retain];
@@ -423,7 +423,7 @@
 	sessionNotes = [[coder decodeObject] retain];
 	sessionKernel = [[coder decodeObject] retain];
 	kernelIsCached = [[coder decodeObject] boolValue];
-	NSLog(@"loaded session instance %@ has sessionKernel %@\n", self, sessionKernel);
+//	NSLog(@"loaded session instance %@ has sessionKernel %@\n", self, sessionKernel);
 	return self;
 }
 

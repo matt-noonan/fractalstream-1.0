@@ -94,6 +94,23 @@
 	return n;
 }
 
+- (int) copySubtreeFrom: (int) here to: (int) there {
+	int n, i, child;
+	n = [self newNodeOfType: node[here].type at: there];
+	node[n].cloneOf = 0;
+	node[n].auxi[0] = node[here].auxi[0];
+	node[n].auxi[1] = node[here].auxi[1];
+	node[n].auxf[0] = node[here].auxf[0];
+	node[n].auxf[1] = node[here].auxf[1];
+	if(node[here].children == 0) return n;
+	child = node[here].firstChild;
+	for(i = 0; i < node[here].children; i++) {
+		[self copySubtreeFrom: child to: n];
+		child = node[child].nextSibling;
+	}
+	return n;
+}
+
 
 - (int) newNodeOfType: (int) type before: (int) spot {
 	int parent, prevSib, i, me;
@@ -213,7 +230,7 @@
 			t = [self newNodeOfType: FSE_Var | FSE_Variable at: lhs];
 			node[t].auxi[0] = node[here].auxi[0] + 1;
 		}
-		rhs = [self cloneSubtreeFrom: node[here].auxi[1] to: movednode];
+		rhs = [self copySubtreeFrom: node[here].auxi[1] to: movednode];
 /*
 		rhs = [self newNodeOfType: FSE_Var | FSE_LinkedSubexpression at: movednode];
 		node[lhs].auxi[0] = node[here].auxi[0];
@@ -222,6 +239,7 @@
 
 		clearnode = [self newNodeOfType: FSE_Command | FSE_Clear before: loopStack[stackPtr - 1]];
 		node[clearnode].auxi[0] = node[here].auxi[1];
+		node[clearnode].auxi[1] = node[here].auxi[0];
 
 		[self deleteNodeAt: here];
 		return;
@@ -1978,14 +1996,16 @@
 							log = [log stringByAppendingFormat: @"if"]; break;
 						case FSE_Flag:
 							log = [log stringByAppendingFormat: @"flag"]; break;
-						case FSE_Default:
+		 				case FSE_Default:
 							log = [log stringByAppendingFormat: @"default"]; break;
 						case FSE_Reset:
 							log = [log stringByAppendingFormat: @"reset"]; break;
 						case FSE_Bumpdown:
 							log = [log stringByAppendingFormat: @"bumpdown"]; break;
 						case FSE_Clear:
-							log = [log stringByAppendingFormat: @"clear:%i", node[currentNode].auxi[0]]; break;
+							log = [log stringByAppendingFormat: @"clear:%i", node[currentNode].auxi[1]]; break;
+						case FSE_Probe:
+							log = [log stringByAppendingFormat: @"probe %i", node[currentNode].auxi[1]]; break;
 						default:
 							log = [log stringByAppendingFormat: @"command"]; break;
 					}

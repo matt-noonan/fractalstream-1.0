@@ -440,6 +440,7 @@
 	currentFlagID = 1;
 
 	usesC = 0;
+	int lastIf = -1;
 	
 	stackptr = -1;
 	reported = NO;
@@ -450,7 +451,7 @@
 	nextvar = 0;
 	loopDepth = 0;
 	
-	tree = [[[FSEParseTree alloc] init] autorelease];
+	tree = [[FSEParseTree alloc] init];
 	node = [tree newOrphanOfType: FSE_RootNode];
 	rootblock = node;
 	orphan = [tree newOrphanOfType: FSE_Nil];  /* orphan node gets used as a temporary root as subtrees get built */
@@ -568,6 +569,16 @@
 			if([symbol isEqualToString: @"."] == NO) {
 				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"reduce ____ mod ____.\"), got \"%@\" instead.", symbol];
 			}
+			if(useComplexVars) {
+				if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: node] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
+					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+				}
+			}
+			else {
+				if(var[[tree nodeAt: [tree nodeAt: node] -> firstChild] -> auxi[0]].par == YES) {
+					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+				}
+			}
 		}		
 		else if([symbol isEqualToString: @"set"] == YES) {
 			node = [tree newNodeOfType: FSE_Command | FSE_Set at: codeblock];
@@ -580,6 +591,16 @@
 			[self readNextSymbol];
 			if([symbol isEqualToString: @"."] == NO) {
 				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"set ____ to ____.\"), got \"%@\" instead.", symbol];
+			}
+			if(useComplexVars) {
+				if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: node] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
+					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+				}
+			}
+			else {
+				if(var[[tree nodeAt: [tree nodeAt: node] -> firstChild] -> auxi[0]].par == YES) {
+					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+				}
 			}
 		}
 		else if([symbol isEqualToString: @"default"] == YES) {
@@ -658,6 +679,8 @@
 			node = [tree newNodeOfType: FSE_Command | FSE_If at: codeblock];
 			[self extractBoolBelowNode: node];
 			[self readNextSymbol];
+			lastIf = node;
+			[tree nodeAt: node] -> auxi[0] = -1;
 			if([symbol isEqualToString: @","] == YES) {
 				stack[++stackptr] = codeblock;
 				codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
@@ -675,6 +698,7 @@
 			stack[++stackptr] = codeblock;
 			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
 			autopop = 2;
+			[tree nodeAt: lastIf] -> auxi[0] = codeblock;
 		}
 		else if([symbol isEqualToString: @":"] == YES) {
 			autopop = 0;
@@ -770,6 +794,16 @@
 				[self extractArithBelowNode: setnode];
 				[tree swapBirthOrderAt: setnode];
 				[self readNextSymbol];
+				if(useComplexVars) {
+					if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: setnode] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
+						error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+					}
+				}
+				else {
+					if(var[[tree nodeAt: [tree nodeAt: setnode] -> firstChild] -> auxi[0]].par == YES) {
+						error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+					}
+				}
 			}
 			if([symbol isEqualToString: @"until"] == YES) {
 				codeblock = stack[stackptr--];
@@ -855,7 +889,6 @@
 	if(error) { NSLog(@"ERROR -----> \"%@\", tree is:\n", error); [tree log]; return; }
 	else NSLog(@"realification completed\n");
 	[tree postprocessReserving: nextvar];
-//	[tree log];
 
 /*
 	NSLog(@"linearizing to opstream\n");
@@ -878,7 +911,7 @@
 	ifile = [NSString stringWithFormat: @"%@.c",filename];
 	[gcc getCString: gccC]; [ifile getCString: ifileC];
 	NSLog(@"writing to \"%@\", compiling with command \"%@\".\n", ifile, gcc);
-	emit(ifileC, [tree nodeAt: 0], [tree size]); /*** hack ***/
+	//emit(ifileC, [tree nodeAt: 0], [tree size]); /*** hack ***/
 	if(system(gccC)) error = [NSString stringWithString: @"gcc error, check console log for details."];
 	symbol = nil;
 }
@@ -948,6 +981,9 @@
 	for(i = 0; i < nextvar; i++) NSLog(@"        \"%@\" : %i\n", var[i].word, var[i].code);
 }
 
+- (int) numberOfVariables { return nextvar; }
+- (int) maximumLoopDepth { return 16; }	/* hack, should track the loop depth as we parse */
+
 - (void) setOutputFilename: (NSString*) newFilename { filename = [newFilename retain]; }
 
 - (BOOL) isParametric {
@@ -962,6 +998,8 @@
 	for(i = 5; i < nextvar; i++) if(var[i].par == YES) [p addObject: [self nameOfVariableAtIndex: i]];
 	return [NSArray arrayWithArray: p];
 }
+
+- (FSEParseTree*) tree { return tree; }
 
 - (NSString*) errorMessage { return (error == nil)? nil : [NSString stringWithString: error]; }
 - (NSRange) errorRange { return lastRange; }

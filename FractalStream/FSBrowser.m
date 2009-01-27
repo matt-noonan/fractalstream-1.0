@@ -14,9 +14,11 @@
 - (void) awakeFromNib {
 	NSString* path;
 	void* loadedModule;
-	
+	theKernel = [[FSKernel alloc] init];
 	[theTools setupMenu: self];
 }
+
+- (FSKernel*) kernel { return theKernel; }
 
 - (void) loadDataFromInterfaceTo: (FSViewerData*) theData {
 	theData -> maxIters = [iterBox intValue];
@@ -50,12 +52,10 @@
 	loadedModule = kernel = NULL;
 	return;
 #else
-	loadedModule = dlopen([tmp cString], RTLD_NOW);
-	if(loadedModule == NULL) { 
-		NSLog(@"loadedModule was null, error code %s\n", dlerror());
-		return;
-	}
-	kernel = dlsym(loadedModule, "kernel");
+	NSLog(@"trying to get loadedModule from %@\n", theKernel);
+	[theKernel buildKernelFromCompiler: theCompiler];
+	//[theKernel loadKernelFromFile: tmp];
+	kernel = [theKernel kernelPtr];
 #endif
 	if(kernel == NULL) {
 		NSLog(@"could not extract kernel routine\n");
