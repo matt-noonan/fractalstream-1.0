@@ -203,7 +203,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					609,
+					369,
 					60,
 					20,
 					48,
@@ -2849,6 +2849,21 @@
 			6888B2C00F2FC5E600724593 /* PBXTextBookmark */ = 6888B2C00F2FC5E600724593 /* PBXTextBookmark */;
 			6888B2C20F2FC62200724593 /* PBXTextBookmark */ = 6888B2C20F2FC62200724593 /* PBXTextBookmark */;
 			6888B2C40F2FC64200724593 /* PBXTextBookmark */ = 6888B2C40F2FC64200724593 /* PBXTextBookmark */;
+			6888B2C70F303CA700724593 /* PBXTextBookmark */ = 6888B2C70F303CA700724593 /* PBXTextBookmark */;
+			6888B2C80F303CA700724593 /* PBXTextBookmark */ = 6888B2C80F303CA700724593 /* PBXTextBookmark */;
+			6888B2C90F303CA700724593 /* PBXTextBookmark */ = 6888B2C90F303CA700724593 /* PBXTextBookmark */;
+			6888B2CA0F303CA700724593 /* PBXTextBookmark */ = 6888B2CA0F303CA700724593 /* PBXTextBookmark */;
+			6888B2CB0F303CA700724593 /* PBXTextBookmark */ = 6888B2CB0F303CA700724593 /* PBXTextBookmark */;
+			6888B2CC0F303CA700724593 /* PBXTextBookmark */ = 6888B2CC0F303CA700724593 /* PBXTextBookmark */;
+			6888B2CD0F303CA700724593 /* PBXTextBookmark */ = 6888B2CD0F303CA700724593 /* PBXTextBookmark */;
+			6888B2CE0F303CA700724593 /* PBXTextBookmark */ = 6888B2CE0F303CA700724593 /* PBXTextBookmark */;
+			6888B2CF0F303CA700724593 /* PBXTextBookmark */ = 6888B2CF0F303CA700724593 /* PBXTextBookmark */;
+			6888B2D00F303CA700724593 /* PBXTextBookmark */ = 6888B2D00F303CA700724593 /* PBXTextBookmark */;
+			6888B2D10F303CA700724593 /* PBXTextBookmark */ = 6888B2D10F303CA700724593 /* PBXTextBookmark */;
+			6888B2D50F30415300724593 /* PBXTextBookmark */ = 6888B2D50F30415300724593 /* PBXTextBookmark */;
+			6888B2D70F30419B00724593 /* PBXTextBookmark */ = 6888B2D70F30419B00724593 /* PBXTextBookmark */;
+			6888B2D80F30419C00724593 /* PBXTextBookmark */ = 6888B2D80F30419C00724593 /* PBXTextBookmark */;
+			6888B2E80F3042D100724593 /* PBXTextBookmark */ = 6888B2E80F3042D100724593 /* PBXTextBookmark */;
 			68972C450D4A4B8B00FBF09B = 68972C450D4A4B8B00FBF09B /* PBXTextBookmark */;
 			689805910F25446E001FF684 = 689805910F25446E001FF684 /* PBXTextBookmark */;
 			689805950F25446E001FF684 = 689805950F25446E001FF684 /* PBXTextBookmark */;
@@ -25252,7 +25267,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {681, 2674}}";
 			sepNavSelRange = "{2713, 0}";
-			sepNavVisRange = "{2480, 432}";
+			sepNavVisRange = "{2480, 503}";
 		};
 	};
 	6888B0B00F2EECCD00724593 /* FSColorLibraryController.h */ = {
@@ -29402,6 +29417,156 @@
 		vrLen = 1433;
 		vrLoc = 472;
 	};
+	6888B2C70F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68BFD8330DADB86800325B56 /* FSDocument.m */;
+		name = "FSDocument.m: 39";
+		rLen = 0;
+		rLoc = 1032;
+		rType = 0;
+		vrLen = 1463;
+		vrLoc = 439;
+	};
+	6888B2C80F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6888B0AD0F2EECB400724593 /* FSScriptLibraryController.h */;
+		name = "FSScriptLibraryController.h: 48";
+		rLen = 0;
+		rLoc = 1057;
+		rType = 0;
+		vrLen = 1153;
+		vrLoc = 272;
+	};
+	6888B2C90F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6888AE160F2EAFA500724593 /* FSJitter.h */;
+		name = "FSJitter.h: 13";
+		rLen = 0;
+		rLoc = 232;
+		rType = 0;
+		vrLen = 500;
+		vrLoc = 0;
+	};
+	6888B2CA0F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6888A6510F2AB41300724593 /* FSKernel.h */;
+		name = "FSKernel.h: 46";
+		rLen = 0;
+		rLoc = 1380;
+		rType = 0;
+		vrLen = 1299;
+		vrLoc = 0;
+	};
+	6888B2CB0F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68A35A800D5D79DB00FE5ACA /* FSEController.h */;
+		name = "FSEController.h: 25";
+		rLen = 0;
+		rLoc = 587;
+		rType = 0;
+		vrLen = 593;
+		vrLoc = 0;
+	};
+	6888B2CC0F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68BFD8330DADB86800325B56 /* FSDocument.m */;
+		name = "FSDocument.m: 39";
+		rLen = 0;
+		rLoc = 1032;
+		rType = 0;
+		vrLen = 1463;
+		vrLoc = 439;
+	};
+	6888B2CD0F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6888B0AD0F2EECB400724593 /* FSScriptLibraryController.h */;
+		name = "FSScriptLibraryController.h: 48";
+		rLen = 0;
+		rLoc = 1057;
+		rType = 0;
+		vrLen = 1153;
+		vrLoc = 272;
+	};
+	6888B2CE0F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6888AE160F2EAFA500724593 /* FSJitter.h */;
+		name = "FSJitter.h: 13";
+		rLen = 0;
+		rLoc = 232;
+		rType = 0;
+		vrLen = 500;
+		vrLoc = 0;
+	};
+	6888B2CF0F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6888A6510F2AB41300724593 /* FSKernel.h */;
+		name = "FSKernel.h: 46";
+		rLen = 0;
+		rLoc = 1380;
+		rType = 0;
+		vrLen = 1299;
+		vrLoc = 0;
+	};
+	6888B2D00F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68A35A800D5D79DB00FE5ACA /* FSEController.h */;
+		name = "FSEController.h: 25";
+		rLen = 0;
+		rLoc = 587;
+		rType = 0;
+		vrLen = 593;
+		vrLoc = 0;
+	};
+	6888B2D10F303CA700724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68B732210D3AFEB10021E000 /* FSSession.h */;
+		name = "FSSession.h: 105";
+		rLen = 0;
+		rLoc = 2722;
+		rType = 0;
+		vrLen = 1607;
+		vrLoc = 1579;
+	};
+	6888B2D50F30415300724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68B732210D3AFEB10021E000 /* FSSession.h */;
+		name = "FSSession.h: 105";
+		rLen = 0;
+		rLoc = 2722;
+		rType = 0;
+		vrLen = 1535;
+		vrLoc = 1743;
+	};
+	6888B2D70F30419B00724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6888B0AE0F2EECB400724593 /* FSScriptLibraryController.m */;
+		name = "FSScriptLibraryController.m: 111";
+		rLen = 0;
+		rLoc = 2713;
+		rType = 0;
+		vrLen = 503;
+		vrLoc = 2480;
+	};
+	6888B2D80F30419C00724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68B732210D3AFEB10021E000 /* FSSession.h */;
+		name = "FSSession.h: 105";
+		rLen = 0;
+		rLoc = 2722;
+		rType = 0;
+		vrLen = 1535;
+		vrLoc = 1743;
+	};
+	6888B2E80F3042D100724593 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 68B732210D3AFEB10021E000 /* FSSession.h */;
+		name = "FSSession.h: 105";
+		rLen = 0;
+		rLoc = 2722;
+		rType = 0;
+		vrLen = 1535;
+		vrLoc = 1743;
+	};
 	689552C40D6166CB003AE96D /* malloc_error_debug */ = {
 		isa = PBXSymbolicBreakpoint;
 		actions = (
@@ -29413,7 +29578,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = "";
-		modificationTime = 254789183.869779;
+		modificationTime = 254821068.855065;
 		state = 0;
 		symbolName = malloc_error_debug;
 	};
@@ -29670,7 +29835,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {632, 1638}}";
 			sepNavSelRange = "{2722, 0}";
-			sepNavVisRange = "{1707, 1571}";
+			sepNavVisRange = "{1743, 1535}";
 			sepNavVisRect = "{{0, 145}, {847, 527}}";
 		};
 	};
@@ -29858,9 +30023,9 @@
 	};
 	68BFD8330DADB86800325B56 /* FSDocument.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1160, 1414}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1160, 1302}}";
 			sepNavSelRange = "{1032, 0}";
-			sepNavVisRange = "{472, 1433}";
+			sepNavVisRange = "{439, 1463}";
 		};
 	};
 	68BFD88C0DADB8E900325B56 /* PBXTextBookmark */ = {
@@ -30077,7 +30242,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = libSystem.B.dylib;
-		modificationTime = 254789183.071714;
+		modificationTime = 254821067.702689;
 		state = 1;
 		symbolName = malloc_error_break;
 	};
@@ -30172,7 +30337,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = "";
-		modificationTime = 254789183.828606;
+		modificationTime = 254821068.829418;
 		state = 0;
 		symbolName = "_NSLockError()";
 	};

@@ -51,26 +51,16 @@
 		6882595F0F25ABF800D86B76 /* FSColorOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6882595E0F25ABF800D86B76 /* FSColorOperation.m */; };
 		68825F940F27B9AC00D86B76 /* FSThreading.m in Sources */ = {isa = PBXBuildFile; fileRef = 68825F930F27B9AC00D86B76 /* FSThreading.m */; };
 		6888A6530F2AB41300724593 /* FSKernel.M in Sources */ = {isa = PBXBuildFile; fileRef = 6888A6520F2AB41300724593 /* FSKernel.M */; };
-		6888A6680F2AB45100724593 /* libLLVMCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6580F2AB45100724593 /* libLLVMCore.a */; };
-		6888A6690F2AB45100724593 /* libLLVMSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6590F2AB45100724593 /* libLLVMSupport.a */; };
-		6888A66A0F2AB45100724593 /* libLLVMSystem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A65A0F2AB45100724593 /* libLLVMSystem.a */; };
-		6888A66B0F2AB45100724593 /* LLVMExecutionEngine.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A65B0F2AB45100724593 /* LLVMExecutionEngine.o */; };
-		6888A66C0F2AB45100724593 /* LLVMJIT.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A65C0F2AB45100724593 /* LLVMJIT.o */; };
-		6888A66D0F2AB45100724593 /* libLLVMipo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A65D0F2AB45100724593 /* libLLVMipo.a */; };
-		6888A66E0F2AB45100724593 /* libLLVMipa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A65E0F2AB45100724593 /* libLLVMipa.a */; };
-		6888A66F0F2AB45100724593 /* libLLVMScalarOpts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A65F0F2AB45100724593 /* libLLVMScalarOpts.a */; };
-		6888A6700F2AB45100724593 /* libLLVMTransformUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6600F2AB45100724593 /* libLLVMTransformUtils.a */; };
-		6888A6710F2AB45100724593 /* libLLVMTarget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6610F2AB45100724593 /* libLLVMTarget.a */; };
-		6888A6720F2AB45100724593 /* libLLVMAnalysis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6620F2AB45100724593 /* libLLVMAnalysis.a */; };
-		6888A6730F2AB45100724593 /* libLLVMCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6630F2AB45100724593 /* libLLVMCodeGen.a */; };
-		6888A6740F2AB45100724593 /* LLVMX86CodeGen.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6640F2AB45100724593 /* LLVMX86CodeGen.o */; };
-		6888A6750F2AB45100724593 /* LLVMX86AsmPrinter.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6650F2AB45100724593 /* LLVMX86AsmPrinter.o */; };
-		6888A6760F2AB45100724593 /* libLLVMAsmPrinter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6660F2AB45100724593 /* libLLVMAsmPrinter.a */; };
-		6888A6770F2AB45100724593 /* libLLVMSelectionDAG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888A6670F2AB45100724593 /* libLLVMSelectionDAG.a */; };
 		6888AE180F2EAFA500724593 /* FSJitter.M in Sources */ = {isa = PBXBuildFile; fileRef = 6888AE170F2EAFA500724593 /* FSJitter.M */; };
 		6888B0AF0F2EECB400724593 /* FSScriptLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6888B0AE0F2EECB400724593 /* FSScriptLibraryController.m */; };
 		6888B0B20F2EECCD00724593 /* FSColorLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6888B0B10F2EECCD00724593 /* FSColorLibraryController.m */; };
 		6888B26B0F2FB47F00724593 /* folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 6888B26A0F2FB47F00724593 /* folder.png */; };
+		6888B2E00F3042B400724593 /* LLVMExecutionEngine.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888B2DA0F3042B400724593 /* LLVMExecutionEngine.o */; };
+		6888B2E10F3042B400724593 /* LLVMJIT.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888B2DB0F3042B400724593 /* LLVMJIT.o */; };
+		6888B2E20F3042B400724593 /* LLVMPowerPCAsmPrinter.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888B2DC0F3042B400724593 /* LLVMPowerPCAsmPrinter.o */; };
+		6888B2E30F3042B400724593 /* LLVMPowerPCCodeGen.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888B2DD0F3042B400724593 /* LLVMPowerPCCodeGen.o */; };
+		6888B2E40F3042B400724593 /* LLVMX86AsmPrinter.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888B2DE0F3042B400724593 /* LLVMX86AsmPrinter.o */; };
+		6888B2E50F3042B400724593 /* LLVMX86CodeGen.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 6888B2DF0F3042B400724593 /* LLVMX86CodeGen.o */; };
 		68A35A810D5D79DB00FE5ACA /* FSEParseTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */; };
 		68A35A820D5D79DB00FE5ACA /* FSECompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7A0D5D79DB00FE5ACA /* FSECompiler.m */; };
 		68A35A830D5D79DB00FE5ACA /* FSEC_gcc.c in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7B0D5D79DB00FE5ACA /* FSEC_gcc.c */; };
@@ -137,22 +127,6 @@
 		68825F930F27B9AC00D86B76 /* FSThreading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSThreading.m; sourceTree = "<group>"; };
 		6888A6510F2AB41300724593 /* FSKernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSKernel.h; sourceTree = "<group>"; };
 		6888A6520F2AB41300724593 /* FSKernel.M */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FSKernel.M; sourceTree = "<group>"; };
-		6888A6580F2AB45100724593 /* libLLVMCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMCore.a; path = /opt/local/lib/libLLVMCore.a; sourceTree = "<absolute>"; };
-		6888A6590F2AB45100724593 /* libLLVMSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMSupport.a; path = /opt/local/lib/libLLVMSupport.a; sourceTree = "<absolute>"; };
-		6888A65A0F2AB45100724593 /* libLLVMSystem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMSystem.a; path = /opt/local/lib/libLLVMSystem.a; sourceTree = "<absolute>"; };
-		6888A65B0F2AB45100724593 /* LLVMExecutionEngine.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMExecutionEngine.o; path = /opt/local/lib/LLVMExecutionEngine.o; sourceTree = "<absolute>"; };
-		6888A65C0F2AB45100724593 /* LLVMJIT.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMJIT.o; path = /opt/local/lib/LLVMJIT.o; sourceTree = "<absolute>"; };
-		6888A65D0F2AB45100724593 /* libLLVMipo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMipo.a; path = /opt/local/lib/libLLVMipo.a; sourceTree = "<absolute>"; };
-		6888A65E0F2AB45100724593 /* libLLVMipa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMipa.a; path = /opt/local/lib/libLLVMipa.a; sourceTree = "<absolute>"; };
-		6888A65F0F2AB45100724593 /* libLLVMScalarOpts.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMScalarOpts.a; path = /opt/local/lib/libLLVMScalarOpts.a; sourceTree = "<absolute>"; };
-		6888A6600F2AB45100724593 /* libLLVMTransformUtils.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMTransformUtils.a; path = /opt/local/lib/libLLVMTransformUtils.a; sourceTree = "<absolute>"; };
-		6888A6610F2AB45100724593 /* libLLVMTarget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMTarget.a; path = /opt/local/lib/libLLVMTarget.a; sourceTree = "<absolute>"; };
-		6888A6620F2AB45100724593 /* libLLVMAnalysis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMAnalysis.a; path = /opt/local/lib/libLLVMAnalysis.a; sourceTree = "<absolute>"; };
-		6888A6630F2AB45100724593 /* libLLVMCodeGen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMCodeGen.a; path = /opt/local/lib/libLLVMCodeGen.a; sourceTree = "<absolute>"; };
-		6888A6640F2AB45100724593 /* LLVMX86CodeGen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMX86CodeGen.o; path = /opt/local/lib/LLVMX86CodeGen.o; sourceTree = "<absolute>"; };
-		6888A6650F2AB45100724593 /* LLVMX86AsmPrinter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMX86AsmPrinter.o; path = /opt/local/lib/LLVMX86AsmPrinter.o; sourceTree = "<absolute>"; };
-		6888A6660F2AB45100724593 /* libLLVMAsmPrinter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMAsmPrinter.a; path = /opt/local/lib/libLLVMAsmPrinter.a; sourceTree = "<absolute>"; };
-		6888A6670F2AB45100724593 /* libLLVMSelectionDAG.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMSelectionDAG.a; path = /opt/local/lib/libLLVMSelectionDAG.a; sourceTree = "<absolute>"; };
 		6888AE160F2EAFA500724593 /* FSJitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSJitter.h; sourceTree = "<group>"; };
 		6888AE170F2EAFA500724593 /* FSJitter.M */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FSJitter.M; sourceTree = "<group>"; };
 		6888B0AD0F2EECB400724593 /* FSScriptLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSScriptLibraryController.h; sourceTree = "<group>"; };
@@ -160,6 +134,12 @@
 		6888B0B00F2EECCD00724593 /* FSColorLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorLibraryController.h; sourceTree = "<group>"; };
 		6888B0B10F2EECCD00724593 /* FSColorLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColorLibraryController.m; sourceTree = "<group>"; };
 		6888B26A0F2FB47F00724593 /* folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder.png; sourceTree = "<group>"; };
+		6888B2DA0F3042B400724593 /* LLVMExecutionEngine.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMExecutionEngine.o; path = /usr/local/lib/LLVMExecutionEngine.o; sourceTree = "<absolute>"; };
+		6888B2DB0F3042B400724593 /* LLVMJIT.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMJIT.o; path = /usr/local/lib/LLVMJIT.o; sourceTree = "<absolute>"; };
+		6888B2DC0F3042B400724593 /* LLVMPowerPCAsmPrinter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMPowerPCAsmPrinter.o; path = /usr/local/lib/LLVMPowerPCAsmPrinter.o; sourceTree = "<absolute>"; };
+		6888B2DD0F3042B400724593 /* LLVMPowerPCCodeGen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMPowerPCCodeGen.o; path = /usr/local/lib/LLVMPowerPCCodeGen.o; sourceTree = "<absolute>"; };
+		6888B2DE0F3042B400724593 /* LLVMX86AsmPrinter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMX86AsmPrinter.o; path = /usr/local/lib/LLVMX86AsmPrinter.o; sourceTree = "<absolute>"; };
+		6888B2DF0F3042B400724593 /* LLVMX86CodeGen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMX86CodeGen.o; path = /usr/local/lib/LLVMX86CodeGen.o; sourceTree = "<absolute>"; };
 		68A35A770D5D79DB00FE5ACA /* FSECompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSECompiler.h; sourceTree = "<group>"; };
 		68A35A780D5D79DB00FE5ACA /* FSEParseTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEParseTree.m; sourceTree = "<group>"; };
 		68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEParseNode.h; sourceTree = "<group>"; };
@@ -202,22 +182,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
-				6888A6680F2AB45100724593 /* libLLVMCore.a in Frameworks */,
-				6888A6690F2AB45100724593 /* libLLVMSupport.a in Frameworks */,
-				6888A66A0F2AB45100724593 /* libLLVMSystem.a in Frameworks */,
-				6888A66B0F2AB45100724593 /* LLVMExecutionEngine.o in Frameworks */,
-				6888A66C0F2AB45100724593 /* LLVMJIT.o in Frameworks */,
-				6888A66D0F2AB45100724593 /* libLLVMipo.a in Frameworks */,
-				6888A66E0F2AB45100724593 /* libLLVMipa.a in Frameworks */,
-				6888A66F0F2AB45100724593 /* libLLVMScalarOpts.a in Frameworks */,
-				6888A6700F2AB45100724593 /* libLLVMTransformUtils.a in Frameworks */,
-				6888A6710F2AB45100724593 /* libLLVMTarget.a in Frameworks */,
-				6888A6720F2AB45100724593 /* libLLVMAnalysis.a in Frameworks */,
-				6888A6730F2AB45100724593 /* libLLVMCodeGen.a in Frameworks */,
-				6888A6740F2AB45100724593 /* LLVMX86CodeGen.o in Frameworks */,
-				6888A6750F2AB45100724593 /* LLVMX86AsmPrinter.o in Frameworks */,
-				6888A6760F2AB45100724593 /* libLLVMAsmPrinter.a in Frameworks */,
-				6888A6770F2AB45100724593 /* libLLVMSelectionDAG.a in Frameworks */,
+				6888B2E00F3042B400724593 /* LLVMExecutionEngine.o in Frameworks */,
+				6888B2E10F3042B400724593 /* LLVMJIT.o in Frameworks */,
+				6888B2E20F3042B400724593 /* LLVMPowerPCAsmPrinter.o in Frameworks */,
+				6888B2E30F3042B400724593 /* LLVMPowerPCCodeGen.o in Frameworks */,
+				6888B2E40F3042B400724593 /* LLVMX86AsmPrinter.o in Frameworks */,
+				6888B2E50F3042B400724593 /* LLVMX86CodeGen.o in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +197,6 @@
 		019EAF500A2600A000E2AC05 /* Program Editor */ = {
 			isa = PBXGroup;
 			children = (
-				6888A6570F2AB43700724593 /* llvm Libraries */,
 				68A35A7D0D5D79DB00FE5ACA /* FSECompilerSymbols.H */,
 				68A35A790D5D79DB00FE5ACA /* FSEParseNode.h */,
 				68A35A7C0D5D79DB00FE5ACA /* FSEParseTree.h */,
@@ -321,6 +290,7 @@
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				6888B2D90F30421300724593 /* Libraries */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 			);
@@ -385,29 +355,6 @@
 			name = "Color Editor";
 			sourceTree = "<group>";
 		};
-		6888A6570F2AB43700724593 /* llvm Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				6888A6580F2AB45100724593 /* libLLVMCore.a */,
-				6888A6590F2AB45100724593 /* libLLVMSupport.a */,
-				6888A65A0F2AB45100724593 /* libLLVMSystem.a */,
-				6888A65B0F2AB45100724593 /* LLVMExecutionEngine.o */,
-				6888A65C0F2AB45100724593 /* LLVMJIT.o */,
-				6888A65D0F2AB45100724593 /* libLLVMipo.a */,
-				6888A65E0F2AB45100724593 /* libLLVMipa.a */,
-				6888A65F0F2AB45100724593 /* libLLVMScalarOpts.a */,
-				6888A6600F2AB45100724593 /* libLLVMTransformUtils.a */,
-				6888A6610F2AB45100724593 /* libLLVMTarget.a */,
-				6888A6620F2AB45100724593 /* libLLVMAnalysis.a */,
-				6888A6630F2AB45100724593 /* libLLVMCodeGen.a */,
-				6888A6640F2AB45100724593 /* LLVMX86CodeGen.o */,
-				6888A6650F2AB45100724593 /* LLVMX86AsmPrinter.o */,
-				6888A6660F2AB45100724593 /* libLLVMAsmPrinter.a */,
-				6888A6670F2AB45100724593 /* libLLVMSelectionDAG.a */,
-			);
-			name = "llvm Libraries";
-			sourceTree = "<group>";
-		};
 		6888B0AC0F2EEC7900724593 /* Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +364,19 @@
 				6888B0B10F2EECCD00724593 /* FSColorLibraryController.m */,
 			);
 			name = Library;
+			sourceTree = "<group>";
+		};
+		6888B2D90F30421300724593 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				6888B2DA0F3042B400724593 /* LLVMExecutionEngine.o */,
+				6888B2DB0F3042B400724593 /* LLVMJIT.o */,
+				6888B2DC0F3042B400724593 /* LLVMPowerPCAsmPrinter.o */,
+				6888B2DD0F3042B400724593 /* LLVMPowerPCCodeGen.o */,
+				6888B2DE0F3042B400724593 /* LLVMX86AsmPrinter.o */,
+				6888B2DF0F3042B400724593 /* LLVMX86CodeGen.o */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -803,12 +763,17 @@
 		68D7AE5E0A59B1BF0076FC20 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_OBJC_GC = NO;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_FAST_MATH = NO;
 				GCC_MODEL_TUNING = "";
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					_STDC_LIMIT_MACROS,
 					_GNU_SOURCE,
@@ -817,16 +782,26 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = /opt/local/include;
-				LIBRARY_SEARCH_PATHS = /opt/local/lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_LDFLAGS = (
 					"-lpthread",
 					"-lm",
+					"-lLLVMCodeGen",
+					"-lLLVMipo",
+					"-lLLVMScalarOpts",
+					"-lLLVMTransformUtils",
+					"-lLLVMipa",
+					"-lLLVMAnalysis",
+					"-lLLVMTarget",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lLLVMSystem",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
-				USER_HEADER_SEARCH_PATHS = /opt/local/include;
+				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 				ZERO_LINK = NO;
 			};
 			name = Development;
@@ -834,13 +809,16 @@
 		68D7AE5F0A59B1BF0076FC20 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_FAST_MATH = YES;
-				GCC_INPUT_FILETYPE = automatic;
 				GCC_MODEL_TUNING = "";
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					_STDC_LIMIT_MACROS,
 					_GNU_SOURCE,
@@ -849,18 +827,28 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = /opt/local/include;
-				LIBRARY_SEARCH_PATHS = /opt/local/lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				OTHER_LDFLAGS = (
 					"-lpthread",
 					"-lm",
+					"-lLLVMCodeGen",
+					"-lLLVMipo",
+					"-lLLVMScalarOpts",
+					"-lLLVMTransformUtils",
+					"-lLLVMipa",
+					"-lLLVMAnalysis",
+					"-lLLVMTarget",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lLLVMSystem",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
 				);
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
-				USER_HEADER_SEARCH_PATHS = /opt/local/include;
+				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -868,7 +856,11 @@
 		68D7AE600A59B1BF0076FC20 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_INPUT_FILETYPE = automatic;
@@ -882,17 +874,30 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = /opt/local/include;
-				LIBRARY_SEARCH_PATHS = /opt/local/lib;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OTHER_LDFLAGS = (
 					"-lpthread",
 					"-lm",
+					"-lLLVMCodeGen",
+					"-lLLVMipo",
+					"-lLLVMScalarOpts",
+					"-lLLVMTransformUtils",
+					"-lLLVMipa",
+					"-lLLVMAnalysis",
+					"-lLLVMTarget",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lLLVMSystem",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
 				);
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 				ZERO_LINK = NO;
 			};
 			name = Default;
