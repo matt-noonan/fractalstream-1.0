@@ -662,7 +662,7 @@ using namespace llvm;
 }
 
 - (void) buildLLVMKernel {
-	Module* mod = new Module("LLVM Kernel");
+	llvm::Module* mod = new llvm::Module("LLVM Kernel");
 	module = (void*) mod;
 
 #define thisBlock builder.GetInsertBlock()

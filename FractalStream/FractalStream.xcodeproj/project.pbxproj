@@ -17,7 +17,6 @@
 		6846D46D0D3C254B003A46AF /* FSColorWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = 6846D46C0D3C254B003A46AF /* FSColorWidget.m */; };
 		684E659A0CF91D8700BAB5A5 /* FSViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 684E65990CF91D8700BAB5A5 /* FSViewer.m */; };
 		684E67E10CF9560300BAB5A5 /* FSBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 684E67E00CF9560300BAB5A5 /* FSBrowser.m */; };
-		684E67E50CF958A800BAB5A5 /* MyDocument-saved.nib in Resources */ = {isa = PBXBuildFile; fileRef = 684E67E30CF958A800BAB5A5 /* MyDocument-saved.nib */; };
 		685F90FA0D3D764C00C82447 /* FSColorizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 685F90F90D3D764C00C82447 /* FSColorizer.m */; };
 		687AEF310D75C9CC00998D23 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D15AC360486D014006FF6A4 /* Info.plist */; };
 		687AEF320D75C9CC00998D23 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -67,7 +66,6 @@
 		68A35A840D5D79DB00FE5ACA /* FSEController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35A7E0D5D79DB00FE5ACA /* FSEController.m */; };
 		68A35BA40D5FBD7B00FE5ACA /* FSSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A35BA30D5FBD7B00FE5ACA /* FSSave.m */; };
 		68B732230D3AFEB10021E000 /* FSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 68B732220D3AFEB10021E000 /* FSSession.m */; };
-		68B7323A0D3B01560021E000 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D15AC360486D014006FF6A4 /* Info.plist */; };
 		68BFD8340DADB86800325B56 /* FSDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 68BFD8330DADB86800325B56 /* FSDocument.m */; };
 		68FAB4FC0D5ADA07004ABF7A /* FSRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 68FAB4FB0D5ADA07004ABF7A /* FSRenderer.m */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -88,6 +86,18 @@
 			);
 		};
 /* End PBXBuildRule section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6862F0800F32A97E00B3F6F6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Scripts;
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0182416A09C892C500CDFD3F /* julia.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = julia.icns; sourceTree = "<group>"; };
@@ -116,6 +126,21 @@
 		684E67E40CF958A800BAB5A5 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "English.lproj/MyDocument-saved.nib"; sourceTree = "<group>"; };
 		685F90F80D3D764C00C82447 /* FSColorizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorizer.h; sourceTree = "<group>"; };
 		685F90F90D3D764C00C82447 /* FSColorizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColorizer.m; sourceTree = "<group>"; };
+		6862F0420F32A88E00B3F6F6 /* auto.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = auto.fs; sourceTree = "<group>"; };
+		6862F0430F32A88E00B3F6F6 /* mandbr.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = mandbr.fs; sourceTree = "<group>"; };
+		6862F0440F32A88E00B3F6F6 /* z3-1.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "z3-1.fs"; sourceTree = "<group>"; };
+		6862F0460F32A88E00B3F6F6 /* mathieu.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = mathieu.fs; sourceTree = "<group>"; };
+		6862F0480F32A88E00B3F6F6 /* ab.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = ab.fs; sourceTree = "<group>"; };
+		6862F0490F32A88E00B3F6F6 /* boundary.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = boundary.fs; sourceTree = "<group>"; };
+		6862F04A0F32A88E00B3F6F6 /* ext.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = ext.fs; sourceTree = "<group>"; };
+		6862F04B0F32A88E00B3F6F6 /* extern.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = extern.fs; sourceTree = "<group>"; };
+		6862F04C0F32A88E00B3F6F6 /* Julia.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Julia.fs; sourceTree = "<group>"; };
+		6862F04D0F32A88E00B3F6F6 /* Mandelbrot.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Mandelbrot.fs; sourceTree = "<group>"; };
+		6862F04E0F32A88E00B3F6F6 /* precrit.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = precrit.fs; sourceTree = "<group>"; };
+		6862F0500F32A88E00B3F6F6 /* except.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = except.fs; sourceTree = "<group>"; };
+		6862F0520F32A88E00B3F6F6 /* arcsin.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = arcsin.fs; sourceTree = "<group>"; };
+		6862F0530F32A88E00B3F6F6 /* arcsinp1.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = arcsinp1.fs; sourceTree = "<group>"; };
+		6862F0540F32A88E00B3F6F6 /* exp.fs */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = exp.fs; sourceTree = "<group>"; };
 		687AEF5C0D75C9CC00998D23 /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		687AEF5E0D75C9CC00998D23 /* Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info copy.plist"; sourceTree = "<group>"; };
 		6882595A0F25ABDC00D86B76 /* FSRenderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRenderOperation.h; sourceTree = "<group>"; };
@@ -289,6 +314,7 @@
 			children = (
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
+				6862F0640F32A89900B3F6F6 /* PlugIns */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				6888B2D90F30421300724593 /* Libraries */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
@@ -355,6 +381,76 @@
 			name = "Color Editor";
 			sourceTree = "<group>";
 		};
+		6862F0400F32A88E00B3F6F6 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				6862F0410F32A88E00B3F6F6 /* Newton's Method */,
+				6862F0450F32A88E00B3F6F6 /* Other */,
+				6862F0470F32A88E00B3F6F6 /* Quadratic Maps */,
+				6862F04F0F32A88E00B3F6F6 /* Several Complex Variables */,
+				6862F0510F32A88E00B3F6F6 /* Transcendental Dynamics */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+		6862F0410F32A88E00B3F6F6 /* Newton's Method */ = {
+			isa = PBXGroup;
+			children = (
+				6862F0420F32A88E00B3F6F6 /* auto.fs */,
+				6862F0430F32A88E00B3F6F6 /* mandbr.fs */,
+				6862F0440F32A88E00B3F6F6 /* z3-1.fs */,
+			);
+			path = "Newton's Method";
+			sourceTree = "<group>";
+		};
+		6862F0450F32A88E00B3F6F6 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				6862F0460F32A88E00B3F6F6 /* mathieu.fs */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		6862F0470F32A88E00B3F6F6 /* Quadratic Maps */ = {
+			isa = PBXGroup;
+			children = (
+				6862F0480F32A88E00B3F6F6 /* ab.fs */,
+				6862F0490F32A88E00B3F6F6 /* boundary.fs */,
+				6862F04A0F32A88E00B3F6F6 /* ext.fs */,
+				6862F04B0F32A88E00B3F6F6 /* extern.fs */,
+				6862F04C0F32A88E00B3F6F6 /* Julia.fs */,
+				6862F04D0F32A88E00B3F6F6 /* Mandelbrot.fs */,
+				6862F04E0F32A88E00B3F6F6 /* precrit.fs */,
+			);
+			path = "Quadratic Maps";
+			sourceTree = "<group>";
+		};
+		6862F04F0F32A88E00B3F6F6 /* Several Complex Variables */ = {
+			isa = PBXGroup;
+			children = (
+				6862F0500F32A88E00B3F6F6 /* except.fs */,
+			);
+			path = "Several Complex Variables";
+			sourceTree = "<group>";
+		};
+		6862F0510F32A88E00B3F6F6 /* Transcendental Dynamics */ = {
+			isa = PBXGroup;
+			children = (
+				6862F0520F32A88E00B3F6F6 /* arcsin.fs */,
+				6862F0530F32A88E00B3F6F6 /* arcsinp1.fs */,
+				6862F0540F32A88E00B3F6F6 /* exp.fs */,
+			);
+			path = "Transcendental Dynamics";
+			sourceTree = "<group>";
+		};
+		6862F0640F32A89900B3F6F6 /* PlugIns */ = {
+			isa = PBXGroup;
+			children = (
+				6862F0400F32A88E00B3F6F6 /* Scripts */,
+			);
+			name = PlugIns;
+			sourceTree = "<group>";
+		};
 		6888B0AC0F2EEC7900724593 /* Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -409,6 +505,7 @@
 				8D15AC2B0486D014006FF6A4 /* Resources */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
+				6862F0800F32A97E00B3F6F6 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -461,7 +558,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				68B7323A0D3B01560021E000 /* Info.plist in Resources */,
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
 				8D15AC2D0486D014006FF6A4 /* MainMenu.nib in Resources */,
 				8D15AC2E0486D014006FF6A4 /* FSDocument.nib in Resources */,
@@ -471,7 +567,6 @@
 				01DD1CE509CC945700A43FB5 /* FSCursors.h in Resources */,
 				01DD1D7109CC9DE000A43FB5 /* ZoomIn.tiff in Resources */,
 				680F378C0CA06E3300F1F52E /* programList in Resources */,
-				684E67E50CF958A800BAB5A5 /* MyDocument-saved.nib in Resources */,
 				6888B26B0F2FB47F00724593 /* folder.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -703,21 +798,16 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INPUT_FILETYPE = automatic;
-				GCC_MODEL_CPU = G4;
 				GCC_MODEL_TUNING = G4;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRODUCT_NAME = FractalStream;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
@@ -731,14 +821,11 @@
 				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRODUCT_NAME = FractalStream;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
@@ -750,12 +837,10 @@
 				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRODUCT_NAME = FractalStream;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Default;
@@ -763,67 +848,22 @@
 		68D7AE5E0A59B1BF0076FC20 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_OBJC_GC = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = NO;
 				GCC_FAST_MATH = NO;
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
-					_STDC_LIMIT_MACROS,
-					_GNU_SOURCE,
+				GCC_PREPROCESSOR_DEFINITIONS = (
 					_DEBUG,
-				);
-				GCC_WARN_ABOUT_RETURN_TYPE = NO;
-				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
-				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = /usr/local/include;
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				OTHER_LDFLAGS = (
-					"-lpthread",
-					"-lm",
-					"-lLLVMCodeGen",
-					"-lLLVMipo",
-					"-lLLVMScalarOpts",
-					"-lLLVMTransformUtils",
-					"-lLLVMipa",
-					"-lLLVMAnalysis",
-					"-lLLVMTarget",
-					"-lLLVMCore",
-					"-lLLVMSupport",
-					"-lLLVMSystem",
-					"-lLLVMSelectionDAG",
-					"-lLLVMAsmPrinter",
-				);
-				PREBINDING = NO;
-				USER_HEADER_SEARCH_PATHS = /usr/local/include;
-				ZERO_LINK = NO;
-			};
-			name = Development;
-		};
-		68D7AE5F0A59B1BF0076FC20 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_FAST_MATH = YES;
-				GCC_MODEL_TUNING = "";
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
-					_STDC_LIMIT_MACROS,
 					_GNU_SOURCE,
-					_DEBUG,
+					__STDC_LIMIT_MACROS,
 				);
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
@@ -846,8 +886,55 @@
 					"-lLLVMAsmPrinter",
 				);
 				PREBINDING = NO;
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
-				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SHARED_PRECOMPS_DIR = "";
+				USER_HEADER_SEARCH_PATHS = /usr/local/include;
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		68D7AE5F0A59B1BF0076FC20 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = NO;
+				GCC_FAST_MATH = YES;
+				GCC_MODEL_TUNING = "";
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					_GNU_SOURCE,
+					__STDC_LIMIT_MACROS,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_LDFLAGS = (
+					"-lpthread",
+					"-lm",
+					"-lLLVMCodeGen",
+					"-lLLVMipo",
+					"-lLLVMScalarOpts",
+					"-lLLVMTransformUtils",
+					"-lLLVMipa",
+					"-lLLVMAnalysis",
+					"-lLLVMTarget",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lLLVMSystem",
+					"-lLLVMSelectionDAG",
+					"-lLLVMAsmPrinter",
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SHARED_PRECOMPS_DIR = "";
 				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 				ZERO_LINK = NO;
 			};
@@ -856,21 +943,20 @@
 		68D7AE600A59B1BF0076FC20 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_INPUT_FILETYPE = automatic;
+				GCC_ENABLE_SSE3_EXTENSIONS = NO;
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
-					_STDC_LIMIT_MACROS,
-					_GNU_SOURCE,
+				GCC_PREPROCESSOR_DEFINITIONS = (
 					_DEBUG,
+					_GNU_SOURCE,
+					__STDC_LIMIT_MACROS,
 				);
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_UNUSED_VARIABLE = NO;
@@ -894,9 +980,8 @@
 					"-lLLVMAsmPrinter",
 				);
 				PREBINDING = NO;
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
-				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SHARED_PRECOMPS_DIR = "";
 				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 				ZERO_LINK = NO;
 			};

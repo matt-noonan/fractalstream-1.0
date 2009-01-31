@@ -42,9 +42,9 @@
 			unit.viewerData -> maxIters, unit.viewerData -> maxRadius, unit.viewerData -> minRadius);
 		if([self isCancelled] == YES) break;
 	}
-	
+	unit.finished = [self isCancelled]? NO : YES;
 	if([self isCancelled] == NO) [colorizer colorUnit: &unit];
-	if([self isCancelled] == NO) [unit.owner performSelectorOnMainThread: @selector(renderOperationFinished:) withObject: self waitUntilDone: YES];
+	[unit.owner performSelectorOnMainThread: @selector(renderOperationFinished:) withObject: self waitUntilDone: NO];
 	if([self isCancelled] == YES) unit.freeResults = YES;
 }
 

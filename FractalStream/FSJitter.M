@@ -38,7 +38,7 @@ static FSJitter* sharedJitter = nil;
 
 - (void) startup {
 	/* Build the module provider and execution engine that every document will use */
-	Module* rootModule = new Module("root module");
+	llvm::Module* rootModule = new llvm::Module("root module");
 	ExistingModuleProvider* MP = new ExistingModuleProvider(rootModule);
 	ExecutionEngine* engine = ExecutionEngine::create(MP, false);
 	eng = (void*) engine;

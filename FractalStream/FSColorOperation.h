@@ -8,8 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "FSThreading.h"
 
-@interface FSColorOperation : NSOperation {
+@interface FSColorOperation : FSOperation {
 
 }
 

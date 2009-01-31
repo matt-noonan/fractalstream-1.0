@@ -57,7 +57,8 @@
 	[workQueue setMaxConcurrentOperationCount: NSOperationQueueDefaultMaxConcurrentOperationCount];
 	drawing = [[NSString stringWithString: @"drawing"] retain];
 	[viewerColorizer setColorWidget: colorPicker autocolorCache: acCache];
-
+	renderQueueEntries = 0;
+	
 	renderingFinishedObject = nil;
 	currentBatch = 1;
 	displayList = [[NSMutableArray alloc] init];
@@ -116,11 +117,11 @@
 	configured = YES; view = &fakeview; fakeview = *newData; 
 	[self render: self];
 }
-- getViewerDataTo: (FSViewerData*) savedData { memmove(savedData, view, sizeof(FSViewerData)); }
+- (void) getViewerDataTo: (FSViewerData*) savedData { memmove(savedData, view, sizeof(FSViewerData)); }
 
 - (FSViewerData) data { return fakeview; }
 - (FSColorWidget*) colorPicker { return colorPicker; }
-- setColorPicker: (FSColorWidget*) newColorPicker { colorPicker = newColorPicker; }
+- (void) setColorPicker: (FSColorWidget*) newColorPicker { colorPicker = newColorPicker; }
 
 - (IBAction) render: (id) sender {
 	int i; 
@@ -180,18 +181,29 @@
 		}
 	}
 	
+#ifdef FS_USE_THREADING
+	#ifdef FS_USE_NSOPERATION
+		#define LogBoxSize 7
+	#else
+		#define LogBoxSize 7
+	#endif
+#else
+	#define LogBoxSize 5
+#endif
 	/* Subdivide the viewport into 128x128 regions (or smaller), give each one its own unit */
-	xBoxes = (((int) [self bounds].size.width) >> 7);
-	yBoxes = (((int) [self bounds].size.height) >> 7);
-	xRemainder = ((int) [self bounds].size.width) - (xBoxes << 7);
-	yRemainder = ((int) [self bounds].size.height) - (yBoxes << 7);
+	xBoxes = (((int) [self bounds].size.width) >> LogBoxSize);
+	yBoxes = (((int) [self bounds].size.height) >> LogBoxSize);
+	xRemainder = ((int) [self bounds].size.width) - (xBoxes << LogBoxSize);
+	yRemainder = ((int) [self bounds].size.height) - (yBoxes << LogBoxSize);
 	if(xRemainder) ++xBoxes;
 	if(yRemainder) ++yBoxes;
-	dx = 128.0 * view -> pixelSize * view -> aspectRatio;
-	dy = 128.0 * view -> pixelSize;
+	dx = (double)(1 << LogBoxSize) * view -> pixelSize * view -> aspectRatio;
+	dy = (double)(1 << LogBoxSize) * view -> pixelSize;
 	
-	if(highDetail) { renderQueueEntries = 3 * xBoxes * yBoxes; }
-	else { renderQueueEntries = 2 * xBoxes * yBoxes; }
+	synchronizeTo(workQueue) {
+		if(highDetail) { renderQueueEntries += 3 * xBoxes * yBoxes; }
+		else { renderQueueEntries += 2 * xBoxes * yBoxes; }
+	}
 	for(i = 0; i < 3; i++) {
 		if(i == 0) linearMultiplier = 0.5;
 		else if(i == 1) linearMultiplier = 1.0;
@@ -201,8 +213,8 @@
 		for(y = 0; y < yBoxes; y++) {
 			unit.offset[0] = 0.0;
 			for(x = 0; x < xBoxes; x++) {
-				unit.dimension[0] = ((x == xBoxes - 1) && xRemainder)? xRemainder : 128;	/* note: this ignores detailLevel */
-				unit.dimension[1] = ((y == yBoxes - 1) && yRemainder)? yRemainder : 128;
+				unit.dimension[0] = ((x == xBoxes - 1) && xRemainder)? xRemainder : (1 << LogBoxSize);	/* note: this ignores detailLevel */
+				unit.dimension[1] = ((y == yBoxes - 1) && yRemainder)? yRemainder : (1 << LogBoxSize);
 				unit.dimension[0] = (int)((double) unit.dimension[0] * linearMultiplier + 0.5);
 				unit.dimension[1] = (int)((double) unit.dimension[1] * linearMultiplier + 0.5);
 				unit.step[0] = view -> pixelSize * view -> aspectRatio / linearMultiplier;
@@ -231,45 +243,49 @@
 	NSRect r;
 	NSBitmapImageRep* bitmap;
 	
-	size.width = [op unit] -> dimension[0];
-	size.height = [op unit] -> dimension[1];
-	planes[0] = (unsigned char*)([op unit] -> result);
-	bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
-		pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
-		samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
-		colorSpaceName: NSDeviceRGBColorSpace
-/*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
-		bytesPerRow: (size.width * 4)
-		bitsPerPixel: 32
-	];
-	synchronizeTo(drawing) {
-		finalX = (int)([op unit] -> dimension[0] + 0.5);
-		finalY = (int)([op unit] -> dimension[1] + 0.5);
-		p.x = [op unit] -> location[0];
-		p.y = [op unit] -> location[1];
-		if([op unit] -> multiplier == -1) r = NSMakeRect(p.x, p.y, finalX * 2, finalY * 2);
-		else if([op unit] -> multiplier == 1) r = NSMakeRect(p.x, p.y, finalX / 2, finalY / 2);
-		else r = NSMakeRect(p.x, p.y, finalX, finalY);
-		[background lockFocus];
-		[bitmap drawInRect: r];
-		[background unlockFocus];
-		[bitmap release];
-		readyToDisplay = YES;
+	if([op unit] -> finished) {
+		size.width = [op unit] -> dimension[0];
+		size.height = [op unit] -> dimension[1];
+		planes[0] = (unsigned char*)([op unit] -> result);
+		bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
+			pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
+			samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
+			colorSpaceName: NSDeviceRGBColorSpace
+	/*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
+			bytesPerRow: (size.width * 4)
+			bitsPerPixel: 32
+		];
+		synchronizeTo(drawing) {
+			finalX = (int)([op unit] -> dimension[0] + 0.5);
+			finalY = (int)([op unit] -> dimension[1] + 0.5);
+			p.x = [op unit] -> location[0];
+			p.y = [op unit] -> location[1];
+			if([op unit] -> multiplier == -1) r = NSMakeRect(p.x, p.y, finalX * 2, finalY * 2);
+			else if([op unit] -> multiplier == 1) r = NSMakeRect(p.x, p.y, finalX / 2, finalY / 2);
+			else r = NSMakeRect(p.x, p.y, finalX, finalY);
+			[background lockFocus];
+			[bitmap drawInRect: r];
+			[background unlockFocus];
+			[bitmap release];
+			readyToDisplay = YES;
+		}
 	}
 	synchronizeTo(workQueue) {
 		--renderQueueEntries;
-		if(renderQueueEntries == 0) {
-			if(renderingFinishedObject != nil)
+		NSLog(@"rQE is now %i\n", renderQueueEntries);
+		if(renderQueueEntries <= 0) {
+			if(renderQueueEntries == 0) if(renderingFinishedObject != nil)
 				[renderingFinishedObject performSelector: renderingFinished];
+			renderQueueEntries = 0;
 		}
 	}
-	[self setNeedsDisplay: YES];
+	if([op unit] -> finished) [self setNeedsDisplay: YES];
 }
 
 
-- setRenderCompletedMessage: (SEL) message forObject: (id) obj { renderingFinished = message; renderingFinishedObject = obj; }
+- (void) setRenderCompletedMessage: (SEL) message forObject: (id) obj { renderingFinished = message; renderingFinishedObject = obj; }
 
-- setDefaultsTo: (double*) def count: (int) n {
+- (void) setDefaultsTo: (double*) def count: (int) n {
 	int i;
 	Debug(@"setDefaultsTo got count %i\n", n);
 	defaults = n;

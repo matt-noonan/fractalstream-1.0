@@ -62,7 +62,7 @@
 	return self;
 }
 
-- loadChildren {
+- (void) loadChildren {
 	NSFileManager* fs;
 	NSArray* ar;
 	id item;
@@ -103,7 +103,7 @@
 
 @implementation FSScriptLibraryController
 
-- awakeFromNib {
+- (void) awakeFromNib {
 	[[NSNotificationCenter defaultCenter]
 		addObserver: self selector: @selector(newSelection:)
 		name: NSOutlineViewSelectionDidChangeNotification object: outline
@@ -117,22 +117,30 @@
 	id item;
 	NSEnumerator* en;
 	BOOL isDirectory;
+	NSString* path;
+	
+	path = [NSString stringWithFormat: @"%@/", [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent: @"Scripts/"]];
+	NSLog(@"searching path at \"%@\"\n", path);
 	library = [[NSMutableArray alloc] init];
 	fs = [NSFileManager defaultManager];
-	ar = [fs directoryContentsAtPath: @"/Users/noonan/Desktop/Scripts/"];
+	ar = [fs directoryContentsAtPath: path];
+	NSLog(@"ar is %@\n", ar);
 	en = [ar objectEnumerator];
 	while(item = [en nextObject]) {
 		[fs fileExistsAtPath:
-			[NSString stringWithFormat: @"/Users/noonan/Desktop/Scripts/%@", item]
+			[NSString stringWithFormat: @"%@%@", path, item]
 			isDirectory: &isDirectory
 		];	
-		if([item hasSuffix: @".fs"] || isDirectory) 
-			[library addObject: [[FSScriptLibraryItem alloc] initWithPath: @"/Users/noonan/Desktop/Scripts/" file: item]];
+		if([item hasSuffix: @".fs"] || isDirectory) {
+			NSLog(@"item is %@\n", item);
+			[library addObject: [[FSScriptLibraryItem alloc] initWithPath: path file: item]];
+		}
 	}
+	[outline reloadData];
 }
 
 - (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item {
-	return (item == nil)? [library count] : (int) [item children]; 
+	return (item == nil)? ((library == nil)? 0 : [library count]) : (int) [item children]; 
 }
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item {

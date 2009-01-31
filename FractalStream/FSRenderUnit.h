@@ -22,4 +22,5 @@ typedef struct {
 	double* setting;
 	int settings;
 	double* result;
+	BOOL finished;
 } FSRenderUnit;
