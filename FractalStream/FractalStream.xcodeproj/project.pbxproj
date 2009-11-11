@@ -662,8 +662,8 @@
 				681AF12B0F699AF900E8DE1B /* FSEController.h */,
 				681AF12C0F699AF900E8DE1B /* FSEController.m */,
 				681AF12D0F699AF900E8DE1B /* FSKernel.h */,
-				681AF12E0F699AF900E8DE1B /* FSKernel.mm */,
 				681AF12F0F699AF900E8DE1B /* FSJitter.h */,
+				681AF12E0F699AF900E8DE1B /* FSKernel.mm */,
 				681AF1300F699AF900E8DE1B /* FSJitter.mm */,
 				68605DB60F6DCEE500189C8C /* FSCustomDataManager.h */,
 				68605DB70F6DCEE500189C8C /* FSCustomDataManager.m */,
@@ -686,13 +686,13 @@
 				681AF13B0F699AF900E8DE1B /* FSRenderer.m */,
 				681AF13C0F699AF900E8DE1B /* FSViewer.h */,
 				681AF13D0F699AF900E8DE1B /* FSViewer.m */,
-				681AF4C30F6CCE8000E8DE1B /* FSFullscreenWindow.h */,
-				681AF4C40F6CCE8000E8DE1B /* FSFullscreenWindow.m */,
 				681AF13E0F699AF900E8DE1B /* FSRenderUnit.h */,
 				681AF13F0F699AF900E8DE1B /* FSRenderOperation.h */,
 				681AF1400F699AF900E8DE1B /* FSRenderOperation.m */,
 				681AF1450F699AF900E8DE1B /* FSThreading.h */,
 				681AF1460F699AF900E8DE1B /* FSThreading.m */,
+				681AF4C30F6CCE8000E8DE1B /* FSFullscreenWindow.h */,
+				681AF4C40F6CCE8000E8DE1B /* FSFullscreenWindow.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
