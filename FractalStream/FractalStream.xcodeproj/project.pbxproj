@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		6802822D10AB17CF0077048E /* FSPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6802822C10AB17CF0077048E /* FSPanel.m */; };
+		6802824710AB1A060077048E /* FSDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6802824310AB1A060077048E /* FSDocument.xib */; };
+		6802824810AB1A060077048E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6802824510AB1A060077048E /* MainMenu.xib */; };
 		681AF1470F699AF900E8DE1B /* FSScriptLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */; };
 		681AF1480F699AF900E8DE1B /* FSColorLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1140F699AF900E8DE1B /* FSColorLibraryController.m */; };
 		681AF1490F699AF900E8DE1B /* FSColorWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1180F699AF900E8DE1B /* FSColorWidget.m */; };
@@ -56,7 +57,6 @@
 		681AF4C50F6CCE8000E8DE1B /* FSFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF4C40F6CCE8000E8DE1B /* FSFullscreenWindow.m */; };
 		683CAB330FD787500071EEAB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		683CAB340FD787500071EEAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
-		683CAB360FD787500071EEAB /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		683CAB370FD787500071EEAB /* henonc.fs in Resources */ = {isa = PBXBuildFile; fileRef = 681AF1AD0F699B8F00E8DE1B /* henonc.fs */; };
 		683CAB380FD787500071EEAB /* henona.fs in Resources */ = {isa = PBXBuildFile; fileRef = 681AF1AE0F699B8F00E8DE1B /* henona.fs */; };
 		683CAB390FD787500071EEAB /* julia.icns in Resources */ = {isa = PBXBuildFile; fileRef = 681AF1B60F699BCC00E8DE1B /* julia.icns */; };
@@ -110,8 +110,6 @@
 		688F109A0FD9BED700FAFC60 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */; };
 		688F109B0FD9BED700FAFC60 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
 		68AF3AA51049EB7600967604 /* FSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 68411692100306F000C5323F /* FSColor.m */; };
-		68AF3AB9104A3C5E00967604 /* FSDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BDE3420FDF5712009CC703 /* FSDocument.xib */; };
-		68BDE3440FDF5712009CC703 /* FSDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BDE3420FDF5712009CC703 /* FSDocument.xib */; };
 		68CB40A81065EA5E0005403B /* LLVMExecutionEngine.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 681AF1B90F699DEA00E8DE1B /* LLVMExecutionEngine.o */; };
 		68CB40A91065EA5E0005403B /* LLVMJIT.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 681AF1BA0F699DEA00E8DE1B /* LLVMJIT.o */; };
 		68CB40AA1065EA5E0005403B /* LLVMPowerPCAsmPrinter.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 681AF1BB0F699DEA00E8DE1B /* LLVMPowerPCAsmPrinter.o */; };
@@ -371,7 +369,6 @@
 /* Begin PBXFileReference section */
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2A37F4BAFDCFA73011CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -379,6 +376,8 @@
 		32DBCF750370BD2300C91783 /* FractalStream_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FractalStream_Prefix.pch; sourceTree = "<group>"; };
 		6802822B10AB17CF0077048E /* FSPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSPanel.h; sourceTree = "<group>"; };
 		6802822C10AB17CF0077048E /* FSPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSPanel.m; sourceTree = "<group>"; };
+		6802824410AB1A060077048E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FSDocument.xib; sourceTree = "<group>"; };
+		6802824610AB1A060077048E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		681AF1110F699AF900E8DE1B /* FSScriptLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSScriptLibraryController.h; sourceTree = "<group>"; };
 		681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSScriptLibraryController.m; sourceTree = "<group>"; };
 		681AF1130F699AF900E8DE1B /* FSColorLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorLibraryController.h; sourceTree = "<group>"; };
@@ -483,7 +482,6 @@
 		68AF3A6E1049D83400967604 /* LLVMPowerPCCodeGen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMPowerPCCodeGen.o; path = win/LLVMPowerPCCodeGen.o; sourceTree = "<group>"; };
 		68AF3A701049D83400967604 /* LLVMX86AsmPrinter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMX86AsmPrinter.o; path = win/LLVMX86AsmPrinter.o; sourceTree = "<group>"; };
 		68AF3A711049D83400967604 /* LLVMX86CodeGen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMX86CodeGen.o; path = win/LLVMX86CodeGen.o; sourceTree = "<group>"; };
-		68BDE3430FDF5712009CC703 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FSDocument.xib; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -583,12 +581,12 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				68BDE3420FDF5712009CC703 /* FSDocument.xib */,
+				6802824310AB1A060077048E /* FSDocument.xib */,
+				6802824510AB1A060077048E /* MainMenu.xib */,
 				681AF1B60F699BCC00E8DE1B /* julia.icns */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
-				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
 				683CAB980FD787500071EEAB /* Info copy.plist */,
 			);
 			name = Resources;
@@ -1021,11 +1019,9 @@
 			files = (
 				683CAB330FD787500071EEAB /* Credits.rtf in Resources */,
 				683CAB340FD787500071EEAB /* InfoPlist.strings in Resources */,
-				683CAB360FD787500071EEAB /* MainMenu.xib in Resources */,
 				683CAB370FD787500071EEAB /* henonc.fs in Resources */,
 				683CAB380FD787500071EEAB /* henona.fs in Resources */,
 				683CAB390FD787500071EEAB /* julia.icns in Resources */,
-				68AF3AB9104A3C5E00967604 /* FSDocument.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1035,11 +1031,11 @@
 			files = (
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
-				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				681AF1AF0F699B8F00E8DE1B /* henonc.fs in Resources */,
 				681AF1B00F699B8F00E8DE1B /* henona.fs in Resources */,
 				681AF1B70F699BCC00E8DE1B /* julia.icns in Resources */,
-				68BDE3440FDF5712009CC703 /* FSDocument.xib in Resources */,
+				6802824710AB1A060077048E /* FSDocument.xib in Resources */,
+				6802824810AB1A060077048E /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1138,14 +1134,6 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1DDD582A0DA1D0D100B32029 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1DDD582B0DA1D0D100B32029 /* English */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 		2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1154,12 +1142,20 @@
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		68BDE3420FDF5712009CC703 /* FSDocument.xib */ = {
+		6802824310AB1A060077048E /* FSDocument.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				68BDE3430FDF5712009CC703 /* English */,
+				6802824410AB1A060077048E /* English */,
 			);
 			name = FSDocument.xib;
+			sourceTree = "<group>";
+		};
+		6802824510AB1A060077048E /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6802824610AB1A060077048E /* English */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

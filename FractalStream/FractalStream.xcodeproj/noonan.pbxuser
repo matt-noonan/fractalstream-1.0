@@ -165,7 +165,7 @@
 	};
 	32DBCF750370BD2300C91783 /* FractalStream_Prefix.pch */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {600, 253}}";
+			sepNavIntBoundsRect = "{{0, 0}, {920, 641}}";
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRange = "{0, 157}";
 		};
@@ -940,7 +940,7 @@
 	};
 	681AF13C0F699AF900E8DE1B /* FSViewer.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {920, 1664}}";
+			sepNavIntBoundsRect = "{{0, 0}, {920, 1638}}";
 			sepNavSelRange = "{1950, 0}";
 			sepNavVisRange = "{491, 1126}";
 		};
