@@ -29,6 +29,7 @@
 		FSSessionNode* parent;
 		FSSessionNode* firstChild;
 		FSSessionNode* favoredChild;
+		NSMutableDictionary* extra;
 		int nodeNumber;
 }
 
@@ -44,6 +45,7 @@
 
 - (void) encodeWithCoder: (NSCoder*) coder;
 - (id) initWithCoder: (NSCoder*) coder;
+- (NSMutableDictionary*) extra;
 
 @end
 
@@ -53,6 +55,7 @@
 	
 	@protected
 		IBOutlet NSOutlineView* historyView;
+		IBOutlet id owner;
 		FSSessionNode* root;
 		FSSessionNode* currentNode;
 		
@@ -112,5 +115,7 @@
 
 - (void) encodeWithCoder: (NSCoder*) coder;
 - (id) initWithCoder: (NSCoder*) coder;
-	
+
+- (void) changeTo: (FSSessionNode*) node;
+
 @end
