@@ -66,8 +66,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 279647861;
-			PBXWorkspaceStateSaveDate = 279647861;
+			PBXPerProjectTemplateStateSaveDate = 279648106;
+			PBXWorkspaceStateSaveDate = 279648106;
 		};
 		perUserProjectItems = {
 			68027F4810AB142F0077048E = 68027F4810AB142F0077048E /* PBXTextBookmark */;
@@ -80,18 +80,18 @@
 			680280C210AB166A0077048E = 680280C210AB166A0077048E /* PBXTextBookmark */;
 			680280C310AB166A0077048E = 680280C310AB166A0077048E /* PBXTextBookmark */;
 			680280C410AB166A0077048E = 680280C410AB166A0077048E /* PBXTextBookmark */;
-			6802820D10AB16CF0077048E /* PBXTextBookmark */ = 6802820D10AB16CF0077048E /* PBXTextBookmark */;
-			6802820E10AB16CF0077048E /* PBXTextBookmark */ = 6802820E10AB16CF0077048E /* PBXTextBookmark */;
-			6802820F10AB16CF0077048E /* PBXTextBookmark */ = 6802820F10AB16CF0077048E /* PBXTextBookmark */;
-			6802821010AB16CF0077048E /* PBXTextBookmark */ = 6802821010AB16CF0077048E /* PBXTextBookmark */;
-			6802821110AB16CF0077048E /* PBXTextBookmark */ = 6802821110AB16CF0077048E /* PBXTextBookmark */;
-			6802821210AB16CF0077048E /* PBXTextBookmark */ = 6802821210AB16CF0077048E /* PBXTextBookmark */;
-			6802821310AB16CF0077048E /* PBXTextBookmark */ = 6802821310AB16CF0077048E /* PBXTextBookmark */;
-			6802821410AB16CF0077048E /* PBXTextBookmark */ = 6802821410AB16CF0077048E /* PBXTextBookmark */;
-			6802821510AB16CF0077048E /* PBXTextBookmark */ = 6802821510AB16CF0077048E /* PBXTextBookmark */;
-			6802821610AB16CF0077048E /* PBXTextBookmark */ = 6802821610AB16CF0077048E /* PBXTextBookmark */;
-			6802821710AB16CF0077048E /* PBXTextBookmark */ = 6802821710AB16CF0077048E /* PBXTextBookmark */;
-			6802821810AB16CF0077048E /* PBXTextBookmark */ = 6802821810AB16CF0077048E /* PBXTextBookmark */;
+			6802820D10AB16CF0077048E = 6802820D10AB16CF0077048E /* PBXTextBookmark */;
+			6802820E10AB16CF0077048E = 6802820E10AB16CF0077048E /* PBXTextBookmark */;
+			6802820F10AB16CF0077048E = 6802820F10AB16CF0077048E /* PBXTextBookmark */;
+			6802821010AB16CF0077048E = 6802821010AB16CF0077048E /* PBXTextBookmark */;
+			6802821110AB16CF0077048E = 6802821110AB16CF0077048E /* PBXTextBookmark */;
+			6802821210AB16CF0077048E = 6802821210AB16CF0077048E /* PBXTextBookmark */;
+			6802821310AB16CF0077048E = 6802821310AB16CF0077048E /* PBXTextBookmark */;
+			6802821410AB16CF0077048E = 6802821410AB16CF0077048E /* PBXTextBookmark */;
+			6802821510AB16CF0077048E = 6802821510AB16CF0077048E /* PBXTextBookmark */;
+			6802821610AB16CF0077048E = 6802821610AB16CF0077048E /* PBXTextBookmark */;
+			6802821710AB16CF0077048E = 6802821710AB16CF0077048E /* PBXTextBookmark */;
+			6802821810AB16CF0077048E = 6802821810AB16CF0077048E /* PBXTextBookmark */;
 			6804D43A10AA7E6C004BC5A0 = 6804D43A10AA7E6C004BC5A0 /* PBXTextBookmark */;
 			6804D43B10AA7E6C004BC5A0 = 6804D43B10AA7E6C004BC5A0 /* PBXTextBookmark */;
 			6804D44B10AA7F1C004BC5A0 = 6804D44B10AA7F1C004BC5A0 /* PBXTextBookmark */;
@@ -389,6 +389,20 @@
 		rType = 0;
 		vrLen = 1067;
 		vrLoc = 551;
+	};
+	6802822B10AB17CF0077048E /* FSPanel.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {920, 641}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 581}";
+		};
+	};
+	6802822C10AB17CF0077048E /* FSPanel.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {920, 884}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1146}";
+		};
 	};
 	6804D43A10AA7E6C004BC5A0 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -926,9 +940,9 @@
 	};
 	681AF13C0F699AF900E8DE1B /* FSViewer.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {920, 1638}}";
+			sepNavIntBoundsRect = "{{0, 0}, {920, 1664}}";
 			sepNavSelRange = "{1950, 0}";
-			sepNavVisRange = "{551, 1067}";
+			sepNavVisRange = "{491, 1126}";
 		};
 	};
 	681AF13D0F699AF900E8DE1B /* FSViewer.m */ = {
@@ -1207,6 +1221,12 @@
 		vrLoc = 1041;
 	};
 	686060B50F72AB0900189C8C /* FSPanel.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = FSPanel.h;
+		path = /Users/noonan/Desktop/FractalStream/FSPanel.h;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {733, 550}}";
 			sepNavSelRange = "{575, 0}";
@@ -1214,6 +1234,12 @@
 		};
 	};
 	686060B60F72AB0900189C8C /* FSPanel.m */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.objc;
+		name = FSPanel.m;
+		path = /Users/noonan/Desktop/FractalStream/FSPanel.m;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {733, 966}}";
 			sepNavSelRange = "{675, 0}";

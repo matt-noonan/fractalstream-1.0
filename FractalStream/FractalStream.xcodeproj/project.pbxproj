@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
+		6802822D10AB17CF0077048E /* FSPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6802822C10AB17CF0077048E /* FSPanel.m */; };
 		681AF1470F699AF900E8DE1B /* FSScriptLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */; };
 		681AF1480F699AF900E8DE1B /* FSColorLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1140F699AF900E8DE1B /* FSColorLibraryController.m */; };
 		681AF1490F699AF900E8DE1B /* FSColorWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1180F699AF900E8DE1B /* FSColorWidget.m */; };
@@ -83,7 +84,6 @@
 		683CAB510FD787500071EEAB /* FSStartup.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF15D0F699B2A00E8DE1B /* FSStartup.m */; };
 		683CAB520FD787500071EEAB /* FSFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF4C40F6CCE8000E8DE1B /* FSFullscreenWindow.m */; };
 		683CAB530FD787500071EEAB /* FSCustomDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68605DB70F6DCEE500189C8C /* FSCustomDataManager.m */; };
-		683CAB540FD787500071EEAB /* FSPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 686060B60F72AB0900189C8C /* FSPanel.m */; };
 		683CAB570FD787500071EEAB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		683CAB7A0FD787500071EEAB /* nqsle.fs in Copy Files (Differential Eqns) */ = {isa = PBXBuildFile; fileRef = 681AF1920F699B3900E8DE1B /* nqsle.fs */; };
 		683CAB7B0FD787500071EEAB /* pend.fs in Copy Files (Differential Eqns) */ = {isa = PBXBuildFile; fileRef = 681AF1930F699B3900E8DE1B /* pend.fs */; };
@@ -107,7 +107,6 @@
 		683CAB920FD787500071EEAB /* exp.fs in Copy Files (Transcendental Dynamics) */ = {isa = PBXBuildFile; fileRef = 681AF1AA0F699B3900E8DE1B /* exp.fs */; };
 		68411693100306F000C5323F /* FSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 68411692100306F000C5323F /* FSColor.m */; };
 		68605DB80F6DCEE500189C8C /* FSCustomDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68605DB70F6DCEE500189C8C /* FSCustomDataManager.m */; };
-		686060B70F72AB0900189C8C /* FSPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 686060B60F72AB0900189C8C /* FSPanel.m */; };
 		688F109A0FD9BED700FAFC60 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */; };
 		688F109B0FD9BED700FAFC60 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
 		68AF3AA51049EB7600967604 /* FSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 68411692100306F000C5323F /* FSColor.m */; };
@@ -378,6 +377,8 @@
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32DBCF750370BD2300C91783 /* FractalStream_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FractalStream_Prefix.pch; sourceTree = "<group>"; };
+		6802822B10AB17CF0077048E /* FSPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSPanel.h; sourceTree = "<group>"; };
+		6802822C10AB17CF0077048E /* FSPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSPanel.m; sourceTree = "<group>"; };
 		681AF1110F699AF900E8DE1B /* FSScriptLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSScriptLibraryController.h; sourceTree = "<group>"; };
 		681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSScriptLibraryController.m; sourceTree = "<group>"; };
 		681AF1130F699AF900E8DE1B /* FSColorLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorLibraryController.h; sourceTree = "<group>"; };
@@ -476,8 +477,6 @@
 		68411692100306F000C5323F /* FSColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColor.m; sourceTree = "<group>"; };
 		68605DB60F6DCEE500189C8C /* FSCustomDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCustomDataManager.h; sourceTree = "<group>"; };
 		68605DB70F6DCEE500189C8C /* FSCustomDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCustomDataManager.m; sourceTree = "<group>"; };
-		686060B50F72AB0900189C8C /* FSPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSPanel.h; sourceTree = "<group>"; };
-		686060B60F72AB0900189C8C /* FSPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSPanel.m; sourceTree = "<group>"; };
 		68AF3A641049D83400967604 /* LLVMExecutionEngine.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMExecutionEngine.o; path = win/LLVMExecutionEngine.o; sourceTree = "<group>"; };
 		68AF3A691049D83400967604 /* LLVMJIT.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMJIT.o; path = win/LLVMJIT.o; sourceTree = "<group>"; };
 		68AF3A6D1049D83400967604 /* LLVMPowerPCAsmPrinter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = LLVMPowerPCAsmPrinter.o; path = win/LLVMPowerPCAsmPrinter.o; sourceTree = "<group>"; };
@@ -636,8 +635,8 @@
 			children = (
 				681AF11A0F699AF900E8DE1B /* FSDocument.h */,
 				681AF11B0F699AF900E8DE1B /* FSDocument.m */,
-				686060B50F72AB0900189C8C /* FSPanel.h */,
-				686060B60F72AB0900189C8C /* FSPanel.m */,
+				6802822B10AB17CF0077048E /* FSPanel.h */,
+				6802822C10AB17CF0077048E /* FSPanel.m */,
 				681AF11C0F699AF900E8DE1B /* FSSave.h */,
 				681AF11D0F699AF900E8DE1B /* FSSave.m */,
 				681AF11E0F699AF900E8DE1B /* FSSession.h */,
@@ -1091,7 +1090,6 @@
 				683CAB510FD787500071EEAB /* FSStartup.m in Sources */,
 				683CAB520FD787500071EEAB /* FSFullscreenWindow.m in Sources */,
 				683CAB530FD787500071EEAB /* FSCustomDataManager.m in Sources */,
-				683CAB540FD787500071EEAB /* FSPanel.m in Sources */,
 				68AF3AA51049EB7600967604 /* FSColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1124,8 +1122,8 @@
 				681AF15E0F699B2A00E8DE1B /* FSStartup.m in Sources */,
 				681AF4C50F6CCE8000E8DE1B /* FSFullscreenWindow.m in Sources */,
 				68605DB80F6DCEE500189C8C /* FSCustomDataManager.m in Sources */,
-				686060B70F72AB0900189C8C /* FSPanel.m in Sources */,
 				68411693100306F000C5323F /* FSColor.m in Sources */,
+				6802822D10AB17CF0077048E /* FSPanel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
