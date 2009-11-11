@@ -2,7 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "FSEParseTree.h"
-#import "FSEC_gcc.h"
+//#import "FSEC_gcc.h"
 
 /* This class builds a FSEParseTree from the source code.  This parse tree can then be interpreted by
 	any back-end systems (see FSEC_gcc.c for a simple example) */
@@ -31,8 +31,9 @@ typedef struct {
 	FSEParseTree *tree;
 #define FSECOMPILER_VARIABLES 1024
 	FSEDict var[FSECOMPILER_VARIABLES];
-	int index, node, nextvar, orphan, currentFlagID;
+	int index, nextvar, orphan, currentFlagID;
 	int usesC;
+	int loopDepth, probecount;
 	BOOL useComplexVars, useCustom;
 }
 

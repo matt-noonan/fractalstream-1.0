@@ -54,7 +54,7 @@
 		{	@"stops",		FSE_Stops	},
 		{	@"vanishes",	FSE_Vanishes}
 	};
-	const int function_ops = 15;
+	const int function_ops = 19;
 	const FSEDict function[] = {
 		{	@"exp",		FSE_Exp		},
 		{	@"cosh",	FSE_Cosh	},
@@ -70,7 +70,11 @@
 		{	@"arccos",	FSE_Arccos	},
 		{	@"arcsin",	FSE_Arcsin	},
 		{	@"arctan",	FSE_Arctan	},
-		{	@"arg",		FSE_Arg		}
+		{	@"arg",		FSE_Arg		},
+		{	@"conj",	FSE_Bar		},
+		{	@"bar",		FSE_Bar		},
+		{	@"random",	FSE_Random	},
+		{	@"gaussian",FSE_Gaussian}
 	};
 	const int reserved_ops = 13;
 	const FSEDict reserved[] = {

@@ -9,11 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import <stdlib.h>
 #import <string.h>
-#import "FSViewport.h"
 #import "FSCursors.h"
 #import "FSSession.h"
 #import "FSViewer.h"
 #import "FSTool.h"
+#import "FSCustomDataManager.h"
 
 #ifndef FSTool_Type_Definitions
 #define FSTool_Type_Definitions
@@ -53,6 +53,8 @@
 	NSCursor* currentCursor;
 	BOOL ignoreMouseUp;
 	BOOL inDrag;
+	
+	FSCustomDataManager* dataManager;
 }
 
 - (IBAction) resetTrace: (id) sender;
@@ -63,5 +65,6 @@
 - (void) setSession: (FSSession*) newSession;
 - (void) updateMenuForParametric: (BOOL) isPar;
 - (void) addTools: (NSFileWrapper*) toolWrapper;
+- (void) setDataManager: (FSCustomDataManager*) dm;
 
 @end

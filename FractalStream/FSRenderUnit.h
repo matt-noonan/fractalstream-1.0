@@ -23,4 +23,5 @@ typedef struct {
 	int settings;
 	double* result;
 	BOOL finished;
+	int batch;
 } FSRenderUnit;

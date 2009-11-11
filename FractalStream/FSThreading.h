@@ -8,10 +8,10 @@
  */
 #import <Cocoa/Cocoa.h>
 
-/* Undefine the following symbol to target 10.4 and older, Cocotron, etc.
-	Re-implement FSOperation classes using pthreads or NSThread for GNUStep. */
 #define FS_USE_THREADING
-//#define FS_USE_NSOPERATION
+#ifndef WINDOWS
+	#define FS_USE_NSOPERATION
+#endif
 
 #ifdef FS_USE_THREADING
 	#ifdef FS_USE_NSOPERATION
@@ -26,7 +26,7 @@
 		@end
 	
 	#else
-		#define NSOperationQueueDefaultMaxConcurrentOperationCount 1
+		#define NSOperationQueueDefaultMaxConcurrentOperationCount 2
 		#define synchronizeTo @synchronized
 		
 		@interface FSOperation : NSObject {
@@ -63,7 +63,7 @@
 	#endif
 
 #else
-	#define NSOperationQueueDefaultMaxConcurrentOperationCount 2
+	#define NSOperationQueueDefaultMaxConcurrentOperationCount 1
 	#define synchronizeTo if
 
 	@interface FSOperation : NSObject {

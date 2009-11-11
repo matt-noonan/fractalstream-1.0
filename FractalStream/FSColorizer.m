@@ -8,11 +8,14 @@
 
 #import "FSColorizer.h"
 
+
 @implementation FSColorizer
 
 - (id) init {
+	FSGradient* gradient;
+	FSColor* color;
 	self = [super init];
-	acMax = 64;
+	colorArray = nil;
 	return self;
 }
 
@@ -26,6 +29,7 @@
 	colorPicker = picker;
 }
 
+- (void) setColorArray: (NSArray*) colors { colorArray = colors; }
 
 - (void) colorUnit: (FSRenderUnit*) unit {
 	unsigned char* texture;
@@ -36,21 +40,78 @@
 	double loglog, golgol;
 	int phase;
 	int xMax, yMax;
-	float* colorArray;
+//	float* colorArray;
 	int* smoothness;
+//	id gradient;
+	FSColor* col;
+	NSColor* c;
+	FSGradient* gradient;
 	double nearR, farR;
 	int prog;
 	
 	texture = (unsigned char*) (unit -> result);   /**** have to mix down to 8-bit integer with NSBitmapImageRep?? ***/
 	xMax = unit -> dimension[0];
 	yMax = unit -> dimension[1];
-	colorArray = [colorPicker colorArrayPtr];
-	smoothness = [colorPicker smoothnessPtr];
+	colorArray = [colorPicker colorArray];
+//	smoothness = [colorPicker smoothnessPtr];
 	farR = (unit -> viewerData) -> maxRadius;
 	nearR = (unit -> viewerData) -> minRadius;
 	nearR *= nearR; farR *= farR;
 	prog = (unit -> viewerData) -> program;
 	
+	synchronizeTo(colorArray) {
+		for(y = 0; y < yMax; y++) {
+			for(x = 0; x < xMax; x++) {
+				oX = (unit -> result)[(3*xMax*y) + (3*x) + 0];
+				oY = (unit -> result)[(3*xMax*y) + (3*x) + 1];
+				k = (int) ((unit -> result)[(3*xMax*y) + (3*x) + 2]);
+				flag = k & 0xff;  flag &= 0x0f;
+				k >>= 8;
+				
+				if(k == -1) { r = g = b = 1.0; }
+				else if((flag >= 64) || (flag >= [colorArray count])) { r = g = b = 0.7; }
+				else if(k == (unit -> viewerData) -> maxIters) { 
+					r = g = b = 0.0;
+				}
+				else {
+					col = [colorArray objectAtIndex: flag];
+					gradient = [col gradientForX: oX Y: oY withTolerance: (unit -> viewerData) -> minRadius];
+					if([gradient smoothing] > 0) {
+						loglog = (double)k + 
+							(log(2.0 * log((double) ((unit -> viewerData)->maxRadius)))
+							- log(log(oX*oX + oY*oY) / 2.0)) / log((double) [gradient smoothing]);
+						k = (int) loglog;
+						loglog = loglog - floor(loglog);
+						{
+							float* cache = [gradient getColorCache];
+							int index = 3*((k+1) % [gradient subdivisions]);
+							r = loglog*cache[index + 0]; g = loglog*cache[index + 1]; b = loglog*cache[index + 2];
+							loglog = 1.0 - loglog;
+							index = 3*(k % [gradient subdivisions]);
+							r += loglog*cache[index + 0]; g += loglog*cache[index + 1]; b += loglog*cache[index + 2];
+						}
+					}
+					else {
+						float* cache = [gradient getColorCache];
+						int index = 3*(k % [gradient subdivisions]);
+						r = cache[index + 0]; g = cache[index + 1]; b = cache[index + 2];
+					}
+				}
+				if(r > 1.0) r = 1.0; if(g > 1.0) g = 1.0; if(b > 1.0) b = 1.0;
+				if(r < 0.0) r = 0.0; if(g < 0.0) g = 0.0; if(b < 0.0) b = 0.0;
+				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
+				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
+				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
+			}
+		}
+	}
+}
+
+
+
+
+	
+/*
 	synchronizeTo(colorPicker) {
 		for(y = 0; y < yMax; y++) {
 			for(x = 0; x < xMax; x++) {
@@ -116,7 +177,6 @@
 						}
 					}
 					else {
-						/* this color scheme uses autocoloring.  MAKE THIS THREAD-SAFE!!!! */
 						int i;
 						i = 0;
 						useGrey = NO;
@@ -127,10 +187,8 @@
 						if(i == acCache[flag].used_entries) {
 							{ // used to synch to colorPicker
 								int acCount;
-								/* hit a new fixpoint */
 
 								if(acCache[flag].locked || (prog == 1)) useGrey = YES;
-								// hack, should just be else
 								else if(acCache[flag].used_entries < 16) {
 								
 								if((oX*oX + oY*oY) < farR) [colorPicker
@@ -156,7 +214,6 @@
 									realloc(acCache[flag].y, sizeof(double) * acCache[flag].allocated_entries);
 								}
 								[colorPicker cacheAutocolor: flag to: acCache[flag].color X: acCache[flag].x Y: acCache[flag].y];
-								} /* hack */
 							}
 						}
 						if(useGrey == NO) {
@@ -187,7 +244,6 @@
 							}
 						}
 						else {
-							/* autocoloring, did not land on a known fixpoint.  Try to compute a color value anyway. */
 							double total, dist;
 							float R, G, B;
 							total = 0.0;
@@ -247,8 +303,7 @@
 				texture[(4 * x) + (y * 4 * xMax) + 3] = 0;
 			}
 		}
-	}
-}
+	}*/
 
 
 @end

@@ -78,6 +78,7 @@ typedef struct {
 #define FSE_Probe		26
 #define FSE_Fail		27
 #define FSE_Succeed		28
+#define FSE_DataLoop	29
 
 #define FSE_Type_Mask	0xffffff00
 #define FSE_Arith		0x200
@@ -144,3 +145,7 @@ typedef struct {
 #define FSE_Arcsin		12
 #define FSE_Arctan		13
 #define FSE_Arg			14
+#define FSE_Bar			15
+#define FSE_Random		16
+#define FSE_Random2		17
+#define FSE_Gaussian	18

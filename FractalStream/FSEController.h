@@ -22,5 +22,6 @@
 
 - (NSArray*) state;
 - (void) restoreFrom: (NSArray*) savedState;
+- (void) setTitle: (NSString*) title description: (NSData*) description;
 
 @end

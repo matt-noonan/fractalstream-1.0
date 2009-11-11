@@ -17,6 +17,7 @@
 #import "FSViewer.h"
 #import "FSSession.h"
 #import "FSKernel.h"
+#import "FSCustomDataManager.h"
 
 @interface FSBrowser : NSObject {
 	IBOutlet FSViewer* theViewer;
@@ -44,6 +45,7 @@
 	IBOutlet NSButton* detailBox;
 	IBOutlet NSTextField* aspectBox;
 	IBOutlet FSColorWidget* colorWidget;
+	IBOutlet NSTableView* varTable;
 	
 	NSFileWrapper* toolsWrapper;
  	NSArray* variableNames;
@@ -53,6 +55,7 @@
 	NSArray* probeNames;
 	int uniqueVariableNames;
 	FSKernel* theKernel;
+	FSCustomDataManager* dataManager;
 	
 	BOOL configured;
 }
@@ -61,6 +64,7 @@
 - (IBAction) goBackward: (id) sender;
 - (IBAction) refresh: (id) sender;
 - (IBAction) goHome: (id) sender;
+- (void) testAndRefresh: (NSNotification*) note ;
 - (void) changeTo: (NSString*) newName X: (double) x Y: (double) y p1: (double) p1 p2: (double) p2 pixelSize: (double) pixelSize parametric: (BOOL) isPar;
 - (void) sendDefaultsToViewer;
 - (void) putCurrentDataIn: (FSViewerData*) p;
@@ -74,6 +78,9 @@
 - (void) addTools: (NSFileWrapper*) toolWrapper;
 - (NSFileWrapper*) extraTools;
 - (FSKernel*) kernel;
+- (IBAction) embedTool: (id) sender;
+- (IBAction) hidePanels: (id) sender;
+- (IBAction) revealPanels: (id) sender;
 
 - (void) reloadSession;
 - (void) reloadSessionWithoutRefresh;
@@ -84,7 +91,7 @@
 
 - (int) numberOfRowsInTableView: (NSTableView*) tableView;
 - (id) tableView: (NSTableView*) tableView objectValueForTableColumn: (NSTableColumn*) tableColumn row: (int) row;
-- (id) tableView: (NSTableView*) tableView setObjectValue: (id) anObject forTableColumn: (NSTableColumn*) tableColumn row: (int) row;
+- (void) tableView: (NSTableView*) tableView setObjectValue: (id) anObject forTableColumn: (NSTableColumn*) tableColumn row: (int) row;
 - (NSArray*) namedVariables;
 - (NSArray*) namedVariablesRealParts;
 - (NSArray*) namedVariablesImagParts;

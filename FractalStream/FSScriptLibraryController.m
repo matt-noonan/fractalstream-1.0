@@ -12,7 +12,7 @@
 
 - (id) initWithPath: (NSString*) p file: (NSString*) f {
 	self = [super init];
-	return [self makeLibraryItemForPath: [NSString stringWithFormat: @"%@%@", p, f]];
+	return [[self makeLibraryItemForPath: [NSString stringWithFormat: @"%@%@", p, f]] retain];
 }
 
 - (id) makeLibraryItemForPath: (NSString*) p {
@@ -34,9 +34,7 @@
 		int i;
 		/* We are a script, load our data */
 		[FSSave useMiniLoads: YES];
-		array = [
-			[NSKeyedUnarchiver unarchiveObjectWithData: [NSData dataWithContentsOfFile: p]]
-		minidata];
+		array = [[NSKeyedUnarchiver unarchiveObjectWithData: [NSData dataWithContentsOfFile: p]] minidata];
 		en = [array objectEnumerator];
 		title = nil; description = nil; preview = nil;
 		i = 0;
@@ -51,7 +49,8 @@
 					description = [[NSData dataWithData: item] retain];
 					break;
 				case 3:
-					preview = [item copy];
+					if([item isKindOfClass: [NSImage class]]) preview = [item copy];
+					else preview = [[NSImage alloc] initWithData: item];
 					break; 
 				default:
 					break;
@@ -78,8 +77,8 @@
 			isDirectory: &isDirectory
 		];	
 		if([item hasSuffix: @".fs"] || isDirectory) 
-			[children addObject: [[FSScriptLibraryItem alloc]
-				initWithPath: path file: item]];
+			[children addObject: [[[FSScriptLibraryItem alloc]
+				initWithPath: path file: item] autorelease]];
 	}
 
 }
@@ -99,16 +98,31 @@
 	return [children objectAtIndex: c];
 }
 
+- (void) dealloc {
+	[children release];
+	[super dealloc];
+}
+
 @end
 
 @implementation FSScriptLibraryController
 
 - (void) awakeFromNib {
+	useOutlineView = YES;
 	[[NSNotificationCenter defaultCenter]
 		addObserver: self selector: @selector(newSelection:)
 		name: NSOutlineViewSelectionDidChangeNotification object: outline
 	];
+	library = nil;
 	[self reload];
+}
+
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter]
+		removeObserver: self
+		name: NSOutlineViewSelectionDidChangeNotification object: outline
+	];
+	[super dealloc];
 }
 
 - (void) reload {
@@ -120,20 +134,19 @@
 	NSString* path;
 	
 	path = [NSString stringWithFormat: @"%@/", [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent: @"Scripts/"]];
-	NSLog(@"searching path at \"%@\"\n", path);
+	if(library) [library release];
 	library = [[NSMutableArray alloc] init];
 	fs = [NSFileManager defaultManager];
-	ar = [fs directoryContentsAtPath: path];
-	NSLog(@"ar is %@\n", ar);
+	if(useOutlineView) ar = [fs directoryContentsAtPath: path];
+	else ar = [fs subpathsAtPath: path];
 	en = [ar objectEnumerator];
 	while(item = [en nextObject]) {
 		[fs fileExistsAtPath:
 			[NSString stringWithFormat: @"%@%@", path, item]
 			isDirectory: &isDirectory
 		];	
-		if([item hasSuffix: @".fs"] || isDirectory) {
-			NSLog(@"item is %@\n", item);
-			[library addObject: [[FSScriptLibraryItem alloc] initWithPath: path file: item]];
+		if([item hasSuffix: @".fs"] || (isDirectory && useOutlineView)) {
+			[library addObject: [[[FSScriptLibraryItem alloc] initWithPath: path file: item] autorelease]];
 		}
 	}
 	[outline reloadData];
@@ -144,7 +157,7 @@
 }
 
 - (BOOL) outlineView: (NSOutlineView*) outlineView isItemExpandable: (id) item {
-	return (item == nil)? YES : [item isGroup];
+	return (item == nil)? YES : (useOutlineView? [item isGroup] : NO);
 }
 
 - (id) outlineView: (NSOutlineView*) outlineView child: (int) index ofItem: (id) item {
@@ -160,7 +173,6 @@
 }
 
 - (IBAction) openScript: (id) sender {
-	NSData* data;
 	id item;
 	item = [outline itemAtRow: [outline selectedRow]];
 	if(item == nil) { NSLog(@"item was nil?\n"); return; }
@@ -171,15 +183,43 @@
 }
 
 - (IBAction) editScript: (id) sender {
+	id item;
+	item = [outline itemAtRow: [outline selectedRow]];
+	if(item == nil) { NSLog(@"item was nil?\n"); return; }
+	if([item path] == nil) return;
+	if([item isGroup]) return;
+	if([theDoc loadDataRepresentation: [NSData dataWithContentsOfFile: [item path]] ofType: @"DocumentType"])
+		[theDoc openEditor];
 }
+
+- (IBAction) switchScriptView: (id) sender {
+	useOutlineView = ([sender indexOfSelectedItem] == 0)? YES : NO;
+	[self reload];
+}
+
 
 - (void) newSelection: (NSNotification*) note {
 	id item;
 	item = [outline itemAtRow: [outline selectedRow]];
+	if (item == nil) {
+		[openButton setEnabled: NO];
+		[openEditorButton setEnabled: NO];
+		[description setString: @""];
+		[previewer setImage: [NSImage imageNamed: @"NSRemoveTemplate"]];
+		return;
+	}
+	if ([item isGroup]) {
+		[openButton setEnabled: NO];
+		[openEditorButton setEnabled: NO];
+	}
+	else {
+		[openButton setEnabled: YES];
+		[openEditorButton setEnabled: YES];
+	}
 	if([item description]) { 
 		[description selectAll: self];
 		[description replaceCharactersInRange: [description selectedRange]
-			withRTFD: (NSData*) [item description]];
+			withRTF: (NSData*) [item description]];
 	}
 	else [description setString: @""];
 	if([item image]) [previewer setImage: [item image]];

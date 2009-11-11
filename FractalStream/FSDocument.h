@@ -9,10 +9,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import "FSSession.h"
-#import "FSViewport.h"
 #import "FSTools.h"
 #import "FSBrowser.h"
 #import "FSSave.h"
+#import "FSPanel.h"
 
 @interface FSDocument : NSDocument
 {
@@ -33,11 +33,24 @@
 	IBOutlet NSTextField* iterationBox;
 	IBOutlet NSTextField* radiusBox;
 	IBOutlet NSTabView* mainTabView;
+	
+	IBOutlet NSView* librarySaveView;
+	IBOutlet NSTextField* libraryTitleField;
+	IBOutlet NSTextView* libraryDescriptionView;
+	IBOutlet NSImageView* libraryPreview;
+	
+	IBOutlet FSPanelHelper* panelHelper;
+	IBOutlet NSTextView* logView;
 }
 
 - (void) completeConfiguration;
 - (void) iterations: (int*) it;
 - (void) radius: (double*) rad;
 - (void) doDocumentLoadWithLibrary: (BOOL) lib;
+- (IBAction) saveToLibrary: (id) sender;
+- (IBAction) embedTool: (id) sender;
+- (void) openScriptLibrary;
+- (void) openEditor;
+- (void) log: (NSString*) str;
 
 @end

@@ -9,6 +9,7 @@
 #import "FSRenderOperation.h"
 #import "FSColorizer.h"
 #import "FSThreading.h"
+#import "FSFullscreenWindow.h"
 
 #ifndef GL_TEXTURE_RECTANGLE_EXT
 #define GL_TEXTURE_RECTANGLE_EXT            0x84F5
@@ -40,6 +41,7 @@
 	NSTrackingRectTag coordinateTracker;
 	SEL renderingFinished;
 	id renderingFinishedObject;
+	int renderBatch;
 	
 	NSMutableArray* displayList;
 	int currentBatch;
@@ -53,6 +55,8 @@
 	IBOutlet FSColorWidget* colorPicker;
 	IBOutlet NSButton* denormalButton;
 	IBOutlet NSTextField* timerField;
+	IBOutlet NSTextView* viewDescription;
+	IBOutlet id document;
 	FSColorizer* viewerColorizer;
 	BOOL useFakeZoom;
 	FSOperationQueue* workQueue;
@@ -61,12 +65,19 @@
 	NSImage* background;
 	FSViewer_Autocolor_Cache acCache[64];
 	int renderQueueEntries;
+	FSFullscreenWindow* fswindow;
 	
 	BOOL configured;
+	
+	IBOutlet NSImageView* tView;
 }
+
+- (IBAction) tTest: (id) sender;
 
 - (id) initWithCoder: (NSCoder*) coder;
 - (IBAction) render: (id) sender;
+- (IBAction) startFullScreen: (id) sender;
+- (IBAction) endFullScreen: (id) sender;
 - (void) setViewerData: (FSViewerData*) newData;
 - (void) getViewerDataTo: (FSViewerData*) savedData;
 - (BOOL) isAwake;
@@ -99,10 +110,14 @@
 - (void) convertPoint: (double*) point toGL: (double*) gl;
 
 - (FSColorWidget*) colorPicker;
-- setColorPicker: (FSColorWidget*) newColorPicker;
+- (void) setColorPicker: (FSColorWidget*) newColorPicker;
 
 - (void) mouseEntered: (NSEvent*) theEvent;
 - (void) mouseExited: (NSEvent*) theEvent;
 - (void) mouseMoved: (NSEvent*) theEvent;
 - (BOOL) acceptsFirstResponder;
+
+- (void) registerForNotifications: (id) owningDocument;
+- (id) document;
+
 @end

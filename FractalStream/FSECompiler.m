@@ -17,7 +17,7 @@
 	return self;
 }
 
-- awakeFromNib { NSLog(@"FSECompiler %@ woke from nib\n", self); }
+- (void) awakeFromNib { NSLog(@"FSECompiler %@ woke from nib\n", self); }
 
 #define FSSymbol_NIL		-1
 #define FSSymbol_WHITESPACE 0
@@ -164,7 +164,11 @@
 			} \
 		} \
 		else if([self typeOf: [lastSymbol characterAtIndex: 0]] == FSSymbol_CONSTANT) { \
-			if([lastSymbol length] > 1) error = @"bad constant"; \
+			if([lastSymbol length] > 1) { \
+				error = @"bad constant"; \
+				lhs = [tree newNodeOfType: (FSE_Var | FSE_Constant) at: parent]; \
+				[tree nodeAt: lhs] -> auxf[0] = 0.0; \
+			} \
 			else { \
 				unichar cchar; \
 				double x; \
@@ -243,8 +247,10 @@
 			if([symbol isEqualToString: function[i].word] == YES) {
 				lastSymbol = [NSString stringWithString: symbol];
 				oldparent = parent;
+				NSLog(@"found function %@\n", symbol);
 				parent = [tree newNodeOfType: (FSE_Func | function[i].code) at: oldparent];
-				[self extractArithBelowNode: parent];
+//				if((function[i].code != FSE_Random) && (function[i].code != FSE_Gaussian))
+					[self extractArithBelowNode: parent];
 				return parent;
 			}
 		}
@@ -254,9 +260,11 @@
 			if([symbol isEqualToString: arith_postfix[i].word] == YES) break;
 		if(i != arith_postfix_ops) {
 			/* found a postfix operator, so make a (postfix_op (eval _)) subtree */
-			oldnode = node;	oldparent = parent;
+/*			oldnode = node;	oldparent = parent;
 			parent = [tree newNodeOfType: (FSE_Arith | arith_postfix[i].code) at: oldparent];
 			EVALUATE_YOURSELF;
+*/
+			error = @"postfix arithmetic operators are disabled in this version of FractalStream.";
 			return parent;
 		}
 		else {
@@ -419,20 +427,348 @@
 	return expr;
 }
 
+- (BOOL) extractCommandBelowNode: (int) parent {
+	int node;
+	[self readNextSymbol];
+	if(symbol == nil) { error = @"script ended unexpectedly"; return NO; }
+	else if([symbol isEqualToString: @"."]) { return YES; }
+	else if([symbol isEqualToString: @"("]) {
+		int pdepth;
+		++index; pdepth = 1;
+		while(pdepth > 0) {
+			if([source characterAtIndex: index] == '(') ++pdepth;
+			if([source characterAtIndex: index] == ')') --pdepth;
+			++index;
+			if(index >= [source length]) { error = @"runaway comment"; return NO; }
+		}
+		return YES;
+	}
+	else if([symbol isEqualToString: @"fail"]) {
+		node = [tree newNodeOfType: FSE_Command | FSE_Fail at: parent];
+		[tree nodeAt: node] -> auxi[0] = loopDepth;
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"fail.\"), got \"%@\" instead.", symbol];
+		}
+	}
+	else if([symbol isEqualToString: @"succeed"]) {
+		node = [tree newNodeOfType: FSE_Command | FSE_Succeed at: parent];
+		[tree nodeAt: node] -> auxi[0] = loopDepth;
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"succeed.\"), got \"%@\" instead.", symbol];
+		}
+	}
+	else if([symbol isEqualToString: @"reduce"]) {
+		node = [tree newNodeOfType: FSE_Command | FSE_Modulo at: parent];
+		[self extractArithBelowNode: node];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"mod"] == NO) {
+			error = [NSString stringWithFormat: @"error: expected \"mod\" clause (\"reduce x mod y.\")"];
+		}
+		else [self extractArithBelowNode: node];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"reduce ____ mod ____.\"), got \"%@\" instead.", symbol];
+		}
+		if(useComplexVars) {
+			if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: node] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
+				error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+			}
+		}
+		else {
+			if(var[[tree nodeAt: [tree nodeAt: node] -> firstChild] -> auxi[0]].par == YES) {
+				error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+			}
+		}
+	}		
+	else if([symbol isEqualToString: @"set"]) {
+		node = [tree newNodeOfType: FSE_Command | FSE_Set at: parent];
+		[self extractArithBelowNode: node];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"to"] == NO) {
+			error = [NSString stringWithFormat: @"error: expected \"to\" clause (\"set x to y.\")"];
+		}
+		else [self extractArithBelowNode: node];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"set ____ to ____.\"), got \"%@\" instead.", symbol];
+		}
+		if(useComplexVars) {
+			if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: node] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
+				error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+			}
+		}
+		else {
+			if(var[[tree nodeAt: [tree nodeAt: node] -> firstChild] -> auxi[0]].par == YES) {
+				error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+			}
+		}
+	}
+	else if([symbol isEqualToString: @"default"]) {
+		int ch, v;
+		if(useComplexVars) {
+			int join;
+			node = [tree newNodeOfType: FSE_Command | FSE_Default at: parent];
+			ch = [self extractArithBelowNode: node];
+			v = [tree nodeAt: [tree nodeAt: ch] -> firstChild] -> auxi[0];
+			var[v].par = YES; var[v+1].par = YES;
+			[tree nodeAt: [tree nodeAt: ch] -> firstChild] -> auxi[1] = [self parameterNumberOfVariableAtIndex: v];
+			[tree nodeAt: [tree nodeAt: [tree nodeAt: ch] -> firstChild] -> nextSibling] -> auxi[1] =
+																[self parameterNumberOfVariableAtIndex: v+1];
+		}
+		else {
+			node = [tree newNodeOfType: FSE_Command | FSE_Default at: parent];
+			ch = [self extractArithBelowNode: node];
+			v = [tree nodeAt: ch] -> auxi[0];
+			var[v].par = YES;
+			[tree nodeAt: ch] -> auxi[1] = [self parameterNumberOfVariableAtIndex: v];
+		}
+		NSLog(@"made variable %i into parametric variable %i\n", [tree nodeAt: ch] -> auxi[0], [tree nodeAt: ch] -> auxi[1]);
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"to"] == NO) {
+			error = [NSString stringWithFormat: @"error: expected \"to\" clause (\"default x to y.\")"];
+		}
+		else [self extractArithBelowNode: node];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"default ____ to ____.\"), got \"%@\" instead.", symbol];
+		}
+	}
+	else if([symbol isEqualToString: @"report"]) { 
+		node = [tree newNodeOfType: FSE_Command | FSE_Report at: parent];
+		[self extractArithBelowNode: node];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"report ____.\"), got \"%@\" instead.", symbol];
+		}
+	}
+	else if([symbol isEqualToString: @"["]) {
+		NSString* name;
+		NSRange range;
+		NSEnumerator* flagEnum;
+		NSString* testName;
+		int savedindex, flagid;
+		savedindex = index;
+		while([source characterAtIndex: index] != ']') {
+			++index;
+			if(index >= [source length]) { error = @"runaway flag"; break; }
+		}
+		range.location = savedindex; range.length = index - savedindex;
+		name = [NSString stringWithString: [literalSource substringWithRange: range]];
+		[self readNextSymbol];
+		node = [tree newNodeOfType: FSE_Command | FSE_Flag at: parent];
+		flagid = 0;
+		flagEnum = [flags objectEnumerator];
+		while(testName = [flagEnum nextObject]) { if([name isEqualToString: testName]) break; ++flagid; }
+		[tree nodeAt: node] -> auxi[0] = flagid;
+		if(flagid >= currentFlagID) { ++currentFlagID; [flags addObject: name]; }
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"... [____].\"), got \"%@\" instead.", symbol];
+		}
+	}
+	else if([symbol isEqualToString: @"block"] || ([symbol isEqualToString: @":"])) {
+		int n;
+		BOOL r;
+		n = [tree newNodeOfType: FSE_Command | FSE_Block at: parent];
+		while(r = [self extractCommandBelowNode: n]) ; // "end" will return NO but no error, so gets converted to YES.
+	}
+	else if([symbol isEqualToString: @"end"]) {
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"end.\"), got \"%@\" instead.", symbol];
+		}
+		return NO;
+	}
+	else if([symbol isEqualToString: @"if"]) {
+		node = [tree newNodeOfType: FSE_Command | FSE_If at: parent];
+		[self extractBoolBelowNode: node];
+		[self readNextSymbol];
+		[tree nodeAt: node] -> auxi[0] = -1;
+		if([symbol isEqualToString: @"then"] == YES) {
+			int n, idx;
+			BOOL r;
+			n = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+			r = [self extractCommandBelowNode: n];
+			if(r == NO) return NO;
+			idx = index;
+			[self readNextSymbol];
+			if([symbol isEqualToString: @"else"]) {
+				n = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+				return [self extractCommandBelowNode: n];
+			}
+			else index = idx;
+		}
+		else error = [NSString stringWithFormat: @"i do not know this syntax for if (symbol is %@)", symbol];
+	}
+	else if([symbol isEqualToString: @"using"]) {
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"each"]) {
+			node = [tree newNodeOfType: FSE_Command | FSE_DataLoop at: parent];
+			[tree nodeAt: node] -> auxi[0] = loopDepth;
+			[self extractArithBelowNode: node]; // first arg is index variable
+			[self readNextSymbol];
+			if([symbol isEqualToString: @"in"]) {
+				[self readNextSymbol];
+				if([symbol getCString: [tree nodeAt: node] -> name maxLength: 64 encoding: NSUTF8StringEncoding]) {
+					[self readNextSymbol];
+					if([symbol isEqualToString: @"for"]) {
+						[self extractArithBelowNode: node];
+						[tree swapBirthOrderAt: node];
+						++loopDepth;
+						[self extractCommandBelowNode: node];
+						--loopDepth;
+					}
+					else error = [NSString stringWithFormat: @"expected \"using each ___ in ___ for ___\", got %@ instead", symbol]; 
+				}
+				else error = [NSString stringWithFormat: @"bad name for data source (must be no more than 64 bytes in UTF-8 encoding)."];
+			}
+			else error = [NSString stringWithFormat: @"expected \"using each ___ in ___\", got %@ instead", symbol];
+		}
+		else error = [NSString stringWithFormat: @"expected \"using each\", got %@ instead", symbol];
+	}
+	else if([symbol isEqualToString: @"repeat"]) {
+		int tnode;
+		node = [tree newNodeOfType: FSE_Command | FSE_Repeat at: parent];
+		[tree nodeAt: node] -> auxi[0] = loopDepth; 
+		tnode = [tree newNodeOfType: FSE_Func | FSE_Re at: node];
+		[self extractArithBelowNode: tnode];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"times"] == YES) {
+			++loopDepth;
+			[self extractCommandBelowNode: node];
+			--loopDepth;
+		}
+		else error = [NSString stringWithString: @"expected repeat command to end with \"times\""];
+	}
+	else if([symbol isEqualToString: @"do"]) { // "do" is equivalent to "iterate:"
+		int n;
+		BOOL r;
+		node = [tree newNodeOfType: FSE_Command | FSE_Do at: parent];
+		[tree nodeAt: node] -> auxi[0] = loopDepth;
+		n = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+		++loopDepth;
+		while(r = [self extractCommandBelowNode: n]) ; // should return NO with error "until"
+		--loopDepth;
+		if([error isEqualToString: @"until"]) error = nil;
+		else {
+			error = [NSString stringWithString: @"no matching \"until\" for \"do\""];
+			return NO;
+		}
+		[self extractBoolBelowNode: node];
+		if([symbol isEqualToString: @"."] == NO) { 
+			error = [NSString stringWithFormat: @"error: expected the sentence to end (\"...until ____.\"), got \"%@\" instead.", symbol];
+		}
+	}
+	else if([symbol isEqualToString: @"until"] == YES) {
+		error = [NSString stringWithString: @"until"];
+		return NO;
+	}
+	else if([symbol isEqualToString: @"iterate"] == YES) {
+		int setnode, varnode, jnode, v, n;
+		node = [tree newNodeOfType: FSE_Command | FSE_Do at: parent];
+		[tree nodeAt: node] -> auxi[0] = loopDepth;
+		n = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
+		setnode = [tree newNodeOfType: FSE_Command | FSE_Set at: n];
+		if(useComplexVars) {
+			varnode = [tree newNodeOfType: FSE_Var | FSE_Join at: setnode];
+			[tree nodeAt: [tree newNodeOfType: FSE_Var | FSE_Variable at: varnode]] -> auxi[0] = 0;
+			[tree nodeAt: [tree newNodeOfType: FSE_Var | FSE_Variable at: varnode]] -> auxi[0] = 1;
+		}
+		else {
+			varnode = [tree newNodeOfType: FSE_Var | FSE_Variable at: setnode];
+			[tree nodeAt: varnode] -> auxi[0] = 0;
+		}
+		[self extractArithBelowNode: setnode];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"on"] == YES) {
+			[tree deleteNodeAt: varnode];
+			[self extractArithBelowNode: setnode];
+			[tree swapBirthOrderAt: setnode];
+			[self readNextSymbol];
+			if(useComplexVars) {
+				if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: setnode] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
+					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+				}
+			}
+			else {
+				if(var[[tree nodeAt: [tree nodeAt: setnode] -> firstChild] -> auxi[0]].par == YES) {
+					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
+				}
+			}
+		}
+		if([symbol isEqualToString: @"until"] == YES) {
+			[self extractBoolBelowNode: node];
+			[self readNextSymbol];
+			if([symbol isEqualToString: @"."] == NO) {
+				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"...until ____.\"), got \"%@\" instead.", symbol];
+			}
+		}
+		else {
+			error = [NSString stringWithFormat: @"error: expected \"until\" clause"];
+		}
+	}
+	else if([symbol isEqualToString: @"probe"] == YES) {
+		NSString* name;
+		NSRange range;
+		int savedindex;
+		double probetype;
+		savedindex = index;
+		[self readNextSymbol];
+		if		([symbol isEqualToString: @"complex"])	probetype = 0.0;
+		else if	([symbol isEqualToString: @"real"])		probetype = 1.0;
+		else if	([symbol isEqualToString: @"rational"]) probetype = 2.0;
+		else if	([symbol isEqualToString: @"integer"])	probetype = 3.0;
+		else										{   probetype = 0.0; index = savedindex; }
+		node = [tree newNodeOfType: FSE_Command | FSE_Probe at: parent];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"\""] == NO) {
+			error = [NSString stringWithFormat: @"error: expected the sentence to read (probe \"[probename]\"), got \"%@\" instead.", symbol];
+		}
+		savedindex = index;
+		while([source characterAtIndex: index] != '\"') {
+			++index;
+			if(index >= [source length]) { error = @"runaway probe name"; break; }
+		}
+		range.location = savedindex; range.length = index - savedindex;
+		name = [NSString stringWithString: [literalSource substringWithRange: range]];
+		[self readNextSymbol];
+		[probes addObject: name];
+		[tree nodeAt: node] -> auxi[0] = loopDepth;
+		[tree nodeAt: node] -> auxi[1] = ++probecount;
+		[tree nodeAt: node] -> auxf[0] = probetype;
+		[self extractCommandBelowNode: node];
+	}
+	else if([symbol isEqualToString: @"par"] == YES) {
+		node = [tree newNodeOfType: FSE_Command | FSE_Par at: parent];
+		[self extractCommandBelowNode: node];
+	}
+	else if([symbol isEqualToString: @"dyn"] == YES) {
+		node = [tree newNodeOfType: FSE_Command | FSE_Dyn at: parent];
+		[self extractCommandBelowNode: node];
+	}
+	else {
+		error = [NSString stringWithFormat: @"syntax error, symbol is \"%@\".", symbol];
+	}
+	
+	return error? NO : YES;
+}
+
+
 - (BOOL) usesCustom { return useCustom; }
 - (NSString*) customPath { NSLog(@"customPath is \"%@\"\n", customPath); return customPath; }
 
 
 - (IBAction) compile: (id) sender
 {
-	int prefixblock, codeblock, rootblock, t, savednode, tmpnode, savedcounter, savedroot;
+	int prefixblock, codeblock, rootblock, t, savednode, tmpnode, savedcounter, savedroot, node;
 	NSString *gcc, *ifile;
 	char gccC[256], ifileC[256];
-	int stack[512], stackptr, loopDepth, probecount;
 	BOOL reported, autopop, custom;
 	FSEOpStream opstream;
 	
-	NSLog(@"compiling source:\n%@\n\n", source);
+	NSLog(@"compiler %@ asked to compile by sender %@\n", self, sender);
 	error = nil;
 	[flags release], flags = nil;
 	[probes release], probes = nil;
@@ -444,7 +780,6 @@
 	usesC = 0;
 	int lastIf = -1;
 	
-	stackptr = -1;
 	reported = NO;
 	autopop = NO;
 	custom = NO;
@@ -476,7 +811,7 @@
 				savedindex = index + 1;
 				while([source characterAtIndex: index] != '}') {
 					++index;
-					if(index >= [source length]) { error = @"runaway flag"; break; }
+					if(index >= [source length]) { error = @"runaway option list"; break; }
 				}
 				range.location = savedindex; range.length = index - savedindex;
 				customPath = [[NSString stringWithFormat: @"%@/", [literalSource substringWithRange: range]] retain];
@@ -486,8 +821,8 @@
 			else break;
 		}
 		if([symbol isEqualToString: @"}"] == NO) error = [NSString stringWithFormat: @"unknown option \"%@\".", symbol];
-		else [self readNextSymbol];
 	}
+	else index = 0;
 	
 	if(useComplexVars) {
 		[self indexOfVariableWithName: @"z"]; [self indexOfVariableWithName: @"c"];
@@ -501,387 +836,9 @@
 	}
 	
 	
-	while((symbol != nil) && (error == nil)) {
-		if([symbol isEqualToString: @"."] == YES) { }
-		else if([symbol isEqualToString: @"("] == YES) {
-			int pdepth;
-			++index; pdepth = 1;
-			while(pdepth > 0) {
-				if([source characterAtIndex: index] == '(') ++pdepth;
-				if([source characterAtIndex: index] == ')') --pdepth;
-				++index;
-				if(index >= [source length]) { error = @"runaway comment"; break; }
-			}
-		}
-		else if([symbol isEqualToString: @"parse"] == YES) {
-			[self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"parse: expected \".\", found \"%@\"", symbol];
-			}
-			else NSLog(@"parse: done\n");
-			[tree log]; [tree reorder]; [tree log];
-			error = [NSString stringWithString: @"parse finished."];
-		}
-		else if([symbol isEqualToString: @"bparse"] == YES) {
-			[self extractBoolBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"bparse: expected \".\", found \"%@\"", symbol];
-			}
-			else NSLog(@"bparse: done\n");
-			[tree log]; [tree reorder]; [tree log];
-			error = [NSString stringWithString: @"bparse finished."];
-		}
-		else if([symbol isEqualToString: @"begin"] == YES) {
-			/* everything we just put in the code block belongs in the prefix block, so relink the tree */
-			[tree swapBirthOrderAt: rootblock];
-			t = codeblock; codeblock = prefixblock; prefixblock = t;
-			//node = codeblock;
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to say \"begin.\", got \"%@\" instead.", symbol];
-			}
-		}
-		else if([symbol isEqualToString: @"fail"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Fail at: codeblock];
-			[tree nodeAt: node] -> auxi[0] = loopDepth;
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"fail.\"), got \"%@\" instead.", symbol];
-			}
-		}
-		else if([symbol isEqualToString: @"succeed"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Succeed at: codeblock];
-			[tree nodeAt: node] -> auxi[0] = loopDepth;
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"succeed.\"), got \"%@\" instead.", symbol];
-			}
-		}
-		else if([symbol isEqualToString: @"reduce"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Modulo at: codeblock];
-			[self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"mod"] == NO) {
-				error = [NSString stringWithFormat: @"error: expected \"mod\" clause (\"reduce x mod y.\")"];
-			}
-			else [self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"reduce ____ mod ____.\"), got \"%@\" instead.", symbol];
-			}
-			if(useComplexVars) {
-				if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: node] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
-					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
-				}
-			}
-			else {
-				if(var[[tree nodeAt: [tree nodeAt: node] -> firstChild] -> auxi[0]].par == YES) {
-					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
-				}
-			}
-		}		
-		else if([symbol isEqualToString: @"set"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Set at: codeblock];
-			[self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"to"] == NO) {
-				error = [NSString stringWithFormat: @"error: expected \"to\" clause (\"set x to y.\")"];
-			}
-			else [self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"set ____ to ____.\"), got \"%@\" instead.", symbol];
-			}
-			if(useComplexVars) {
-				if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: node] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
-					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
-				}
-			}
-			else {
-				if(var[[tree nodeAt: [tree nodeAt: node] -> firstChild] -> auxi[0]].par == YES) {
-					error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
-				}
-			}
-		}
-		else if([symbol isEqualToString: @"default"] == YES) {
-			int ch, v;
-			if(useComplexVars) {
-				int join;
-				node = [tree newNodeOfType: FSE_Command | FSE_Default at: codeblock];
-				ch = [self extractArithBelowNode: node];
-				v = [tree nodeAt: [tree nodeAt: ch] -> firstChild] -> auxi[0];
-				var[v].par = YES; var[v+1].par = YES;
-				[tree nodeAt: [tree nodeAt: ch] -> firstChild] -> auxi[1] = [self parameterNumberOfVariableAtIndex: v];
-				[tree nodeAt: [tree nodeAt: [tree nodeAt: ch] -> firstChild] -> nextSibling] -> auxi[1] =
-																	[self parameterNumberOfVariableAtIndex: v+1];
-			}
-			else {
-				node = [tree newNodeOfType: FSE_Command | FSE_Default at: codeblock];
-				ch = [self extractArithBelowNode: node];
-				v = [tree nodeAt: ch] -> auxi[0];
-				var[v].par = YES;
-				[tree nodeAt: ch] -> auxi[1] = [self parameterNumberOfVariableAtIndex: v];
-			}
-			NSLog(@"made variable %i into parametric variable %i\n", [tree nodeAt: ch] -> auxi[0], [tree nodeAt: ch] -> auxi[1]);
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"to"] == NO) {
-				error = [NSString stringWithFormat: @"error: expected \"to\" clause (\"default x to y.\")"];
-			}
-			else [self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"default ____ to ____.\"), got \"%@\" instead.", symbol];
-			}
-		}
-		else if([symbol isEqualToString: @"report"] == YES) { 
-			reported = YES;
-			node = [tree newNodeOfType: FSE_Command | FSE_Report at: codeblock];
-			[self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"report ____.\"), got \"%@\" instead.", symbol];
-			}
-		}
-		else if([symbol isEqualToString: @"["] == YES) {
-			NSString* name;
-			NSRange range;
-			NSEnumerator* flagEnum;
-			NSString* testName;
-			int savedindex, flagid;
-			savedindex = index;
-			while([source characterAtIndex: index] != ']') {
-				++index;
-				if(index >= [source length]) { error = @"runaway flag"; break; }
-			}
-			range.location = savedindex; range.length = index - savedindex;
-			name = [NSString stringWithString: [literalSource substringWithRange: range]];
-			[self readNextSymbol];
-			node = [tree newNodeOfType: FSE_Command | FSE_Flag at: codeblock];
-			flagid = 0;
-			flagEnum = [flags objectEnumerator];
-			while(testName = [flagEnum nextObject]) { if([name isEqualToString: testName]) break; ++flagid; }
-			[tree nodeAt: node] -> auxi[0] = flagid;
-			if(flagid >= currentFlagID) { ++currentFlagID; [flags addObject: name]; }
-		}
-		else if([symbol isEqualToString: @"block"] == YES) {
-			stack[++stackptr] = codeblock;
-			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: codeblock];
-		}
-		else if([symbol isEqualToString: @"end"] == YES) {
-			codeblock = stack[stackptr--];
-			[self readNextSymbol];
-			if(([symbol isEqualToString: @"repeat"] == YES) || ([symbol isEqualToString: @"loop"] == YES)) { --loopDepth; [self readNextSymbol]; }
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"end.\"), got \"%@\" instead.", symbol];
-			}
-		}
-		else if([symbol isEqualToString: @"if"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_If at: codeblock];
-			[self extractBoolBelowNode: node];
-			[self readNextSymbol];
-			lastIf = node;
-			[tree nodeAt: node] -> auxi[0] = -1;
-			if([symbol isEqualToString: @","] == YES) {
-				stack[++stackptr] = codeblock;
-				codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-				autopop = 2;
-			}
-			else if([symbol isEqualToString: @"then"] == YES) {
-				stack[++stackptr] = codeblock;
-				codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-				autopop = 2;
-			}
-			else error = [NSString stringWithFormat: @"i do not know this syntax for if (symbol is %@)", symbol];
-		}
-		else if(([symbol isEqualToString: @"else"] == YES) || ([symbol isEqualToString: @"otherwise"] == YES)) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Else at: codeblock];
-			stack[++stackptr] = codeblock;
-			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-			autopop = 2;
-			[tree nodeAt: lastIf] -> auxi[0] = codeblock;
-		}
-		else if([symbol isEqualToString: @":"] == YES) {
-			autopop = 0;
-		}
-		else if([symbol isEqualToString: @"repeat"] == YES) {
-			int tnode;
-			node = [tree newNodeOfType: FSE_Command | FSE_Repeat at: codeblock];
-			[tree nodeAt: node] -> auxi[0] = loopDepth; 
-			tnode = [tree newNodeOfType: FSE_Func | FSE_Re at: node];
-			[self extractArithBelowNode: tnode];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"times"] == YES) {
-				stack[++stackptr] = codeblock;
-				codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-			}
-			else error = [NSString stringWithString: @"expected repeat command to end with \"times\""];
-			++loopDepth;
-		}
-		else if([symbol isEqualToString: @"do"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Do at: codeblock];
-			stack[++stackptr] = node; // push fse_do node
-			stack[++stackptr] = codeblock; // push current code block
-			[tree nodeAt: node] -> auxi[0] = loopDepth;
-			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-			++loopDepth;
-		}
-		else if([symbol isEqualToString: @"probe"] == YES) {
-			NSString* name;
-			NSRange range;
-			int savedindex;
-			double probetype;
-			savedindex = index;
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"complex"] == YES) probetype = 0.0;
-			else if([symbol isEqualToString: @"real"] == YES) probetype = 1.0;
-			else if([symbol isEqualToString: @"rational"] == YES) probetype = 2.0;
-			else if([symbol isEqualToString: @"integer"] == YES) probetype = 3.0;
-			else { probetype = 0.0; index = savedindex; }
-			node = [tree newNodeOfType: FSE_Command | FSE_Probe at: codeblock];
-			stack[++stackptr] = node; // push fse_probe node
-			stack[++stackptr] = codeblock; // push current code block
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"\""] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to read (probe \"[probename]\"), got \"%@\" instead.", symbol];
-			}
-			savedindex = index;
-			while([source characterAtIndex: index] != '\"') {
-				++index;
-				if(index >= [source length]) { error = @"runaway probe name"; break; }
-			}
-			range.location = savedindex; range.length = index - savedindex;
-			name = [NSString stringWithString: [literalSource substringWithRange: range]];
-			[self readNextSymbol];
-			[probes addObject: name];
-			[tree nodeAt: node] -> auxi[0] = loopDepth;
-			[tree nodeAt: node] -> auxi[1] = ++probecount;
-			[tree nodeAt: node] -> auxf[0] = probetype;
-			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-		}
-		else if([symbol isEqualToString: @"until"] == YES) {
-			codeblock = stack[stackptr--];
-			node = stack[stackptr--];
-			[self extractBoolBelowNode: node];
-			[tree newNodeOfType: FSE_Command | FSE_Bumpdown at: codeblock];
-			[self readNextSymbol];
-			--loopDepth;
-			if([symbol isEqualToString: @"."] == NO) {
-				error = [NSString stringWithFormat: @"error: expected the sentence to end (\"...until ____.\"), got \"%@\" instead.", symbol];
-			}
-		}
-		else if([symbol isEqualToString: @"iterate"] == YES) {
-			int setnode, varnode, jnode, v;
-			node = [tree newNodeOfType: FSE_Command | FSE_Do at: codeblock];
-			stack[++stackptr] = node; // push fse_do node
-			stack[++stackptr] = codeblock; // push current code block
-			[tree nodeAt: node] -> auxi[0] = loopDepth;
-			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-			++loopDepth;
-			setnode = [tree newNodeOfType: FSE_Command | FSE_Set at: codeblock];
-			if(useComplexVars) {
-				varnode = [tree newNodeOfType: FSE_Var | FSE_Join at: setnode];
-				[tree nodeAt: [tree newNodeOfType: FSE_Var | FSE_Variable at: varnode]] -> auxi[0] = 0;
-				[tree nodeAt: [tree newNodeOfType: FSE_Var | FSE_Variable at: varnode]] -> auxi[0] = 1;
-			}
-			else {
-				varnode = [tree newNodeOfType: FSE_Var | FSE_Variable at: setnode];
-				[tree nodeAt: varnode] -> auxi[0] = 0;
-			}
-			[self extractArithBelowNode: setnode];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"on"] == YES) {
-				[tree deleteNodeAt: varnode];
-				[self extractArithBelowNode: setnode];
-				[tree swapBirthOrderAt: setnode];
-				[self readNextSymbol];
-				if(useComplexVars) {
-					if(var[[tree nodeAt: [tree nodeAt: [tree nodeAt: setnode] -> firstChild] -> firstChild] -> auxi[0]].par == YES) {
-						error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
-					}
-				}
-				else {
-					if(var[[tree nodeAt: [tree nodeAt: setnode] -> firstChild] -> auxi[0]].par == YES) {
-						error = [NSString stringWithString: @"variables defined with \"default\" are read-only within a script.\n"];
-					}
-				}
-			}
-			if([symbol isEqualToString: @"until"] == YES) {
-				codeblock = stack[stackptr--];
-				node = stack[stackptr--];
-				[self extractBoolBelowNode: node];
-				[tree newNodeOfType: FSE_Command | FSE_Bumpdown at: codeblock];
-				[self readNextSymbol];
-				--loopDepth;
-				if([symbol isEqualToString: @"."] == NO) {
-					error = [NSString stringWithFormat: @"error: expected the sentence to end (\"...until ____.\"), got \"%@\" instead.", symbol];
-				}
-			}
-			else {
-				error = [NSString stringWithFormat: @"error: expected \"until\" clause"];
-			}
-			
-/*
-			node = [tree newNodeOfType: FSE_Command | FSE_Iterate at: codeblock];
-			[tree nodeAt: node] -> auxi[0] = loopDepth;
-			++loopDepth;
-			[self extractArithBelowNode: node];
-			[self readNextSymbol];
-			if([symbol isEqualToString: @"on"] == YES) {
-				[self extractArithBelowNode: node];
-				[self readNextSymbol];
-			}
-			if([symbol isEqualToString: @"until"] == YES) {
-				--loopDepth;
-				[self extractBoolBelowNode: node];
-				[self readNextSymbol];
-				if([symbol isEqualToString: @"."] == NO) {
-					error = [NSString stringWithFormat: @"error: expected the sentence to end (\"iterate ____ until ____.\"), got \"%@\" instead.", symbol];
-				}
-				[tree newNodeOfType: FSE_Command | FSE_Bumpdown at: codeblock];
-			}
-			else {
-				error = [NSString stringWithFormat: @"error: expected \"until\" clause"];
-			}
-*/
-		}
-		else if([symbol isEqualToString: @"par"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Par at: codeblock];
-			stack[++stackptr] = codeblock;
-			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-			autopop = 2;
-		}
-		else if([symbol isEqualToString: @"dyn"] == YES) {
-			node = [tree newNodeOfType: FSE_Command | FSE_Dyn at: codeblock];
-			stack[++stackptr] = codeblock;
-			codeblock = [tree newNodeOfType: FSE_Command | FSE_Block at: node];
-			autopop = 2;
-		}
-		else {
-			error = [NSString stringWithFormat: @"syntax error, symbol is \"%@\".", symbol];
-			break;
-		}
-		if(error) return;
-		if(autopop == 1) { codeblock = stack[stackptr--];  }
-		if(autopop > 0) autopop--;
-		[self readNextSymbol];
-		if(savedroot == codeblock) {
-			if(savedcounter == 1) { codeblock = savednode; }
-			if(savedcounter > 0) savedcounter--;
-		}
-	}
-	
-	if(loopDepth != 0) {
-		error = [NSString stringWithString: @"loops did not close up, did you mean to use \"end loop\" or \"end repeat\"?"];
-		return;
-	}
-	/*** COME BACK TO THIS, SORT OF HACKED IN TO FSEC_gcc.c 
-	if(reported == NO) {
-		node = [tree newNodeOfType: (FSE_Var | FSE_Variable) at: [tree newNodeOfType: FSE_Command | FSE_Report at: codeblock]];
-		[tree nodeAt: node] -> auxi[0] = useComplexVars? [self indexOfVariableWithName: @"z"] : [self indexOfVariableWithName: @"x"];
-	}
-	***/
+	while([self extractCommandBelowNode: codeblock]) ;
+	if([error isEqualToString: @"script ended unexpectedly"]) error = nil;
+	if(error) return;
 	
 	[tree reorder];
 //	[tree log];
@@ -890,31 +847,11 @@
 	error = [tree realifyFrom: FSE_RootNode];
 	if(error) { NSLog(@"ERROR -----> \"%@\", tree is:\n", error); [tree log]; return; }
 	else NSLog(@"realification completed\n");
-	[tree postprocessReserving: nextvar];
-
-/*
-	NSLog(@"linearizing to opstream\n");
-	[tree linearizeTo: &opstream];
-	NSLog(@"logging opstream:\n");
-	[tree logOpStream: &opstream];
-	NSLog(@"reducing to 8 registers\n");
-	[tree reduceOpStream: &opstream toRegisterCount: 8];
-	[tree logOpStream: &opstream];
-*/
-	
-//	NSLog(@"searching for subtree equivalences\n");
-//	[tree optimizeReserving: nextvar];
 //	[tree log];
+//	[tree postprocessReserving: nextvar];
+
 	[self printVariableStack];
 
-//	gcc = [NSString stringWithFormat: @"gcc -dynamiclib -arch ppc -arch i386 -O3 -o %@ %@.c", 
-//		filename, filename
-//	];
-//	ifile = [NSString stringWithFormat: @"%@.c",filename];
-//	[gcc getCString: gccC]; [ifile getCString: ifileC];
-//	NSLog(@"writing to \"%@\", compiling with command \"%@\".\n", ifile, gcc);
-	//emit(ifileC, [tree nodeAt: 0], [tree size]); /*** hack ***/
-//	if(system(gccC)) error = [NSString stringWithString: @"gcc error, check console log for details."];
 	symbol = nil;
 }
 
@@ -928,24 +865,22 @@
 }
 
 - (void) buildScript: (NSString*) newSource {
-	NSLog(@"Compiler is going to build script \"%@\"\n", newSource);
-	[self 
-		setTitle: @""
-		source: newSource
-		andDescription: @""
-	];
-	[self compile: self];
+	if([[newSource lowercaseString] isEqualToString: source] != YES) {
+		NSLog(@"Compiler is going to build script \"%@\"\n", newSource);
+		[self setTitle: @"" source: newSource andDescription: @""];
+		[self compile: self];
+	}
 }
 
 - (NSArray*) flagArray { 
 	NSArray* ar;
-	ar = [[NSArray arrayWithArray: flags] retain];
+	ar = [NSArray arrayWithArray: flags];
 	return ar;
 }
 
 - (NSArray*) probeArray {
 	NSArray* ar;
-	ar = [[NSArray arrayWithArray: probes] retain];
+	ar = [NSArray arrayWithArray: probes];
 	return ar;
 }
 
@@ -1006,7 +941,7 @@
 - (NSArray*) parameters {
 	NSMutableArray* p;
 	int i;
-	p = [[NSMutableArray alloc] init];
+	p = [[[NSMutableArray alloc] init] autorelease];
 	for(i = 5; i < nextvar; i++) if(var[i].par == YES) [p addObject: [self nameOfVariableAtIndex: i]];
 	return [NSArray arrayWithArray: p];
 }

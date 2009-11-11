@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "FSECompiler.h"
 #import "FSJitter.h"
+#import "FSCustomDataManager.h"
 
 #define LLVMi32(x) ConstantInt::get(IntegerType::get(32), (x), true)
 #define LLVMu32(x) ConstantInt::get(IntegerType::get(32), (x), false)
@@ -35,14 +36,22 @@
 	void *_f_exp, *_f_log, *_f_sqrt, *_f_cos, *_f_sin, *_f_tan;			// (Function*) f_exp etc
 	void *_f_cosh, *_f_sinh, *_f_tanh, *_f_acos, *_f_asin, *_f_atan;	// (Function*) f_cosh etc
 	void *_f_atan2, *_f_fmod;	// (Function*) f_atan2 etc
+	void *_f_frandom, *_f_gaussian;	// (Function*) f_random, etc
+	void *_dsInP, *_dsOutP;
 	int eSF_was_const;
 	double eSF_const_x;
 	double eSF_const_y;
+	char postfixID[32];
+	int emitStep;
 	
 	FSJitter* jitter;
+	FSCustomDataManager* dataManager;
+	void* customDataPtr;
+	void* customQueryPtr;
 }
 
 - (void) test;
+- (void) setDataManager: (FSCustomDataManager*) dm;
 - (BOOL) buildKernelFromCompiler: (FSECompiler*) newComp;
 - (void) buildLLVMKernel;
 - (void*) loadKernelFromFile: (NSString*) filename;

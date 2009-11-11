@@ -38,11 +38,16 @@
 	IBOutlet NSImageView* previewer;
 	IBOutlet NSOutlineView* outline;
 	IBOutlet FSDocument* theDoc;
+	IBOutlet NSButton* openButton;
+	IBOutlet NSButton* openEditorButton;
+	BOOL useOutlineView;
 }
 
 - (IBAction) newScript: (id) sender;
 - (IBAction) openScript: (id) sender;
 - (IBAction) editScript: (id) sender;
+- (IBAction) switchScriptView: (id) sender;
+
 - (void) newSelection: (NSNotification*) note;
 - (void) reload;
 - (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item;

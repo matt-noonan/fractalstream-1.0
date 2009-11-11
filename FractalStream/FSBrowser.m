@@ -14,8 +14,47 @@
 - (void) awakeFromNib {
 	NSString* path;
 	void* loadedModule;
+	NSLog(@"browser %@ awoke from nib\n", self);
+	dataManager = [[FSCustomDataManager alloc] init];
 	theKernel = [[FSKernel alloc] init];
+	[theKernel setDataManager: dataManager];
+	[theTools setDataManager: dataManager];
 	[theTools setupMenu: self];
+	
+	/* Set up notifications so that whenever any of our settings change, we refresh */
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self selector: @selector(testAndRefresh:)
+		name: NSControlTextDidEndEditingNotification object: iterBox
+	];
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self selector: @selector(testAndRefresh:)
+		name: NSControlTextDidEndEditingNotification object: radiusBox
+	];
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self selector: @selector(testAndRefresh:)
+		name: NSControlTextDidEndEditingNotification object: minRadiusBox
+	];
+	[[NSNotificationCenter defaultCenter]
+		addObserver: self selector: @selector(testAndRefresh:)
+		name: NSControlTextDidEndEditingNotification object: aspectBox
+	];
+}
+
+- (IBAction) hidePanels: (id) sender {
+}
+
+- (IBAction) revealPanels: (id) sender {
+}
+
+- (void) testAndRefresh: (NSNotification*) note {
+	id control;
+	control = [note object];
+	if(
+		( (control == iterBox) && (([theSession currentNode] -> data).maxIters != [iterBox intValue]) ) ||
+		( (control == radiusBox) && (([theSession currentNode] -> data).maxRadius != [radiusBox doubleValue]) ) ||
+		( (control == minRadiusBox) && (([theSession currentNode] -> data).minRadius != [minRadiusBox doubleValue]) ) ||
+		( (control == aspectBox) && (([theSession currentNode] -> data).aspectRatio != [aspectBox doubleValue]) )
+	) [self refresh: self];
 }
 
 - (FSKernel*) kernel { return theKernel; }
@@ -42,7 +81,7 @@
 	[aspectBox setFloatValue: rootData.aspectRatio];
 	rootData.eventManager = theTools;
 
-	if([theSession kernelIsCached]) {
+	if([theSession kernelIsCached] || [self editorDisabled]) {
 		tmp = [NSString stringWithFormat: @"%@fskernel%i", NSTemporaryDirectory(), rand()];
 		if([[theSession kernelWrapper] writeToFile: tmp atomically: YES updateFilenames: NO] == NO) {
 			NSLog(@"writeToFile failed with session %@ and data %@ writing to %@\n", theSession, [theSession kernelWrapper], tmp);
@@ -80,6 +119,21 @@
 
 - (void) addTools: (NSFileWrapper*) toolWrapper { toolsWrapper = [toolWrapper retain]; [theTools addTools: toolWrapper]; }
 - (NSFileWrapper*) extraTools { return toolsWrapper; }
+- (IBAction) embedTool: (id) sender {
+	NSOpenPanel* panel;
+	panel = [NSOpenPanel openPanel];
+	[panel setTitle: @"Select a Directory to Embed"];
+	[panel setMessage: @"Select a folder.  The contents of the folder will be embedded into the current script.  Scripts may only contain one embedded directory, so all extra resources required (custom tools, etc) must be in this folder."];
+	[panel setCanChooseDirectories: YES];
+	[panel setCanChooseFiles: NO];
+	/*** replaced if for COCOTRON ***/
+	//if([panel runModal] == NSFileHandlingPanelOKButton) {
+	if(0) {
+		NSLog(@"going to embed directory at \"%@\"\n", [panel filename]);
+		toolsWrapper = [[NSFileWrapper alloc] initWithPath: [panel filename]];
+		[theTools addTools: toolsWrapper];
+	}
+}
 
 - (void) refreshAll { 
 	[theTools setupMenu: self];
@@ -227,6 +281,7 @@
 	realPart = [[NSArray arrayWithArray: re] retain];
 	imagPart = [[NSArray arrayWithArray: im] retain];
 	reducedVariableNames = [[NSArray arrayWithArray: rvn] retain];
+	[re release]; [im release]; [rvn release];
 }
 
 - (void) sendDefaultsToViewer {
@@ -267,12 +322,13 @@
 			return [NSString stringWithString: @"?"];
 	}
 }
-- (id) tableView: (NSTableView*) tableView setObjectValue: (id) anObject forTableColumn: (NSTableColumn*) tableColumn row: (int) row {
+- (void) tableView: (NSTableView*) tableView setObjectValue: (id) anObject forTableColumn: (NSTableColumn*) tableColumn row: (int) row {
 	NSEnumerator* en;
 	NSNumber* val;
 	NSMutableArray* ar;
 	int col, i;
 	col = [[tableColumn identifier] intValue];
+	NSLog(@"setObjectValue, identifier is %i, row is %i\n", col, row);
 	switch(col) {
 		case 1:
 			i = 0;
@@ -284,6 +340,7 @@
 				++i;
 			}
 			realPart = [[NSArray arrayWithArray: ar] retain];
+			[ar release];
 			break;
 		case 2:
 			i = 0;
@@ -295,14 +352,16 @@
 				++i;
 			}
 			imagPart = [[NSArray arrayWithArray: ar] retain];
+			[ar release];
 			break;
 	}
-
+	[self refresh: self];
 }
 
 - (NSArray*) namedVariables { return variableNames; }
 - (NSArray*) namedProbes { return probeNames; }
 - (NSArray*) namedVariablesRealParts { return realPart; }
 - (NSArray*) namedVariablesImagParts { return imagPart; }
+
 
 @end

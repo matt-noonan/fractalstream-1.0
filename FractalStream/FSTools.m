@@ -53,6 +53,7 @@
 	wheel[8][0] = 0.0;
 	wheel[8][1] = 0.0;
 	wheel[8][2] = 0.0;
+	NSLog(@"tools %@ awoke from nib\n", self);
 
 }
 
@@ -306,22 +307,22 @@
 	id <FSTool> aTool;
 	int i;
 	
+	/***** broken for cocotron :( *****/
+#ifdef WINDOWS
+	NSLog(@"FSTools in Cocotron\n");
+	toolsLoaded = YES;
+#else
 	if(toolsLoaded == NO) {
 		toolsLoaded = YES;
 
-		/***** broken for cocotron :( *****/
-#ifdef __WIN32__
-		librarySearchPaths = [NSArray arrayWithObject: @"/Library"];
-#else
 		librarySearchPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSAllDomainsMask - NSSystemDomainMask, YES);
-#endif
 //		librarySearchPaths = [NSArray arrayWithObject: @"/Library"]; 
 
-
-		[bundleSearchPaths addObject: [[NSBundle mainBundle] builtInPlugInsPath]];
+		[bundleSearchPaths addObject: [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent: @"Tools/"]];
+		NSLog(@"bundleSearchPaths is %@\n", bundleSearchPaths);
 		searchPathEnum = [librarySearchPaths objectEnumerator];
-		while(currPath = [searchPathEnum nextObject])
-			[bundleSearchPaths addObject: [currPath stringByAppendingPathComponent:appSupportSubpath]];
+//		while(currPath = [searchPathEnum nextObject])
+//			[bundleSearchPaths addObject: [currPath stringByAppendingPathComponent:appSupportSubpath]];
 //	NSLog(@"bundle search path array is %@\n", bundleSearchPaths);
 		directoryEnum = [bundleSearchPaths objectEnumerator];
 		while(currPath = [directoryEnum nextObject]) {
@@ -333,21 +334,25 @@
 				[pclass preload: toolBundle];
 				aTool = [[pclass alloc] init];
 				[aTool setOwnerTo: viewport];
+				if([aTool respondsToSelector: @selector(setDataManager:)]) [aTool setDataManager: dataManager];
 				[aTool unfreeze];
 				[tools addObject: aTool];
-//				NSLog(@"added tool %@ of class %@ found at %@\n", [aTool name], pclass, pluginPath);
+				NSLog(@"added tool %@ of class %@ found at %@\n", [aTool name], pclass, pluginPath);
+				[aTool release];
 			}
 		}
 		tool = (id*) malloc([tools count] * sizeof(id));
 		toolEnum = [tools objectEnumerator];
 		i = 0; while(aTool = [toolEnum nextObject]) tool[i++] = aTool;
+		NSLog(@"done\n");
 	}
-	
+#endif	
 	probeTools = [[theBrowser namedProbes] count];
 	[popupMenu removeAllItems];
 	[popupMenu addItemWithTitle: @"Zoom"];
 	[popupMenu addItemWithTitle: @"Dynamics"];
 	builtInTools = 2 + probeTools;
+	NSLog(@"probeTools is %i\n", probeTools);
 	if(probeTools > 0) {
 		NSEnumerator* probeEnumerator;
 		NSString* probeName;
@@ -366,6 +371,7 @@
 	while(aTool = [toolEnum nextObject]) [[popupMenu itemWithTitle: [aTool menuName]] setKeyEquivalent: [aTool keyEquivalent]];
 	
 	currentCursor = [NSCursor crosshairCursor];
+	NSLog(@"tools did set up menu\n");
 }
 
 - (void) addTools: (NSFileWrapper*) toolWrapper {
@@ -388,10 +394,12 @@
 		[pclass preload: toolBundle];
 		aTool = [[pclass alloc] init];
 		[aTool setOwnerTo: viewport];
+		if([aTool respondsToSelector: @selector(setDataManager:)]) [aTool setDataManager: dataManager];
 		[aTool unfreeze];
 		[tools addObject: aTool];
 		[popupMenu addItemWithTitle: [aTool menuName]];
 		[[popupMenu itemWithTitle: [aTool menuName]] setKeyEquivalent: [aTool keyEquivalent]];
+		[aTool release];
 	}
 	tool = (id*) malloc([tools count] * sizeof(id));
 	en = [tools objectEnumerator];
@@ -438,5 +446,7 @@
 		currentTool = selected;
 	}
 }
+
+- (void) setDataManager: (FSCustomDataManager*) dm { dataManager = dm; }
 
 @end

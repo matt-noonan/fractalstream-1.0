@@ -8,26 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 #include <stdlib.h>
-
+#import "FSColorLibraryController.h"
 
 typedef struct {
 	NSString* name;
 	float r, g, b;
 } FSCW_named_color;
 
-@interface FSColor : NSObject {
-	float color[8 * 8 * 3];
-}
-
-- (void) setRGBAtMagnitude: (int) m andPhase: (int) p to: (float*) c;
-- (void) putRGBAtMagnitude: (int) m andPhase: (int) p into: (float*) c;
-- (void) cacheInto: (float*) c;
-- (id) colorFromR: (float) r G: (float) g B: (float) b;
-
-- (void) encodeWithCoder: (NSCoder*) coder;
-- (id) initWithCoder: (NSCoder*) coder;
-
-@end
 
 @interface FSColorWidget : NSObject <NSCoding> {
 	IBOutlet NSMatrix* colorMatrix;
@@ -46,8 +33,11 @@ typedef struct {
 	IBOutlet NSButton* acLockButton;
 	IBOutlet NSButton* smoothnessBox;
 	IBOutlet NSTextField* smoothnessField;
+	IBOutlet NSTextField* subdivisionField;
+	IBOutlet FSGradientControl* gradientControl;
 	
-	NSArray* names;
+	NSMutableArray* names;
+	NSMutableArray* colors;
 	float colorArray[8][8][3];
 	float fullColorArray[64][8][8][3];
 	float cachedColorArray[64*8*8*3];
@@ -85,8 +75,12 @@ typedef struct {
 - (int*) smoothnessPtr; 
 - (void) clearSmoothnessArray;
 - (float*) colorArrayPtr;
+- (IBAction) updateColorInformation: (id) sender;
+- (void) updateAutocolorList: (NSNotification*) note; 
 
 - (NSArray*) names;
+- (NSArray*) gradientArray;
+- (NSArray*) colorArray;
 
 - (void) encodeWithCoder: (NSCoder*) coder;
 - (id) initWithCoder: (NSCoder*) coder;
@@ -97,6 +91,7 @@ typedef struct {
 
 @end
 
+/*
 @interface FSColorWidgetCell : NSCell {
 	NSColor* color;
 	BOOL active;
@@ -112,3 +107,4 @@ typedef struct {
 - (void) retoggle;
 
 @end
+*/

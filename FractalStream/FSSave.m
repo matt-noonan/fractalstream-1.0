@@ -42,91 +42,28 @@ static BOOL miniLoads = YES;
 	colorizer = [col retain];
 	editor = [[edit state] retain];
 	browser = [brow retain];
+	NSLog(@"FSSave set type to %@\n", newType);
 }
 
 - (void) encodeWithCoder: (NSCoder*) coder {
 	tools = [browser extraTools];
 	if(tools == nil) tools = [NSNull null];
-	[coder encodeObject: type];
+	[coder encodeObject: type forKey: @"type"];
 	if([type isEqualToString: @"editor"]) {
 		NSLog(@"encoding editor\n");
-		[coder encodeObject: editor];
-	}
-	else if([type isEqualToString: @"full session"]) {
-		NSLog(@"encoding full session\n");
-		[coder encodeObject: editor];
-		[coder encodeObject: session];
-		NSLog(@"encoding colorizer\n");
-		[coder encodeObject: colorizer];
-	}
-	else if([type isEqualToString: @"full session [26mar]"]) {
-		NSLog(@"encoding full session\n");
-		[coder encodeObject: editor];
-		[coder encodeObject: session];
-		NSLog(@"encoding colorizer\n");
-		[coder encodeObject: colorizer];
-		NSLog(@"encoding defaults\n");
-		[coder encodeObject: [browser namedVariables]];
-		[coder encodeObject: [browser namedVariablesRealParts]];
-		[coder encodeObject: [browser namedVariablesImagParts]];
-	}
-	else if([type isEqualToString: @"full session [3sep]"]) {
-		NSLog(@"encoding full session\n");
-		[coder encodeObject: editor];
-		[coder encodeObject: session];
-		NSLog(@"encoding colorizer\n");
-		[coder encodeObject: colorizer];
-		NSLog(@"encoding defaults\n");
-		[coder encodeObject: [browser namedVariables]];
-		[coder encodeObject: [browser namedVariablesRealParts]];
-		[coder encodeObject: [browser namedVariablesImagParts]];
-		[coder encodeObject: [browser namedProbes]];
-		NSLog(@"encoded names = %@, real = %@, imag = %@, probes = %@\n",
-			[browser namedVariables],
-			[browser namedVariablesRealParts],
-			[browser namedVariablesImagParts],
-			[browser namedProbes]
-		);
-	}
-	else if([type isEqualToString: @"full session [20oct]"]) {
-		NSLog(@"encoding full session\n");
-		[coder encodeObject: editor];
-		[coder encodeObject: session];
-		NSLog(@"encoding colorizer\n");
-		[coder encodeObject: colorizer];
-		NSLog(@"encoding defaults\n");
-		[coder encodeObject: [browser namedVariables]];
-		[coder encodeObject: [browser namedVariablesRealParts]];
-		[coder encodeObject: [browser namedVariablesImagParts]];
-		[coder encodeObject: [browser namedProbes]];
-		NSLog(@"encoded names = %@, real = %@, imag = %@, probes = %@\n",
-			[browser namedVariables],
-			[browser namedVariablesRealParts],
-			[browser namedVariablesImagParts],
-			[browser namedProbes]
-		);
-		[coder encodeObject: [colorizer smoothnessArray]];
+		[coder encodeObject: editor forKey: @"editor"];
 	}
 	else if([type isEqualToString: @"full session [22oct]"]) {
-		NSLog(@"encoding full session\n");
-		[coder encodeObject: editor];
-		[coder encodeObject: session];
-		NSLog(@"encoding colorizer\n");
-		[coder encodeObject: colorizer];
-		NSLog(@"encoding defaults\n");
-		[coder encodeObject: [browser namedVariables]];
-		[coder encodeObject: [browser namedVariablesRealParts]];
-		[coder encodeObject: [browser namedVariablesImagParts]];
-		[coder encodeObject: [browser namedProbes]];
-		NSLog(@"encoded names = %@, real = %@, imag = %@, probes = %@\n",
-			[browser namedVariables],
-			[browser namedVariablesRealParts],
-			[browser namedVariablesImagParts],
-			[browser namedProbes]
-		);
-		[coder encodeObject: [colorizer smoothnessArray]];
-		[coder encodeObject: [NSNumber numberWithBool: [browser editorDisabled]]];
-		[coder encodeObject: tools];
+		[coder encodeObject: editor forKey: @"editor"];
+		[coder encodeObject: session forKey: @"session"];
+		[coder encodeObject: colorizer forKey: @"colorizer"];
+		[coder encodeObject: [browser namedVariables] forKey: @"named variables"];
+		[coder encodeObject: [browser namedVariablesRealParts] forKey: @"real parts"];
+		[coder encodeObject: [browser namedVariablesImagParts] forKey: @"imag parts"];
+		[coder encodeObject: [browser namedProbes] forKey: @"namedProbes"];
+		[coder encodeObject: [colorizer smoothnessArray] forKey: @"smoothing"];
+		[coder encodeObject: [NSNumber numberWithBool: [browser editorDisabled]] forKey: @"editor disabled?"];
+		[coder encodeObject: tools forKey: @"tools"];
 	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 }
@@ -137,9 +74,11 @@ static BOOL miniLoads = YES;
 
 	tools = [NSNull null];
 	disableEditor = NO;
-	type = [[coder decodeObject] retain];
+	if([coder containsValueForKey: @"type"]) type = [[coder decodeObjectForKey: @"type"] retain];
+	else type = [[coder decodeObject] retain];
 	if([type isEqualToString: @"editor"] || [FSSave usesMiniLoads]) {
-		editor = [[coder decodeObject] retain];
+		if([coder containsValueForKey: @"type"]) editor = [[coder decodeObjectForKey: @"editor"] retain];
+		else editor = [[coder decodeObject] retain];
 		session = nil;
 		colorizer = nil;
 		browser = nil;
@@ -181,17 +120,32 @@ static BOOL miniLoads = YES;
 		NSLog(@"saved with old version: 20oct");
 	}
 	else if([type isEqualToString: @"full session [22oct]"]) {
-		editor = [[coder decodeObject] retain];
-		session = [[coder decodeObject] retain];
-		colorizer = [[coder decodeObject] retain];
-		names = [[coder decodeObject] retain];
-		real = [[coder decodeObject] retain];
-		imag = [[coder decodeObject] retain];
-		probes = [[coder decodeObject] retain];
-		[colorizer readSmoothnessFrom: [coder decodeObject]];
-		disableEditor = [[coder decodeObject] boolValue];
-		tools = [[coder decodeObject] retain];
-		NSLog(@"tools is %@\n", tools);
+		if([coder containsValueForKey: @"type"]) {
+			NSLog(@"doing a keyed loading of saved data, query = %@\n", [NSNumber numberWithBool: [coder containsValueForKey: @"editor"]]? @"T" : @"F");
+			editor = [[coder decodeObjectForKey: @"editor"] retain];
+			session = [[coder decodeObjectForKey: @"session"] retain];
+			colorizer = [[coder decodeObjectForKey: @"colorizer"] retain];
+			names = [[coder decodeObjectForKey: @"named variables"] retain];
+			real = [[coder decodeObjectForKey: @"real parts"] retain];
+			imag = [[coder decodeObjectForKey: @"imag parts"] retain];
+			probes = [[coder decodeObjectForKey: @"namedProbes"] retain];
+			[colorizer readSmoothnessFrom: [coder decodeObjectForKey: @"smoothing"]];
+			disableEditor = [[coder decodeObjectForKey: @"editor disabled?"] boolValue];
+			tools = [[coder decodeObjectForKey: @"tools"] retain];
+		}
+		else {
+			NSLog(@"doing unkeyed loading\n");
+			editor = [[coder decodeObject] retain];
+			session = [[coder decodeObject] retain];
+			colorizer = [[coder decodeObject] retain];
+			names = [[coder decodeObject] retain];
+			real = [[coder decodeObject] retain];
+			imag = [[coder decodeObject] retain];
+			probes = [[coder decodeObject] retain];
+			[colorizer readSmoothnessFrom: [coder decodeObject]];
+			disableEditor = [[coder decodeObject] boolValue];
+			tools = [[coder decodeObject] retain];
+		}
 	}
 	else NSLog(@"***** unknown type string, FSSave is confused!\n");
 	

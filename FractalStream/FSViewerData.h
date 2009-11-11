@@ -31,6 +31,7 @@ typedef struct {
 		#define FSVO_Line	2
 		#define FSVO_Circle	3
 		#define FSVO_Box	4
+		#define FSVO_Arrow	5
 	double point[2][2];
 	float color[2][4];
 	int batch;

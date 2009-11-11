@@ -42,12 +42,14 @@
 	
 	@implementation FSOperationQueue
 	- (id) init {
+		int i;
 		self = [super init];
 		queue = [[NSMutableArray alloc] init];
 		lock = [[NSConditionLock alloc] initWithCondition: 0];
 		stop = [[NSLock alloc] init];
 		[stop lock];
-		[NSThread detachNewThreadSelector: @selector(runQueue) toTarget: self withObject: nil];
+		for(i = 0; i < NSOperationQueueDefaultMaxConcurrentOperationCount; i++) 
+			[NSThread detachNewThreadSelector: @selector(runQueue) toTarget: self withObject: nil];
 		cancelled = NO;
 		return self;
 	}

@@ -30,7 +30,7 @@
 	self -> favoredChild = nil;
 	self -> parent = nil;
 	self -> children = 0;
-	
+	extra = nil;
 	return self;
 }
 
@@ -55,103 +55,126 @@
 
 - (FSViewerData) data { return data; }
 - (FSViewerData*) dataPtr { return &data; }
+- (NSMutableDictionary*) extra { return extra; }
 
 - (void) encodeWithCoder: (NSCoder*) coder
 {
 	/* version 0 */
-/*	[coder encodeValueOfObjCType: @encode(double) at: &(upperLeft[0])];
-	[coder encodeValueOfObjCType: @encode(double) at: &(upperLeft[1])];
-	[coder encodeValueOfObjCType: @encode(double) at: &(lowerRight[0])];
-	[coder encodeValueOfObjCType: @encode(double) at: &(lowerRight[1])];*/
-	[coder encodeObject: [NSNumber numberWithDouble: upperLeft[0]]];
-	[coder encodeObject: [NSNumber numberWithDouble: upperLeft[1]]];
-	[coder encodeObject: [NSNumber numberWithDouble: lowerRight[0]]];
-	[coder encodeObject: [NSNumber numberWithDouble: lowerRight[1]]];
-//	[coder encodeValueOfObjCType: @encode(double) at: &scale];
-	[coder encodeObject: [NSNumber numberWithDouble: scale]];
-//	[coder encodeValueOfObjCType: @encode(double) at: &(center[0])];
-//	[coder encodeValueOfObjCType: @encode(double) at: &(center[1])];
-	[coder encodeObject: [NSNumber numberWithDouble: center[0]]];
-	[coder encodeObject: [NSNumber numberWithDouble: center[1]]];
-//	[coder encodeValueOfObjCType: @encode(int) at: &program];
-	[coder encodeObject: [NSNumber numberWithInt: program]];
+	[coder encodeObject: [NSNumber numberWithBool: YES] forKey: @"keyed"];
+	[coder encodeObject: [NSNumber numberWithDouble: upperLeft[0]] forKey: @"ul0"];
+	[coder encodeObject: [NSNumber numberWithDouble: upperLeft[1]] forKey: @"ul1"];
+	[coder encodeObject: [NSNumber numberWithDouble: lowerRight[0]] forKey: @"lr0"];
+	[coder encodeObject: [NSNumber numberWithDouble: lowerRight[1]] forKey: @"lr1"];
+	[coder encodeObject: [NSNumber numberWithDouble: scale] forKey: @"scale"];
+	[coder encodeObject: [NSNumber numberWithDouble: center[0]] forKey: @"center0"];
+	[coder encodeObject: [NSNumber numberWithDouble: center[1]] forKey: @"center1"];
+	[coder encodeObject: [NSNumber numberWithInt: program] forKey: @"program"];
 
-//	[coder encodeArrayOfObjCType: @encode(char) count: sizeof(FSViewerData) at: &data];
-	[coder encodeObject: [NSNumber numberWithDouble: data.center[0]]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.center[1]]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.pixelSize]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.aspectRatio]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.detailLevel]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.par[0]]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.par[1]]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.data[0]]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.data[1]]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.data[2]]];
-	[coder encodeObject: [NSNumber numberWithInt: data.maxIters]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.maxRadius]];
-	[coder encodeObject: [NSNumber numberWithDouble: data.minRadius]];
-	[coder encodeObject: [NSNumber numberWithInt: data.program]];
+	[coder encodeObject: [NSNumber numberWithDouble: data.center[0]] forKey: @"data.center[0]"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.center[1]] forKey: @"data.center[1]"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.pixelSize] forKey: @"data.pixelSize"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.aspectRatio] forKey: @"data.aspectRatio"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.detailLevel] forKey: @"data.detailLevel"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.par[0]] forKey: @"data.par[0]"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.par[1]] forKey: @"data.par[1]"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.data[0]] forKey: @"data.data[0]"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.data[1]] forKey: @"data.data[1]"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.data[2]] forKey: @"data.data[2]"];
+	[coder encodeObject: [NSNumber numberWithInt: data.maxIters] forKey: @"data.maxIters"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.maxRadius] forKey: @"data.maxRadius"];
+	[coder encodeObject: [NSNumber numberWithDouble: data.minRadius] forKey: @"data.minRadius"];
+	[coder encodeObject: [NSNumber numberWithInt: data.program] forKey: @"data.program"];
 
-	[coder encodeObject: title];
-	[coder encodeObject: notes];
-	[coder encodeObject: [NSNumber numberWithInt: children]];
-	//[coder encodeValueOfObjCType: @encode(int) at: &children];
-	[coder encodeObject: nextSibling];
-	[coder encodeObject: previousSibling];
-	[coder encodeObject: parent];
-	[coder encodeObject: firstChild];
-	[coder encodeObject: favoredChild];
-	[coder encodeObject: [NSNumber numberWithInt: nodeNumber]];
-	//[coder encodeValueOfObjCType: @encode(int) at: &nodeNumber];
+	[coder encodeObject: title forKey: @"title"];
+	[coder encodeObject: notes forKey: @"notes"];
+	[coder encodeObject: [NSNumber numberWithInt: children] forKey: @"children"];
+	[coder encodeObject: nextSibling forKey: @"nextSibling"];
+	[coder encodeObject: previousSibling forKey: @"previousSibling"];
+	[coder encodeObject: parent forKey: @"parent"];
+	[coder encodeObject: firstChild forKey: @"firstChild"];
+	[coder encodeObject: favoredChild forKey: @"favoredChild"];
+	if(extra != nil) [coder encodeObject: [NSNumber numberWithInt: nodeNumber] forKey: @"nodeNumber"];
+	else {
+		[coder encodeObject: [NSNumber numberWithInt: -1] forKey: @"nodeNumber"];
+		[coder encodeObject: extra forKey: @"extra"];
+	}
 }
 
 - (id) initWithCoder: (NSCoder*) coder {
 	self = [super init];
 	/* version 0 */
-/*	[coder decodeValueOfObjCType: @encode(double) at: &(upperLeft[0])];
-	[coder decodeValueOfObjCType: @encode(double) at: &(upperLeft[1])];
-	[coder decodeValueOfObjCType: @encode(double) at: &(lowerRight[0])];
-	[coder decodeValueOfObjCType: @encode(double) at: &(lowerRight[1])];
-	[coder decodeValueOfObjCType: @encode(double) at: &scale];
-	[coder decodeValueOfObjCType: @encode(double) at: &(center[0])];
-	[coder decodeValueOfObjCType: @encode(double) at: &(center[1])];
-	[coder decodeValueOfObjCType: @encode(int) at: &program];*/
-	upperLeft[0] = [[coder decodeObject] doubleValue];
-	upperLeft[1] = [[coder decodeObject] doubleValue];
-	lowerRight[0] = [[coder decodeObject] doubleValue];
-	lowerRight[1] = [[coder decodeObject] doubleValue];
-	scale = [[coder decodeObject] doubleValue];
-	center[0] = [[coder decodeObject] doubleValue];
-	center[1] = [[coder decodeObject] doubleValue];
-	program = [[coder decodeObject] intValue];
-//	[coder decodeArrayOfObjCType: @encode(char) count: sizeof(FSViewerData) at: &data];
-	data.center[0] = [[coder decodeObject] doubleValue];
-	data.center[1] = [[coder decodeObject] doubleValue];
-	data.pixelSize = [[coder decodeObject] doubleValue];
-	data.aspectRatio = [[coder decodeObject] doubleValue];
-	data.detailLevel = [[coder decodeObject] doubleValue];
-	data.par[0] = [[coder decodeObject] doubleValue];
-	data.par[1] = [[coder decodeObject] doubleValue];
-	data.data[0] = [[coder decodeObject] doubleValue];
-	data.data[1] = [[coder decodeObject] doubleValue];
-	data.data[2] = [[coder decodeObject] doubleValue];
-	data.maxIters = [[coder decodeObject] intValue];
-	data.maxRadius = [[coder decodeObject] doubleValue];
-	data.minRadius = [[coder decodeObject] doubleValue];
-	data.program = [[coder decodeObject] intValue];
-	
-	title = [[coder decodeObject] retain];
-	notes = [[coder decodeObject] retain];
-	children = [[coder decodeObject] intValue];
-	nextSibling = [[coder decodeObject] retain];
-	previousSibling = [[coder decodeObject] retain];
-	parent = [[coder decodeObject] retain];
-	firstChild = [[coder decodeObject] retain];
-	favoredChild = [[coder decodeObject] retain];
-	nodeNumber = [[coder decodeObject] intValue];
-	//[coder decodeValueOfObjCType: @encode(int) at: &nodeNumber];
-	
-//	NSLog(@"decoded FSSessionNode to %@\n", self);
+	if([coder containsValueForKey: @"keyed"]) {
+		upperLeft[0] = [[coder decodeObjectForKey: @"ul0"] doubleValue];
+		upperLeft[1] = [[coder decodeObjectForKey: @"ul1"] doubleValue];
+		lowerRight[0] = [[coder decodeObjectForKey: @"lr0"] doubleValue];
+		lowerRight[1] = [[coder decodeObjectForKey: @"lr1"] doubleValue];
+		scale = [[coder decodeObjectForKey: @"scale"] doubleValue];
+		center[0] = [[coder decodeObjectForKey: @"center0"] doubleValue];
+		center[1] = [[coder decodeObjectForKey: @"center1"] doubleValue];
+		program = [[coder decodeObjectForKey: @"program"] intValue];
+		data.center[0] = [[coder decodeObjectForKey: @"data.center[0]"] doubleValue];
+		data.center[1] = [[coder decodeObjectForKey: @"data.center[1]"] doubleValue];
+		data.pixelSize = [[coder decodeObjectForKey: @"data.pixelSize"] doubleValue];
+		data.aspectRatio = [[coder decodeObjectForKey: @"data.aspectRatio"] doubleValue];
+		data.detailLevel = [[coder decodeObjectForKey: @"data.detailLevel"] doubleValue];
+		data.par[0] = [[coder decodeObjectForKey: @"data.par[0]"] doubleValue];
+		data.par[1] = [[coder decodeObjectForKey: @"data.par[1]"] doubleValue];
+		data.data[0] = [[coder decodeObjectForKey: @"data.data[0]"] doubleValue];
+		data.data[1] = [[coder decodeObjectForKey: @"data.data[1]"] doubleValue];
+		data.data[2] = [[coder decodeObjectForKey: @"data.data[2]"] doubleValue];
+		data.maxIters = [[coder decodeObjectForKey: @"data.maxIters"] intValue];
+		data.maxRadius = [[coder decodeObjectForKey: @"data.maxRadius"] doubleValue];
+		data.minRadius = [[coder decodeObjectForKey: @"data.minRadius"] doubleValue];
+		data.program = [[coder decodeObjectForKey: @"data.program"] intValue];
+		
+		title = [[coder decodeObjectForKey: @"title"] retain];
+		notes = [[coder decodeObjectForKey: @"notes"] retain];
+		children = [[coder decodeObjectForKey: @"children"] intValue];
+		nextSibling = [[coder decodeObjectForKey: @"nextSibling"] retain];
+		previousSibling = [[coder decodeObjectForKey: @"previousSibling"] retain];
+		parent = [[coder decodeObjectForKey: @"parent"] retain];
+		firstChild = [[coder decodeObjectForKey: @"firstChild"] retain];
+		favoredChild = [[coder decodeObjectForKey: @"favoredChild"] retain];
+		nodeNumber = [[coder decodeObjectForKey: @"nodeNumber"] intValue];
+		if(nodeNumber == -1) extra = [[coder decodeObjectForKey: @"extra"] retain];
+		else extra = nil;
+	}
+	else {
+		upperLeft[0] = [[coder decodeObject] doubleValue];
+		upperLeft[1] = [[coder decodeObject] doubleValue];
+		lowerRight[0] = [[coder decodeObject] doubleValue];
+		lowerRight[1] = [[coder decodeObject] doubleValue];
+		scale = [[coder decodeObject] doubleValue];
+		center[0] = [[coder decodeObject] doubleValue];
+		center[1] = [[coder decodeObject] doubleValue];
+		program = [[coder decodeObject] intValue];
+		data.center[0] = [[coder decodeObject] doubleValue];
+		data.center[1] = [[coder decodeObject] doubleValue];
+		data.pixelSize = [[coder decodeObject] doubleValue];
+		data.aspectRatio = [[coder decodeObject] doubleValue];
+		data.detailLevel = [[coder decodeObject] doubleValue];
+		data.par[0] = [[coder decodeObject] doubleValue];
+		data.par[1] = [[coder decodeObject] doubleValue];
+		data.data[0] = [[coder decodeObject] doubleValue];
+		data.data[1] = [[coder decodeObject] doubleValue];
+		data.data[2] = [[coder decodeObject] doubleValue];
+		data.maxIters = [[coder decodeObject] intValue];
+		data.maxRadius = [[coder decodeObject] doubleValue];
+		data.minRadius = [[coder decodeObject] doubleValue];
+		data.program = [[coder decodeObject] intValue];
+		
+		title = [[coder decodeObject] retain];
+		notes = [[coder decodeObject] retain];
+		children = [[coder decodeObject] intValue];
+		nextSibling = [[coder decodeObject] retain];
+		previousSibling = [[coder decodeObject] retain];
+		parent = [[coder decodeObject] retain];
+		firstChild = [[coder decodeObject] retain];
+		favoredChild = [[coder decodeObject] retain];
+		nodeNumber = [[coder decodeObject] intValue];
+		if(nodeNumber == -1) extra = [[coder decodeObject] retain];
+		else extra = nil;
+	}
 	return self;
 }
 
@@ -173,6 +196,7 @@
 - (void) awakeFromNib
 { 
 	[[historyView window] setTitle: sessionTitle];
+	NSLog(@"session %@ awoke from nib\n", self);
 }
 
 - (void) setTitle: (NSString*) title { sessionTitle = title; }
@@ -201,14 +225,14 @@
 
 - (IBAction) selectCurrentParent: (id) sender 
 { 
-	if(currentNode != root) currentNode = currentNode -> parent;
+	if(currentNode != root) [self changeTo: currentNode -> parent];
 }
 
 - (IBAction) makeSelectedNodeCurrent: (id) sender {
 	NSLog(@"*********** this routine does nothing yet!!!\n");
 }
 
-- (IBAction) goToRoot: (id) sender { currentNode = root; }
+- (IBAction) goToRoot: (id) sender { [self changeTo: root]; }
 
 - (IBAction) cloneCurrentNode: (id) sender { 
 	FSSessionNode* node;
@@ -234,9 +258,9 @@
 		node -> nextSibling = currentNode -> nextSibling;
 		currentNode -> parent -> children += currentNode -> children;
 	
-		node = currentNode; currentNode = currentNode -> firstChild;
+		node = currentNode; [self changeTo: currentNode -> firstChild];
 	}
-	else { node = currentNode; currentNode = currentNode -> parent; }
+	else { node = currentNode; [self changeTo: currentNode -> parent]; }
 	// destroy 'node' here
 	[historyView reloadItem: currentNode reloadChildren: YES];
 }
@@ -252,13 +276,15 @@
 
 - (IBAction) goForward: (id) sender
 {
-	if(currentNode -> favoredChild != nil) currentNode = currentNode -> favoredChild;
+	if(currentNode -> favoredChild != nil) {
+		[self changeTo: currentNode -> favoredChild];
+	}
 //	NSLog(@"going forward\n");
 }
 
 - (IBAction) goBackward: (id) sender
 {
-	if(currentNode -> parent != root) currentNode = currentNode -> parent;
+	if(currentNode -> parent != root) [self changeTo: currentNode -> parent];
 //	NSLog(@"going backward\n");
 }
 
@@ -267,7 +293,6 @@
 	FSSessionNode* sibling;
 
 //	NSLog(@"adding a new child, this child thinks that pixelSize is %f\n", (child -> data).pixelSize);
-
 	if(currentNode -> children == 0) {
 		[child retain];
 		currentNode -> children = 1;
@@ -291,7 +316,7 @@
 	child -> parent = currentNode;
 	child -> children = 0;
 	(child -> parent) -> favoredChild = child;
-	if(makeCurrent == YES) currentNode = child;
+	if(makeCurrent == YES) [self changeTo: child];
 	return child;
 }
 
@@ -405,33 +430,64 @@
 - (void) encodeWithCoder: (NSCoder*) coder
 {
 	// version 0
-	[coder encodeObject: root];
-	[coder encodeObject: currentNode];
-	[coder encodeObject: sessionTitle];
-	[coder encodeObject: sessionProgram];
-	[coder encodeObject: sessionNotes];
-	if(kernelIsCached) [coder encodeObject: sessionKernel];
-	else [coder encodeObject: [NSNull null]];
-	[coder encodeObject: [NSNumber numberWithBool: kernelIsCached]];
+	[coder encodeObject: [NSNumber numberWithBool: YES] forKey: @"keyed"];
+	[coder encodeObject: root forKey: @"root"];
+	[coder encodeObject: currentNode forKey: @"current node"];
+	[coder encodeObject: sessionTitle forKey: @"session title"];
+	[coder encodeObject: sessionProgram forKey: @"session program"];
+	[coder encodeObject: sessionNotes forKey: @"session notes"];
+	if(kernelIsCached) [coder encodeObject: sessionKernel forKey: @"cached kernel"];
+	[coder encodeObject: [NSNumber numberWithBool: kernelIsCached] forKey: @"kernel is cached?"];
 }
 
 - (id) initWithCoder: (NSCoder*) coder
 {
 	self = [super init];
 	// version 0
-	root = [[coder decodeObject] retain];
-	currentNode = [[coder decodeObject] retain];
-	sessionTitle = [[coder decodeObject] retain];
-	sessionProgram = [[coder decodeObject] retain];
-	sessionNotes = [[coder decodeObject] retain];
-	sessionKernel = [[coder decodeObject] retain];
-	kernelIsCached = [[coder decodeObject] boolValue];
-//	NSLog(@"loaded session instance %@ has sessionKernel %@\n", self, sessionKernel);
+	if([coder containsValueForKey: @"keyed"]) {
+		root = [[coder decodeObjectForKey: @"root"] retain];
+		currentNode = [[coder decodeObjectForKey: @"current node"] retain];
+		sessionTitle = [[coder decodeObjectForKey: @"session title"] retain];
+		sessionProgram = [[coder decodeObjectForKey: @"session program"] retain];
+		sessionNotes = [[coder decodeObjectForKey: @"session notes"] retain];
+		if([coder containsValueForKey: @"cached kernel"]) sessionKernel = [[coder decodeObjectForKey: @"cached kernel"] retain];
+		else sessionKernel = nil;
+		kernelIsCached = [[coder decodeObjectForKey: @"kernel is cached"] boolValue];
+	}
+	else {
+		root = [[coder decodeObject] retain];
+		currentNode = [[coder decodeObject] retain];
+		sessionTitle = [[coder decodeObject] retain];
+		sessionProgram = [[coder decodeObject] retain];
+		sessionNotes = [[coder decodeObject] retain];
+		sessionKernel = [[coder decodeObject] retain];
+		kernelIsCached = [[coder decodeObject] boolValue];
+	}
 	return self;
 }
 
 
-
+- (void) changeTo: (FSSessionNode*) node {
+	[[NSNotificationCenter defaultCenter]
+		postNotificationName: @"FSSessionWillChangeNode"
+		object: self
+		userInfo: [NSDictionary dictionaryWithObjectsAndKeys:
+			owner,							@"document",
+			currentNode,					@"node",
+			nil
+		]
+	];
+	currentNode = node;
+	[[NSNotificationCenter defaultCenter]
+		postNotificationName: @"FSSessionDidChangeNode"
+		object: self
+		userInfo: [NSDictionary dictionaryWithObjectsAndKeys:
+			owner,							@"document",
+			currentNode,					@"node",
+			nil
+		]
+	];
+}
 
 
 

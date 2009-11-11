@@ -16,8 +16,6 @@
 	int nodes, nextNode;
 	FSEParseNode* node;
 	BOOL reordered;
-	int stackPtr;
-	int loopStack[256];
 	int tempVar;
 }
 
@@ -33,17 +31,11 @@
 - (int) size;
 - (void) setTempVar: (int) newTempVar;
 - (void) countParentsFrom: (int) h;
-- (void) logOpStream: (FSEOpStream*) program;
 - (void) logFrom: (int) currentNode atDepth: (int) depth;
  - (NSString*) realifyFrom: (int) here;
 - (void) reorderFromNode: (int) here;
 - (int) weight: (int) type;
  - (double) evaluateFrom: (int) here usingVariables: (double*) var;
-- (void) linearizeTo: (FSEOpStream*) program;
-- (void) addOp: (FSEOp*) op toOpStream: (FSEOpStream*) program;
-- (int) linearizeFrom: (int) h intoOpStream: (FSEOpStream*) program;
-- (void) reduceOpStream: (FSEOpStream*) program toRegisterCount: (int) reg;
-- (void) insertOp: (FSEOp*) op intoProgram: (FSEOpStream*) program atLocation: (int) loc;
 - (FSEParseNode*) nodeAt: (int) index;
 
 

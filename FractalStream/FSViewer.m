@@ -8,13 +8,21 @@
 
 #import "FSViewer.h"
 
-//#define DEBUGGING
+#define DEBUGGING
 
 #ifndef DEBUGGING
 	void inline Debug(NSString* s, ...) { }
 #else
 	#define Debug NSLog
 #endif
+
+#ifndef WINDOWS
+//	void inline WinLog(NSString* s, ...) { }
+	#define WinLog NSLog
+#else
+	#define WinLog NSLog
+#endif
+
 
 @implementation FSViewerObject
 - (FSViewerItem*) itemPtr { return &item; }
@@ -55,9 +63,10 @@
 	viewerColorizer = [[FSColorizer alloc] init];
 	workQueue = [[FSOperationQueue alloc] init];
 	[workQueue setMaxConcurrentOperationCount: NSOperationQueueDefaultMaxConcurrentOperationCount];
-	drawing = [[NSString stringWithString: @"drawing"] retain];
+	drawing = [[NSString stringWithString: @"drawing"] retain]; // used as a semaphore
 	[viewerColorizer setColorWidget: colorPicker autocolorCache: acCache];
 	renderQueueEntries = 0;
+	renderBatch = 0;
 	
 	renderingFinishedObject = nil;
 	currentBatch = 1;
@@ -65,17 +74,20 @@
 	useFakeZoom = YES;
 	
 //	[[self window] makeFirstResponder: self];
-	[[self window] setAcceptsMouseMovedEvents: YES];
+//	[[self window] setAcceptsMouseMovedEvents: YES];
 	
 	//[progress setDisplayedWhenStopped: NO];
 	//[progress setUsesThreadedAnimation: YES];
 	
+
 	coordinateTracker = [self 
 		addTrackingRect: [self bounds] 
 		owner: self
 		userData: NULL
 		assumeInside: YES
 	];
+
+
 //	[[self window] setInitialFirstResponder: self];
 //	[[self window] makeKeyAndOrderFront: self];
 	[[self window] setTitle: @"FractalStream"];
@@ -86,13 +98,33 @@
 	readyToRender = NO;
 	displayLocked = NO;	
 	awake = YES;
-	
+
+	WinLog(@"making background NSImage\n");
 	background = [[NSImage alloc] initWithSize: [self bounds].size];
-	[self allocateGState];
-	[[self window] useOptimizedDrawing: YES];
+	NSCachedImageRep* rep = [[NSCachedImageRep alloc] initWithSize: [self bounds].size depth: 8 separate: NO alpha: NO];
+	[rep setColorSpaceName: NSDeviceRGBColorSpace];
+	[rep setBitsPerSample: 8];
+	[rep setAlpha: NO];
+	[rep setOpaque: NO];
+	[rep setPixelsHigh: [self bounds].size.height];
+	[rep setPixelsWide: [self bounds].size.width];
+	[background addRepresentation: rep];
+	WinLog(@"allocated background = %@\n", background);
+	[background lockFocus];
+	[[NSColor blueColor] set];
+	NSRectFill([self bounds]);
+	[background unlockFocus];
+	WinLog(@"drew a blue square\n");
+	NSLog(@"background is now %@\n", background);
+//	[self allocateGState];
+//	[[self window] useOptimizedDrawing: YES];
+	
 }
 
 - (BOOL) isAwake { return awake; }
+
+- (id) document { return document; }
+- (void) registerForNotifications: (id) owningDocument { }
 
 - (void) setViewerData: (FSViewerData*) newData {
 	Debug(@"somebody set the viewer data with pixelSize %f\n", newData -> pixelSize);
@@ -114,14 +146,24 @@
 			(newData->kernel == view->kernel)
 	) [self zoomFrom: view->center to: newData->center scalingFrom: view->pixelSize to: newData->pixelSize];
 
+	if(configured == YES) {
+		if((newData -> program != view -> program) || (newData -> kernel != view -> kernel))
+			[[NSNotificationCenter defaultCenter] postNotificationName: @"FSViewerDidChangePlane" object: self];	
+		else [[NSNotificationCenter defaultCenter] postNotificationName: @"FSViewerDidChangeZoom" object: self];	
+	}
+	
 	configured = YES; view = &fakeview; fakeview = *newData; 
 	[self render: self];
+	NSLog(@"done setting data\n");
 }
 - (void) getViewerDataTo: (FSViewerData*) savedData { memmove(savedData, view, sizeof(FSViewerData)); }
 
 - (FSViewerData) data { return fakeview; }
 - (FSColorWidget*) colorPicker { return colorPicker; }
-- (void) setColorPicker: (FSColorWidget*) newColorPicker { colorPicker = newColorPicker; }
+- (void) setColorPicker: (FSColorWidget*) newColorPicker { 
+	colorPicker = newColorPicker;
+	[viewerColorizer setColorWidget: colorPicker autocolorCache: acCache];
+}
 
 - (IBAction) render: (id) sender {
 	int i; 
@@ -134,16 +176,25 @@
 	double z[2];
 	double linearMultiplier;
 	BOOL highDetail;
+	BOOL noProgressive;
 	
 	if(readyToRender == NO) { 
 		Debug(@"not ready to render\n");
 		return;
 	}
 
+	WinLog(@"cancelling operations\n");
 	[workQueue cancelAllOperations];
 	
-	highDetail = (view -> detailLevel > 1.0)? YES : NO;
+#ifndef WINDOWS
+	[progress setUsesThreadedAnimation: YES];
+	[progress setHidden: NO];
+	[progress startAnimation: self];
+#endif
 	
+	highDetail = (view -> detailLevel > 1.0)? YES : NO;
+	noProgressive = (view -> detailLevel <= 0.0)? YES : NO;
+
 	unit.viewerData = view;
 	unit.origin[0] = view -> center[0] - ((double) [self bounds].size.width * view -> pixelSize * view -> aspectRatio / 2.0);
 	unit.origin[1] = view -> center[1] + ((double) [self bounds].size.height * view -> pixelSize / 2.0);
@@ -199,16 +250,19 @@
 	if(yRemainder) ++yBoxes;
 	dx = (double)(1 << LogBoxSize) * view -> pixelSize * view -> aspectRatio;
 	dy = (double)(1 << LogBoxSize) * view -> pixelSize;
+	WinLog(@"using %i work units\n", xBoxes * yBoxes);
 	
 	synchronizeTo(workQueue) {
-		if(highDetail) { renderQueueEntries += 3 * xBoxes * yBoxes; }
-		else { renderQueueEntries += 2 * xBoxes * yBoxes; }
+		if(highDetail) { renderQueueEntries = 3 * xBoxes * yBoxes; }
+		else { renderQueueEntries = 2 * xBoxes * yBoxes; }
+		++renderBatch;
 	}
 	for(i = 0; i < 3; i++) {
 		if(i == 0) linearMultiplier = 0.5;
 		else if(i == 1) linearMultiplier = 1.0;
 		else if(i == 2) linearMultiplier = 2.0;
 		if((highDetail == NO) && (i > 1)) break;
+		if(noProgressive && i) break;
 		unit.offset[1] = 0.0;
 		for(y = 0; y < yBoxes; y++) {
 			unit.offset[0] = 0.0;
@@ -220,6 +274,7 @@
 				unit.step[0] = view -> pixelSize * view -> aspectRatio / linearMultiplier;
 				unit.step[1] = -view -> pixelSize / linearMultiplier;
 				unit.multiplier = i - 1;
+				unit.batch = renderBatch;
 				z[0] = unit.origin[0] + unit.offset[0];
 				z[1] = unit.origin[1] + unit.offset[1];
 				p = [self locationOfPoint: z];
@@ -233,7 +288,17 @@
 			unit.offset[1] -= dy;
 		}
 	}
-	[workQueue go]; /* no-op if using NSOperation */
+	WinLog(@"ready... go!\n");
+	[workQueue go]; /* no-op if using threading */
+	[viewDescription setString:
+		[NSString stringWithFormat: @"Drawing %@\nCentered on (%1.4e, %1.4e)\nWidth is %1.4e, Height is %1.4e\n",
+			(view -> program == 1)? @"parameter plane" : [NSString stringWithFormat: @"dynamical plane\nParameter is (%1.4e, %1.4e)", view -> par[0], view -> par[1]],
+			view -> center[0],
+			view -> center[1],
+			(double) [self bounds].size.width * view -> pixelSize * view -> aspectRatio,
+			(double) [self bounds].size.height * view -> pixelSize
+		]
+	];
 }
 
 - (void) renderOperationFinished: (id) op {
@@ -242,19 +307,23 @@
 	NSPoint p;
 	NSRect r;
 	NSBitmapImageRep* bitmap;
+	NSImage* partialImage;
 	
-	if([op unit] -> finished) {
+	if(([op unit] -> finished) && ([op unit] -> batch == renderBatch)) {
+		//WinLog(@"got unit for batch %i\n", renderBatch);
 		size.width = [op unit] -> dimension[0];
 		size.height = [op unit] -> dimension[1];
 		planes[0] = (unsigned char*)([op unit] -> result);
+		//WinLog(@"making an NSBitmapImageRep\n");
 		bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
 			pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
 			samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
 			colorSpaceName: NSDeviceRGBColorSpace
 	/*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
-			bytesPerRow: (size.width * 4)
-			bitsPerPixel: 32
+			bytesPerRow: (size.width * 3)
+			bitsPerPixel: 24
 		];
+		//WinLog(@"synchronizing for drawing\n");
 		synchronizeTo(drawing) {
 			finalX = (int)([op unit] -> dimension[0] + 0.5);
 			finalY = (int)([op unit] -> dimension[1] + 0.5);
@@ -263,25 +332,40 @@
 			if([op unit] -> multiplier == -1) r = NSMakeRect(p.x, p.y, finalX * 2, finalY * 2);
 			else if([op unit] -> multiplier == 1) r = NSMakeRect(p.x, p.y, finalX / 2, finalY / 2);
 			else r = NSMakeRect(p.x, p.y, finalX, finalY);
+			//WinLog(@"locking focus on background %@\n", background);
 			[background lockFocus];
-			[bitmap drawInRect: r];
+			#ifdef WINDOWS
+				partialImage = [[NSImage alloc] initWithSize: size];
+				[partialImage addRepresentation: bitmap];
+				[partialImage drawInRect: r fromRect: NSZeroRect operation: NSCompositeCopy fraction: 1.0];
+				[partialImage autorelease];
+			#else
+				[bitmap drawInRect: r];
+			#endif
 			[background unlockFocus];
+			//WinLog(@"releasing bitmap\n");
 			[bitmap release];
 			readyToDisplay = YES;
 		}
+		//WinLog(@"drew bitmap\n");
 	}
 	synchronizeTo(workQueue) {
-		--renderQueueEntries;
-		NSLog(@"rQE is now %i\n", renderQueueEntries);
-		if(renderQueueEntries <= 0) {
-			if(renderQueueEntries == 0) if(renderingFinishedObject != nil)
-				[renderingFinishedObject performSelector: renderingFinished];
-			renderQueueEntries = 0;
+		if([op unit] -> batch == renderBatch) {
+			--renderQueueEntries;
+			if(renderQueueEntries == 0) {
+				[progress stopAnimation: self];
+				[progress setHidden: YES];
+				if(renderingFinishedObject != nil)
+					[renderingFinishedObject performSelector: renderingFinished];
+			}
 		}
 	}
-	if([op unit] -> finished) [self setNeedsDisplay: YES];
+	if(([op unit] -> finished) && ([op unit] -> batch == renderBatch)) {
+		[self performSelectorOnMainThread: @selector(viewerNeedsDisplay) withObject: nil waitUntilDone: NO];
+	}
 }
 
+- (void) viewerNeedsDisplay { [self setNeedsDisplay: YES]; }
 
 - (void) setRenderCompletedMessage: (SEL) message forObject: (id) obj { renderingFinished = message; renderingFinishedObject = obj; }
 
@@ -295,8 +379,10 @@
 - (void) viewDidEndLiveResize {
 	[super viewDidEndLiveResize];
 	Debug(@"viewDidEndLiveResize\n");
-	[background release];
-	background = [[NSImage alloc] initWithSize: [self bounds].size];	
+	synchronizeTo(drawing) {
+		[background release];
+		background = [[NSImage alloc] initWithSize: [self bounds].size];
+	}
 	[self render: self];
 }
 
@@ -356,7 +442,7 @@
 }
 
 - (NSImage*) snapshot {
-	return [background copy];
+	return [[background copy] autorelease];
 	
 /*
 */
@@ -467,17 +553,16 @@
 						green: item -> color[0][1]
 						blue: item -> color[0][2]
 						alpha: item -> color[0][3]
-					] setFill];
-					[[NSColor colorWithCalibratedRed: item -> color[1][0]
-						green: item -> color[1][1]
-						blue: item -> color[1][2]
-						alpha: item -> color[1][3]
-					] setStroke];
-					NSRectFillUsingOperation(r, NSCompositeSourceOver);
+					] set];
 					path = [NSBezierPath bezierPath];
 					[path setLineWidth: 0.5];
 					[path appendBezierPathWithOvalInRect: r];
 					[path fill];
+					[[NSColor colorWithCalibratedRed: item -> color[1][0]
+						green: item -> color[1][1]
+						blue: item -> color[1][2]
+						alpha: item -> color[1][3]
+					] set];
 					[path stroke];
 					break;
 
@@ -487,7 +572,7 @@
 						green: item -> color[0][1]
 						blue: item -> color[0][2]
 						alpha: item -> color[0][3]
-					] setStroke];
+					] set];
 					path = [NSBezierPath bezierPath];
 					[path setLineWidth: 1];
 					[path appendBezierPathWithPoints: point count: 2];
@@ -502,13 +587,13 @@
 						green: item -> color[0][1]
 						blue: item -> color[0][2]
 						alpha: item -> color[0][3]
-					] setFill];
+					] set];
+					NSRectFillUsingOperation(r, NSCompositeSourceOver);
 					[[NSColor colorWithCalibratedRed: item -> color[1][0]
 						green: item -> color[1][1]
 						blue: item -> color[1][2]
 						alpha: item -> color[1][3]
-					] setStroke];
-					NSRectFillUsingOperation(r, NSCompositeSourceOver);
+					] set];
 					path = [NSBezierPath bezierPath];
 					[path setLineWidth: 1.5];
 					[path appendBezierPathWithRect: r];
@@ -519,22 +604,36 @@
 					if(s.x > e.x) { t = e.x; e.x = s.x; s.x = t; }
 					if(s.y > e.y) { t = e.y; e.y = s.y; s.y = t; }
 					r = NSMakeRect(s.x, s.y, e.x - s.x, e.y - s.y);
+					path = [NSBezierPath bezierPath];
+					[path setLineWidth: 1.5];
+					[path appendBezierPathWithOvalInRect: r];
 					[[NSColor colorWithCalibratedRed: item -> color[0][0]
 						green: item -> color[0][1]
 						blue: item -> color[0][2]
 						alpha: item -> color[0][3]
-					] setFill];
+					] set];
+					[path fill];
 					[[NSColor colorWithCalibratedRed: item -> color[1][0]
 						green: item -> color[1][1]
 						blue: item -> color[1][2]
 						alpha: item -> color[1][3]
-					] setStroke];
-					path = [NSBezierPath bezierPath];
-					[path setLineWidth: 1.5];
-					[path appendBezierPathWithOvalInRect: r];
-					[path fill];
+					] set];
 					[path stroke];
 					break;
+
+				case FSVO_Arrow:
+					point[0] = s; point[1] = e;
+					[[NSColor colorWithCalibratedRed: item -> color[0][0]
+						green: item -> color[0][1]
+						blue: item -> color[0][2]
+						alpha: item -> color[0][3]
+					] set];
+					path = [NSBezierPath bezierPath];
+					[path setLineWidth: 1];
+					[path appendBezierPathWithPoints: point count: 2];
+					[path stroke];				
+					break;
+
 			
 				default:
 					Debug(@"-drawObjects in FSViewer did not recognize object type %i\n", item -> type);
@@ -554,7 +653,7 @@
 
 - (void) setUsesFakeZoom: (BOOL) z { useFakeZoom = z; }
 
-- zoomFrom: (double*) start to: (double*) end scalingFrom: (double) startSize to: (double) endSize {
+- (void) zoomFrom: (double*) start to: (double*) end scalingFrom: (double) startSize to: (double) endSize {
 	double t[2];
 	NSPoint p, q;
 	int height, width;
@@ -564,7 +663,6 @@
 	NSImage* backgroundCopy;
 
 	NSBezierPath* path;
-	
 	if(useFakeZoom == NO) return;
 
 	p = [self locationOfPoint: start];
@@ -575,15 +673,6 @@
 	t[0] *= zoom;
 	t[1] *= zoom;
 
-	Debug(@"[self bounds].origin = (%f, %f), [self bounds].size = (%f, %f)\n",
-		(double) [self bounds].origin.x,
-		(double) [self bounds].origin.y,
-		(double) [self bounds].size.width,
-		(double) [self bounds].size.height
-	);
-	Debug(@"p = (%f, %f), q = (%f, %f)\n", (double) p.x, (double) p.y, (double) q.x, (double) q.y);
-	Debug(@"pixelSize is %f, aspectRatio is %f\n", view -> pixelSize, view -> aspectRatio);
-
 	backgroundCopy = [background copy];
 	if(zoom > 1.0) {
 		rect = NSMakeRect(
@@ -593,9 +682,11 @@
 			[self bounds].size.height / zoom
 		);
 		synchronizeTo(drawing) {
+			NSLog(@"\nfake zoom: background is %@ and backgroundCopy is %@\n", background, backgroundCopy);
 			[background lockFocus];
 			[backgroundCopy drawInRect: [self bounds] fromRect: rect operation: NSCompositeCopy fraction: 1.0];
 			[background unlockFocus];
+			NSLog(@"now background is %@\n\n", background);
 		}
 	}
 	else {
@@ -628,9 +719,20 @@
 	[backgroundCopy release];
 	
 	
-	[self setNeedsDisplay: YES];
+	[self performSelectorOnMainThread: @selector(viewerNeedsDisplay) withObject: nil waitUntilDone: NO];
 }
 
+
+
+- (IBAction) startFullScreen: (id) sender {
+	fswindow = [[FSFullscreenWindow alloc] init];
+	[fswindow startFullscreenWithView: self];
+}
+
+- (IBAction) endFullScreen: (id) sender {
+	[fswindow endFullscreen];
+	[fswindow release];
+}
 
 - (void) drawTexture {
 	NSRect backgroundRect;
@@ -638,7 +740,15 @@
 	backgroundRect.origin.y = 0.0;
 	synchronizeTo(drawing) {
 		backgroundRect.size = [background size];
-		[background drawInRect: [self bounds] fromRect: backgroundRect operation: NSCompositeCopy fraction: 1.0];
+/*
+		[background lockFocus];
+		[[NSColor greenColor] set];
+		[NSBezierPath fillRect: backgroundRect];
+		[background unlockFocus];
+*/
+//		[background drawInRect: [self bounds] fromRect: backgroundRect operation: NSCompositeCopy fraction: 1.0];
+		//NSLog(@"best image rep for %@ is %@\n", background, [background bestRepresentationForDevice: nil]);
+		[[background bestRepresentationForDevice: nil] drawInRect: [self bounds]];
 	}
 }
 
@@ -646,14 +756,13 @@
 - (void) drawRect: (NSRect) rect
 {
 	if(readyToDisplay == NO) {
-		[[NSColor grayColor] set];
+		[[NSColor redColor] set];
 		NSRectFill(rect);
 		return;
 	}
-
 	[self drawTexture];
-	[self drawObjects];
-	
+	[self drawObjects]; 
+
 	if([self inLiveResize] == YES) {
 		/* draw a transparent rect over the whole view */
 		
@@ -717,5 +826,7 @@
 }
 
 /* end coordinate conversions */
+
+- (IBAction) tTest: (id) sender { [tView setImage: [self snapshot]]; }
 
 @end

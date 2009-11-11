@@ -9,13 +9,17 @@
 #import <Cocoa/Cocoa.h>
 #import "FSViewerData.h"
 #import "FSRenderUnit.h"
+#import "FSColor.h"
 #import "FSColorWidget.h"
 #import "FSThreading.h"
+#import "FSColorLibraryController.h"
+
 
 @interface FSColorizer : NSObject {
 	int acMax;
 	FSViewer_Autocolor_Cache* acCache;
 	FSColorWidget* colorPicker;
+	NSMutableArray* colorArray;
 }
 
 - (id) init;
@@ -23,5 +27,5 @@
 
 - (void) colorUnit: (FSRenderUnit*) unit;
 - (void) setColorWidget: (FSColorWidget*) picker autocolorCache: (FSViewer_Autocolor_Cache*) acc;
-
+- (void) setColorArray: (NSArray*) colors;
 @end

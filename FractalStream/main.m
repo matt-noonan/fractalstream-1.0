@@ -2,8 +2,8 @@
 //  main.m
 //  FractalStream
 //
-//  Created by Matt Noonan on 3/15/06.
-//  Copyright __MyCompanyName__ 2006 . All rights reserved.
+//  Created by Matthew Noonan on 3/12/09.
+//  Copyright Cornell University 2009 . All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

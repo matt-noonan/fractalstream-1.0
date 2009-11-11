@@ -10,7 +10,7 @@
 
 @implementation FSDocument
 
-- (id)init
+- (id) init
 {
     self = [super init];
     if (self) {
@@ -22,6 +22,38 @@
     return self;
 }
 
++ (BOOL) isNativeType: (NSString*) type { return YES; } // need this for GNUstep?  maybe a problem with Info-gnustep.plist?
+
+- (void) awakeFromNib { 
+	NSLog(@"document %@ awoke from nib\n", self);
+}
+
+- (void) windowDidBecomeMain: (NSNotification*) notification {
+	NSLog(@"document %@ became active\n", self);
+	[[NSNotificationCenter defaultCenter] postNotificationName: @"FSDocumentDidBecomeActive" object: self];
+}
+
+- (void) windowDidResignMain: (NSNotification*) notification {
+	NSLog(@"document %@ resigned active\n", self);
+	[[NSNotificationCenter defaultCenter] postNotificationName: @"FSDocumentDidResignActive" object: self];
+}
+
+- (void) windowWillClose: (NSNotification*) notification {
+}
+
+- (void) log: (NSString*) str {
+	[logView insertText: str];
+	NSLog(@"%@", str);
+}
+
+- (IBAction) showLog: (id) sender {
+	[[logView window] orderFront: sender];
+}
+
+- (IBAction) hideLog: (id) sender {
+	[[logView window] orderOut: sender];
+}
+
 - (NSString *)windowNibName
 {
     // Override returning the nib file name of the document
@@ -29,33 +61,55 @@
     return @"FSDocument";
 }
 
-- (void)windowControllerDidLoadNib:(NSWindowController *) aController
-{
+- (void) windowControllerDidLoadNib: (NSWindowController *) aController {
     [super windowControllerDidLoadNib:aController];
-	[self doDocumentLoadWithLibrary: YES];
+	NSLog(@"windowControllerDidLoadNib for document %@\n", self);
+	[self doDocumentLoadWithLibrary: NO];
+	NSLog(@"associating FSPanels\n");
+	[panelHelper associatePanelsToDocument: self];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
+	NSLog(@"finished with windowControllerDidLoadNib for document %@\n", self);
 }
 
 - (void) doDocumentLoadWithLibrary: (BOOL) lib {
 	if(newSession == NO) { 
 		[editor restoreFrom: [savedData editor]];
 		if([savedData session] != nil) {
-			[colorizer getColorsFrom: [savedData colorizer]];
-			[session getSessionFrom: [savedData session]];
-			[session setFlags: [colorizer names]];
-			[browser setVariableNamesTo: [savedData variableNames]];
-			[browser setVariableValuesToReal: [savedData variableReal] imag: [savedData variableImag]];
-			[browser setProbeNamesTo: [savedData probeNames]];
-			[browser setAllowEditor: [savedData allowEditor]];
-			[browser reloadSession];
+			[self log: @"Loading saved FractalStream document"];
+			[colorizer getColorsFrom: [savedData colorizer]]; [self log: @"."];
+			[session getSessionFrom: [savedData session]]; [self log: @"."];
+			[session setFlags: [colorizer names]]; [self log: @"."];
+			[browser setVariableNamesTo: [savedData variableNames]]; [self log: @"."];
+			[browser setVariableValuesToReal: [savedData variableReal] imag: [savedData variableImag]]; [self log: @"."];
+			[browser setProbeNamesTo: [savedData probeNames]]; [self log: @"."];
+			[browser setAllowEditor: [savedData allowEditor]]; [self log: @"."];
+			[browser reloadSession]; [self log: @"."];
 			if([savedData hasTools]) [browser addTools: [savedData customTools]];
-			[mainTabView selectTabViewItemAtIndex: 1];
+			[self log: @"ok\n"];
+			[mainTabView selectTabViewItemAtIndex: 2];
 		}
-		else [mainTabView selectTabViewItemAtIndex: 0];
+		else {
+			[self log: @"Loading uncompiled FractalStream script...\n"];
+			[mainTabView selectTabViewItemAtIndex: 1];
+			[self log: @"ok"];
+		}
 	}
-	else [mainTabView selectTabViewItemAtIndex: (lib == YES)? 3 : 0];
+	else {
+		if(lib) [self log: @"Opening script library.\n"];
+		else [self log: @"Opening blank FractalStream script.\n"];
+		[mainTabView selectTabViewItemAtIndex: (lib == YES)? 0 : 1];
+	}
 }
 
+- (void) openEditor {
+	[editor restoreFrom: [savedData editor]];
+	[mainTabView selectTabViewItemAtIndex: 1];
+}
+
+- (void) openScriptLibrary {
+	[self log: @"Opening script library.\n"];
+	[mainTabView selectTabViewItemAtIndex: 0];
+}
 
 - (void) completeConfiguration 
 {
@@ -69,11 +123,11 @@
 	
 	save = [[FSSave alloc] init];
 	NSLog(@"about to set type, going to send to object %@", save);
-	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 0) 
+	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 1) 
 		[save setType: @"editor" session: nil colorizer: nil editor: editor browser: nil];
 	else
 		[save setType: @"full session [22oct]" session: session colorizer: colorizer editor: editor browser: browser];
-    return [NSKeyedArchiver archivedDataWithRootObject: save];
+    return [NSKeyedArchiver archivedDataWithRootObject: [save autorelease]];
 }
 
 - (BOOL)loadDataRepresentation:(NSData *)data ofType:(NSString *)aType
@@ -86,6 +140,52 @@
     return YES;
 }
 
+- (IBAction) saveToLibrary: (id) sender {
+	NSSavePanel* panel;
+	NSArray* editorState;
+	NSRange range;
+	NSString* file;
+	panel = [NSSavePanel savePanel];
+	editorState = [editor state];
+	[libraryTitleField setStringValue: [editorState objectAtIndex: 0]];
+	[libraryDescriptionView setString: @""];
+	[libraryDescriptionView replaceCharactersInRange: NSMakeRange(0,0) withRTF: [editorState objectAtIndex: 2]];
+	if([editorState count] > 3) {
+		id ob;
+		ob = [editorState objectAtIndex: 3];
+		if(![ob isKindOfClass: [NSImage class]]) {
+			ob = [[NSImage alloc] initWithData: ob];
+			[libraryPreview setImage: ob];
+			[ob release];
+		}
+		else [libraryPreview setImage: ob];
+	}
+	else [libraryPreview setImage: [NSImage imageNamed: @"NSRemoveTemplate"]];
+	[librarySaveView retain]; // gets released by save panel
+	[panel setTitle: @"Save to Library"];
+	[panel setAccessoryView: librarySaveView];
+	[panel setRequiredFileType: @"fs"];
+	file = @"";
+	/*** next line removed for COCOTRON ***/
+	//while([panel  runModalForDirectory: [[[NSBundle mainBundle] builtInPlugInsPath]
+	//								stringByAppendingPathComponent: @"Scripts/"] file: file] == NSFileHandlingPanelOKButton) {
+	while(0) {
+		// clicked the OK button
+		[libraryDescriptionView selectAll: self];
+		[editor setTitle: [libraryTitleField stringValue] description: [libraryDescriptionView RTFFromRange: [libraryDescriptionView selectedRange]]];
+		[libraryDescriptionView setSelectedRange: NSMakeRange(0,0)];
+		if([libraryTitleField stringValue] == @"") {
+			file = [panel filename];
+			NSRunAlertPanel(@"No Title", @"Please enter a title for the script.  This title will be displayed in the script library.", nil, nil, nil);
+			continue;
+		}
+		[[self dataRepresentationOfType: @"DocumentType"] writeToFile: [panel filename] atomically: YES];
+		break;
+	}
+}
+
+- (IBAction) embedTool: (id) sender { [browser embedTool: sender]; }
+
 - (void) iterations: (int*) it
 {
 	*it = [iterationBox intValue];
@@ -95,5 +195,6 @@
 {
 	*rad = [radiusBox doubleValue];
 }
+
 
 @end
