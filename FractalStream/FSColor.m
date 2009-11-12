@@ -12,8 +12,8 @@
 
 - (id) initWithR: (float) r G: (float) g B: (float) b {
 	self = [super init];
-	[self resetToColor: [NSColor colorWithCalibratedRed: r green: g blue: b alpha: 1.0]];
-	[self addColor: [NSColor colorWithCalibratedRed: r*0.5 green: g*0.5 blue: b*0.5 alpha: 1.0] atStop: 0.5];
+	[self resetToColor: [NSColor colorWithCalibratedRed: r*0.5 green: g*0.5 blue: b*0.5 alpha: 1.0]];
+	[self addColor: [NSColor colorWithCalibratedRed: r + 0.5*g green: g+0.4*b blue: b+0.2*r alpha: 1.0] atStop: 0.5];
 	smoothing = 0;
 	linear = YES;
 	subdivisions = 16;
@@ -254,11 +254,11 @@
 	c -> x = X; c -> y = Y;
 	switch(nextAutocolor & 7) {
 		case 0:		r = 0.0;	g = 0.0;	b = 1.0;	break;
-		case 1:		r = 1.0;	g = 1.0;	b = 0.0;	break;
+		case 1:		r = 0.0;	g = 1.0;	b = 0.0;	break;
 		case 2:		r = 1.0;	g = 0.0;	b = 0.0;	break;
-		case 3:		r = 0.0;	g = 1.0;	b = 0.0;	break;
-		case 4:		r = 1.0;	g = 0.0;	b = 1.0;	break;
-		case 5:		r = 0.0;	g = 1.0;	b = 1.0;	break;
+		case 3:		r = 0.0;	g = 1.0;	b = 1.0;	break;
+		case 4:		r = 1.0;	g = 1.0;	b = 0.0;	break;
+		case 5:		r = 1.0;	g = 0.0;	b = 1.0;	break;
 		case 6:		r = 1.0;	g = 0.5;	b = 0.5;	break;
 		case 7:		r = 1.0;	g = 1.0;	b = 1.0;	break;
 	}
@@ -299,14 +299,36 @@
 	[super dealloc];
 }
 
+
+- (id) initWithCoder: (NSCoder*) coder {
+	self = [super init];
+	name = [[coder decodeObjectForKey: @"name"] retain];
+	subcolor = [[coder decodeObjectForKey: @"subcolor"] retain];
+	gradient = [[coder decodeObjectForKey: @"color"] retain];
+	locked = [[coder decodeObjectForKey: @"locked"] boolValue];
+	ac = [[coder decodeObjectForKey: @"useAutocolor"] boolValue];
+	nextAutocolor = [[coder decodeObjectForKey: @"nextAutocolor"] intValue];
+	return self;
+}
+
+- (void) encodeWithCoder: (NSCoder*) coder {
+	[coder encodeObject: name forKey: @"name"];
+	[coder encodeObject: subcolor forKey: @"subcolor"];
+	[coder encodeObject: gradient forKey: @"color"];
+	[coder encodeObject: [NSNumber numberWithBool: locked] forKey: @"locked"];
+	[coder encodeObject: [NSNumber numberWithBool: ac] forKey: @"useAutocolor"];
+	[coder encodeObject: [NSNumber numberWithInt: nextAutocolor] forKey: @"nextAutocolor"];
+	return;
+}
+
 - (FSGradient*) gradientForX: (double) X Y: (double) Y withTolerance: (double) epsilon {
 	NSEnumerator* en;
 	FSColor* c;
 	
 	if(ac == NO) return gradient;
 	en = [subcolor objectEnumerator];
-	while((c = [en nextObject])) if([c isNearX: X Y: Y withTolerance: epsilon]) return [c gradient];
 	if(locked == NO) {
+		while((c = [en nextObject])) if([c isNearX: X Y: Y withTolerance: epsilon]) return [c gradient];
 		c = [self nextColorForX: X Y: Y];
 		[subcolor addObject: c]; 
 		// tell the world: we made a new color
@@ -334,6 +356,10 @@
 
 - (FSGradient*) gradient {
 	return ac? nil : gradient;
+}
+
+- (FSGradient*) baseGradient {
+	return gradient;
 }
 
 - (void) useAutocolor: (BOOL) a { ac = a; }

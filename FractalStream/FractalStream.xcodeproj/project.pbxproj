@@ -10,6 +10,8 @@
 		6802822D10AB17CF0077048E /* FSPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6802822C10AB17CF0077048E /* FSPanel.m */; };
 		6802824710AB1A060077048E /* FSDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6802824310AB1A060077048E /* FSDocument.xib */; };
 		6802824810AB1A060077048E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6802824510AB1A060077048E /* MainMenu.xib */; };
+		6802828F10ABC1C30077048E /* henonc.fs in Copy Files (Hénon Map) */ = {isa = PBXBuildFile; fileRef = 681AF1AD0F699B8F00E8DE1B /* henonc.fs */; };
+		6802829010ABC1C30077048E /* henona.fs in Copy Files (Hénon Map) */ = {isa = PBXBuildFile; fileRef = 681AF1AE0F699B8F00E8DE1B /* henona.fs */; };
 		681AF1470F699AF900E8DE1B /* FSScriptLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */; };
 		681AF1480F699AF900E8DE1B /* FSColorLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1140F699AF900E8DE1B /* FSColorLibraryController.m */; };
 		681AF1490F699AF900E8DE1B /* FSColorWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1180F699AF900E8DE1B /* FSColorWidget.m */; };
@@ -142,6 +144,18 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		6802828E10ABC1900077048E /* Copy Files (Hénon Map) */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Scripts/Hénon Map";
+			dstSubfolderSpec = 13;
+			files = (
+				6802828F10ABC1C30077048E /* henonc.fs in Copy Files (Hénon Map) */,
+				6802829010ABC1C30077048E /* henona.fs in Copy Files (Hénon Map) */,
+			);
+			name = "Copy Files (Hénon Map)";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		681AF1F90F69A8C900E8DE1B /* Copy Files (Scripts) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -378,6 +392,7 @@
 		6802822C10AB17CF0077048E /* FSPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSPanel.m; sourceTree = "<group>"; };
 		6802824410AB1A060077048E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FSDocument.xib; sourceTree = "<group>"; };
 		6802824610AB1A060077048E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		6802831810ABD0CF0077048E /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		681AF1110F699AF900E8DE1B /* FSScriptLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSScriptLibraryController.h; sourceTree = "<group>"; };
 		681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSScriptLibraryController.m; sourceTree = "<group>"; };
 		681AF1130F699AF900E8DE1B /* FSColorLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorLibraryController.h; sourceTree = "<group>"; };
@@ -659,8 +674,8 @@
 				681AF12B0F699AF900E8DE1B /* FSEController.h */,
 				681AF12C0F699AF900E8DE1B /* FSEController.m */,
 				681AF12D0F699AF900E8DE1B /* FSKernel.h */,
-				681AF12F0F699AF900E8DE1B /* FSJitter.h */,
 				681AF12E0F699AF900E8DE1B /* FSKernel.mm */,
+				681AF12F0F699AF900E8DE1B /* FSJitter.h */,
 				681AF1300F699AF900E8DE1B /* FSJitter.mm */,
 				68605DB60F6DCEE500189C8C /* FSCustomDataManager.h */,
 				68605DB70F6DCEE500189C8C /* FSCustomDataManager.m */,
@@ -682,6 +697,7 @@
 				681AF13A0F699AF900E8DE1B /* FSRenderer.h */,
 				681AF13B0F699AF900E8DE1B /* FSRenderer.m */,
 				681AF13C0F699AF900E8DE1B /* FSViewer.h */,
+				6802831810ABD0CF0077048E /* debug.h */,
 				681AF13D0F699AF900E8DE1B /* FSViewer.m */,
 				681AF13E0F699AF900E8DE1B /* FSRenderUnit.h */,
 				681AF13F0F699AF900E8DE1B /* FSRenderOperation.h */,
@@ -982,6 +998,7 @@
 				681AF2030F69A93600E8DE1B /* Copy Files (Other) */,
 				681AF2490F69A9CF00E8DE1B /* Copy Files (Quadratic Maps) */,
 				681AF24A0F69A9CF00E8DE1B /* Copy Files (Several Complex Variables) */,
+				6802828E10ABC1900077048E /* Copy Files (Hénon Map) */,
 				681AF24B0F69A9CF00E8DE1B /* Copy Files (Transcendental Dynamics) */,
 			);
 			buildRules = (

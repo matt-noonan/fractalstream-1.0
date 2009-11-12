@@ -11,11 +11,14 @@
 
 @interface FSFullscreenWindow : NSObject {
 	NSWindow* window;
+	NSRect savedFrame;
+	NSView* savedView;
+	BOOL isFullscreen;
 }
 
-/*
+
 - (void) startFullscreenWithView: (NSView*) view;
 - (void) endFullscreenView;
-*/
+- (void) toggleFullscreenWithView: (NSView*) view;
 
 @end

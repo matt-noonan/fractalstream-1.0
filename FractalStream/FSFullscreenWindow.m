@@ -8,35 +8,32 @@
 
 #import "FSFullscreenWindow.h"
 
-static BOOL _FSFullscreenWindow_usingFullscreen = NO;
 
 @implementation FSFullscreenWindow
-/*
+
+- (id) init { 
+	self = [super init];
+	isFullscreen = NO;
+}
+
 - (void) startFullscreenWithView: (NSView*) view {
-	int windowLevel;
-	
-	if(_FSFullscreenWindow_usingFullscreen) return;
-	_FSFullscreenWindow_usingFullscreen = YES;
-	CGDisplayCapture(kCGDirectMainDisplay);
-	windowLevel = CGShieldingWindowLevel();
-	window = [[NSWindow alloc] initWithContentRect: [[[view window] screen] frame]
-		styleMask: NSBorderlessWindowMask
-		backing: NSBackingStoreBuffered
-		defer: NO
-		screen: [[view window] screen]
-	];
-	[window setLevel: windowLevel];
-	[window setBackgroundColor: [NSColor blackColor]];
-	[window makeKeyAndOrderFront: nil];
-	[window setContentView: view];
-	[view setFrame: [[[view window] screen] frame]];
+	savedFrame = [[view window] frame];
+	savedView = view;
+	[[view window] setFrame: [[view window] frameRectForContentRect: [[[view window] screen] frame]] display: YES animate: YES];
+	if([[[view window] screen] isEqual: [[NSScreen screens] objectAtIndex: 0]]) [NSMenu setMenuBarVisible: NO];
+	isFullscreen = YES;
 }
 
 - (void) endFullscreenView {
-	[window orderOut: self];
-	[window release];
-	CGDisplayRelease(kCGDirectMainDisplay);
-	_FSFullscreenWindow_usingFullscreen = NO;	
+	[[savedView window] setFrame: savedFrame display: YES animate: YES];
+	if([[[savedView window] screen] isEqual: [[NSScreen screens] objectAtIndex: 0]]) [NSMenu setMenuBarVisible: YES];
+	isFullscreen = NO;
 }
-*/
+
+- (void) toggleFullscreenWithView: (NSView*) view {
+	if(isFullscreen) [self endFullscreenView];
+	else [self startFullscreenWithView: view];
+}
+
+
 @end

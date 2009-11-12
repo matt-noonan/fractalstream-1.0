@@ -9,63 +9,6 @@
 #import "FSColorWidget.h"
 #import "FSCWNamedColors.H"
 
-/*
-@implementation FSColor
-
-- (id) init {
-	int i, j, c;
-	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) color[(8*3*j) + 3*i + c] = 0.75;
-	return self;
-}
-
-- (id) colorFromR: (float) r G: (float) g B: (float) b {
-	float shade, fill;
-	int i, j;
-	
-	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
-		shade = 0.5;
-		fill = (float) i / 4.0;
-		if(fill > 1.0) fill = 2.0 - fill;
-		fill *= 0.4;
-	
-		shade = fill;
-		shade += 0.7;
-		fill = 0.0;
-		color[(8*3*j) + 3*((i+4)&7) + 0] = r * shade + fill;
-		color[(8*3*j) + 3*((i+4)&7) + 1] = g * shade + fill;
-		color[(8*3*j) + 3*((i+4)&7) + 2] = b * shade + fill;
-	}
-	return self;
-}
-
-- (void) putRGBAtMagnitude: (int) m andPhase: (int) p into: (float*) c {
-	c[0] = color[(8*3*p) + 3*m + 0];
-	c[1] = color[(8*3*p) + 3*m + 1];
-	c[2] = color[(8*3*p) + 3*m + 2];
-}
-
-- (void) setRGBAtMagnitude: (int) m andPhase: (int) p to: (float*) c {
-	color[(8*3*p) + 3*m + 0] = c[0];
-	color[(8*3*p) + 3*m + 1] = c[1];
-	color[(8*3*p) + 3*m + 2] = c[2];
-}
-
-- (void) cacheInto: (float*) c {
-	int i, j, k;
-	for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++)
-		c[(i*8*3) + (j * 3) + k] = color[(i*8*3) + (j * 3) + k];
-}
-
-- (void) encodeWithCoder: (NSCoder*) coder {
-}
-
-- (id) initWithCoder: (NSCoder*) coder {
-}
-
-
-
-@end
-*/
 
 @implementation FSColorWidget
 
@@ -231,11 +174,13 @@
 	int k, i, j, c;
 	float shade;
 	FSColor* color;
-
-	color = [[FSColor alloc] init];
+	FSGradient* gradient;
+	float r, g, b;
+	
 	names = [[NSArray arrayWithArray: newNames] retain];
 	[self setup];
 	nameEnum = [names objectEnumerator];
+	i = 0;
 	while(name = [nameEnum nextObject]) {
 		k = 0;
 		namedColor = NO;
@@ -258,9 +203,26 @@
 				fullColorArray[c][j][(i+4)&7][2] = named_color[k].b * shade;
 			}
 		}
-		else */[colors addObject: [color nextColorForX: 0.0 Y: 0.0]];
+		else */
+		switch(i & 7) {
+			case 0:		r = 0.0;	g = 0.0;	b = 1.0;	break;
+			case 1:		r = 0.0;	g = 1.0;	b = 0.0;	break;
+			case 2:		r = 1.0;	g = 0.0;	b = 0.0;	break;
+			case 3:		r = 0.0;	g = 1.0;	b = 1.0;	break;
+			case 4:		r = 1.0;	g = 1.0;	b = 0.0;	break;
+			case 5:		r = 1.0;	g = 0.0;	b = 1.0;	break;
+			case 6:		r = 1.0;	g = 0.5;	b = 0.5;	break;
+			case 7:		r = 1.0;	g = 1.0;	b = 1.0;	break;
+		}
+		if(i & 8) { r *= 0.5; g *= 0.5; b *= 0.5; }	
+		color = [[FSColor alloc] init];
+		gradient = [[FSGradient alloc] initWithR: r G: g B: b];
+		[color setGradient: gradient];
+		[colors addObject: color];
+		[gradient release];
+		[color release];
+		i++;
 	}
-	[color release];
 	[self updateColorInformation: self];
 }
 
@@ -268,8 +230,8 @@
 	FSGradient* gradient;
 	gradient = [[colors objectAtIndex: currentColor] gradient];
 	if(gradient == nil) gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
-	if((sender == smoothnessField) || (sender == self)) [gradient setSmoothing: [smoothnessField intValue]];
-	if((sender == subdivisionField) || (sender == self)) [gradient setSubdivisions: [subdivisionField intValue]];
+	if(sender == smoothnessField) [gradient setSmoothing: [smoothnessField intValue]];
+	if(sender == subdivisionField) [gradient setSubdivisions: [subdivisionField intValue]];
 	currentColor = [colorButton indexOfSelectedItem];
 	if(currentColor < 0) currentColor = 0;
 	if((sender == autocolorBox) || (sender == self)) {
@@ -314,7 +276,7 @@
 
 - (void) getColorsFrom: (FSColorWidget*) cw {
 	[self setNamesTo: [cw names]];
-	NSLog(@"***** Active FSColorWidget should take gradients from unarchived FSColorWidget!\n");
+	colors = [(cw->colors) retain];
 }
 
 - (void) encodeWithCoder: (NSCoder*) coder
@@ -325,13 +287,15 @@
 	// version 0
 	size = 8 * 8 * 3 * [self numberOfColors];
 	l = 0;
-	floats = [[NSMutableArray alloc] init];
-	for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
-		[floats addObject: [NSNumber numberWithFloat: fullColorArray[k][i][j][c]]];
+//	floats = [[NSMutableArray alloc] init];
+//	for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
+//		[floats addObject: [NSNumber numberWithFloat: fullColorArray[k][i][j][c]]];
 	[coder encodeObject: [NSNumber numberWithBool: YES] forKey: @"keyed"];
 	[coder encodeObject: names forKey: @"names"];
-	[coder encodeObject: floats forKey: @"data"];
-	[floats release];
+	NSLog(@"encoding colors\n");
+	[coder encodeObject: colors forKey: @"colors"];
+	NSLog(@"did it\n");
+//	[floats release];
 }
 
 - (id) initWithCoder: (NSCoder*) coder
@@ -340,26 +304,54 @@
 	NSArray* floats;
 	NSEnumerator* en;
 	int i, j, k, c, l, size;
+	float r, g, b;
 	self = [super init];
-
+	colors = [[NSMutableArray alloc] init];
+	
 	// version 0
 	if([coder containsValueForKey: @"keyed"]) {
 		names = [[coder decodeObjectForKey: @"names"] retain];
-		floats = [coder decodeObjectForKey: @"data"];
+/*		floats = [coder decodeObjectForKey: @"data"];
 		en = [floats objectEnumerator];
 		for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
 			fullColorArray[k][i][j][c] = [[en nextObject] floatValue];
+*/
+		colors = [[coder decodeObjectForKey: @"colors"] retain];
 	}
 	else {
+		FSColor* c;
+		FSGradient* gradient;
 		names = [[coder decodeObject] retain];
 		NSLog(@"FSColorWidget decoded the names %@\n", names);
-		size = 8 * 8 * 3 * [self numberOfColors];
+/*		size = 8 * 8 * 3 * [self numberOfColors];
 		flat = malloc(sizeof(float) * size);
 		for(i = 0; i < size; i++) flat[i] = [[coder decodeObject] floatValue];
 		l = 0;
 		for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
 			fullColorArray[k][i][j][c] = flat[l++];
 		free(flat);
+*/
+
+		for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
+			r = [[coder decodeObject] floatValue];
+			g = [[coder decodeObject] floatValue];
+			b = [[coder decodeObject] floatValue];
+			if(i == 0) {
+				if(j == 0) {
+					c = [[FSColor alloc] init];
+					gradient = [[FSGradient alloc] init];
+					[gradient resetToColor: [NSColor colorWithCalibratedRed: r green: g blue: b alpha: 1.0]];
+				}
+				else {
+					[gradient addColor: [NSColor colorWithCalibratedRed: r green: g blue: b alpha: 1.0] atStop: ((float) j) / 8.0];
+				}
+				if(j == 7) {
+					[c setGradient: gradient];
+					[colors addObject: c];
+					[c release]; [gradient release];
+				}
+			}
+		}
 	}
 	[self clearSmoothnessArray];
 	cachedColorArrayNeedsUpdate = YES;	

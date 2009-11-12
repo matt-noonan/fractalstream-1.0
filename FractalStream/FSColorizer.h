@@ -20,6 +20,7 @@
 	FSViewer_Autocolor_Cache* acCache;
 	FSColorWidget* colorPicker;
 	NSMutableArray* colorArray;
+	int currentBatch;
 }
 
 - (id) init;
@@ -28,4 +29,6 @@
 - (void) colorUnit: (FSRenderUnit*) unit;
 - (void) setColorWidget: (FSColorWidget*) picker autocolorCache: (FSViewer_Autocolor_Cache*) acc;
 - (void) setColorArray: (NSArray*) colors;
+- (void) setCurrentBatch: (int) cb;
+
 @end

@@ -88,7 +88,8 @@
 	[savedState addObject: [descriptionView RTFFromRange: range]];
 	range.length = 0;
 	[descriptionView setSelectedRange: range];
-	img = [[browser viewer] snapshot];
+	//img = [[browser viewer] snapshot];
+	img = nil; // removes preview
 	if(img) {
 		[img setScalesWhenResized: YES];
 		[img setSize: NSMakeSize(128, 128)];

@@ -56,7 +56,7 @@
 
 @end
 
-@interface FSColor : NSObject {
+@interface FSColor : NSObject <NSCoding> {
 	NSString* name;
 	FSGradient* gradient;		// When gradient is nil, we are an autocolorer and
 	NSMutableArray* subcolor;	//		subcolor will contain our array of FSColors 

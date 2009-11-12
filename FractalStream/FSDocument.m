@@ -64,7 +64,7 @@
 - (void) windowControllerDidLoadNib: (NSWindowController *) aController {
     [super windowControllerDidLoadNib:aController];
 	NSLog(@"windowControllerDidLoadNib for document %@\n", self);
-	[self doDocumentLoadWithLibrary: NO];
+	[self doDocumentLoadWithLibrary: YES];
 	NSLog(@"associating FSPanels\n");
 	[panelHelper associatePanelsToDocument: self];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
@@ -166,10 +166,10 @@
 	[panel setAccessoryView: librarySaveView];
 	[panel setRequiredFileType: @"fs"];
 	file = @"";
-	/*** next line removed for COCOTRON ***/
-	//while([panel  runModalForDirectory: [[[NSBundle mainBundle] builtInPlugInsPath]
-	//								stringByAppendingPathComponent: @"Scripts/"] file: file] == NSFileHandlingPanelOKButton) {
-	while(0) {
+	/*** next section broken for COCOTRON ***/
+#ifndef WINDOWS
+	while([panel  runModalForDirectory: [[[NSBundle mainBundle] builtInPlugInsPath]
+									stringByAppendingPathComponent: @"Scripts/"] file: file] == NSFileHandlingPanelOKButton) {
 		// clicked the OK button
 		[libraryDescriptionView selectAll: self];
 		[editor setTitle: [libraryTitleField stringValue] description: [libraryDescriptionView RTFFromRange: [libraryDescriptionView selectedRange]]];
@@ -182,6 +182,7 @@
 		[[self dataRepresentationOfType: @"DocumentType"] writeToFile: [panel filename] atomically: YES];
 		break;
 	}
+#endif
 }
 
 - (IBAction) embedTool: (id) sender { [browser embedTool: sender]; }

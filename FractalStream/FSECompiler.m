@@ -607,6 +607,8 @@
 		if([symbol isEqualToString: @"each"]) {
 			node = [tree newNodeOfType: FSE_Command | FSE_DataLoop at: parent];
 			[tree nodeAt: node] -> auxi[0] = loopDepth;
+			dataSourceIndex[dataSourceID] = node;
+			[tree nodeAt: node] -> auxi[1] = dataSourceID++;
 			[self extractArithBelowNode: node]; // first arg is index variable
 			[self readNextSymbol];
 			if([symbol isEqualToString: @"in"]) {
@@ -776,7 +778,8 @@
 	probes = [[NSMutableArray alloc] init];
 	[flags addObject: [NSString stringWithString: @"Default Exit Condition"]];
 	currentFlagID = 1;
-
+	dataSourceID = 0;
+	
 	usesC = 0;
 	int lastIf = -1;
 	
@@ -863,6 +866,9 @@
 	literalSource = [NSString stringWithString: newSource];
 //	if(description != nil) [description release]; description = [newDescription retain];
 }
+
+- (int) dataSources { return dataSourceID; }
+- (char*) nameForDataSource: (int) ds { return [tree nodeAt: dataSourceIndex[ds]] -> name; }
 
 - (void) buildScript: (NSString*) newSource {
 	if([[newSource lowercaseString] isEqualToString: source] != YES) {

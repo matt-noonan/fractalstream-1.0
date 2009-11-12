@@ -73,8 +73,31 @@ void gaussian2(double* R) {
 	return self;
 }
 
+- (void) reloadDataSources {
+	int dataSources, i;
+	dataSources = [compiler dataSources];
+	if(dataSources) {
+		dataSource = (void**) malloc(dataSources * sizeof(void*));
+		mergeSource = (void**) malloc(dataSources * sizeof(void*));
+		for(i = 0; i < dataSources; i++) {
+			dataSource[i] = [dataManager getFunctionPointerForData: [NSString stringWithCString: [compiler nameForDataSource: i] encoding: NSUTF8StringEncoding]];
+			mergeSource[i] = [dataManager getFunctionPointerForMerge: [NSString stringWithCString: [compiler nameForDataSource: i] encoding: NSUTF8StringEncoding]];
+		}
+	}
+}
+
+- (void) renewDataSources: (NSNotification*) note {
+	[self reloadDataSources];
+}
+
 - (BOOL) buildKernelFromCompiler: (FSECompiler*) newComp {
 	compiler = newComp;
+	[self reloadDataSources];
+	[[NSNotificationCenter defaultCenter] addObserver: self
+											 selector: @selector(renewDataSources:)
+												 name: @"FSCustomDataAdded"
+											   object: dataManager
+	 ];	
 	jitter = [FSJitter jitter];
 	[self buildLLVMKernel];
 	return YES;

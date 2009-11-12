@@ -21,6 +21,7 @@
 - (void) addDataNamed: (NSString*) name usingObject: (id) ob {
 	NSLog(@"adding data source named %@\n", name);
 	[dataDictionary setObject: ob forKey: name];
+	[[NSNotificationCenter defaultCenter] postNotificationName: @"FSCustomDataAdded" object: self];
 }
 
 - (void) addQueryNamed: (NSString*) name usingObject: (id) ob {
@@ -30,6 +31,13 @@
 - (void*) getFunctionPointerForQuery: (NSString*) name {
 	id ob;
 	ob = [queryDictionary objectForKey: name];
+	if([ob respondsToSelector: @selector(queryNamed:)]) return [ob queryNamed: name];
+	return NULL;
+}
+
+- (void*) getFunctionPointerForMerge: (NSString*) name {
+	id ob;
+	ob = [dataDictionary objectForKey: name];
 	if([ob respondsToSelector: @selector(queryNamed:)]) return [ob queryNamed: name];
 	return NULL;
 }

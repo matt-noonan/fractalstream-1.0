@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 #define FS_USE_THREADING
+#define FS_USE_NSOPERATION
 #ifndef WINDOWS
 	#define FS_USE_NSOPERATION
 #endif

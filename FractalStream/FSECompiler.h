@@ -33,8 +33,9 @@ typedef struct {
 	FSEDict var[FSECOMPILER_VARIABLES];
 	int index, nextvar, orphan, currentFlagID;
 	int usesC;
-	int loopDepth, probecount;
+	int loopDepth, probecount, dataSourceID;
 	BOOL useComplexVars, useCustom;
+	int dataSourceIndex[128];
 }
 
 - (IBAction) compile: (id) sender;
@@ -61,6 +62,8 @@ typedef struct {
 - (int) numberOfVariables;
 - (int) maximumLoopDepth;
 - (FSEParseTree*) tree;
+- (int) dataSources;
+- (char*) nameForDataSource: (int) ds; 
 
 - (BOOL) isParametric;
 - (BOOL) usesCustom;

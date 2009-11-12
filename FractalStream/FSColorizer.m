@@ -31,11 +31,15 @@
 
 - (void) setColorArray: (NSArray*) colors { colorArray = colors; }
 
+- (void) setCurrentBatch: (int) cb {
+	synchronizeTo(colorArray) { currentBatch = cb; }
+}
+
 - (void) colorUnit: (FSRenderUnit*) unit {
 	unsigned char* texture;
 	double oX, oY;
 	int k;
-	int x, y, flag;
+	int x, y, flag, sd;
 	float r, g, b, or, og, ob;
 	double loglog, golgol;
 	int phase;
@@ -48,6 +52,9 @@
 	FSGradient* gradient;
 	double nearR, farR;
 	int prog;
+	float* cache;
+	
+	if((unit->batch) != currentBatch) return;
 	
 	texture = (unsigned char*) (unit -> result);   /**** have to mix down to 8-bit integer with NSBitmapImageRep?? ***/
 	xMax = unit -> dimension[0];
@@ -76,6 +83,13 @@
 				else {
 					col = [colorArray objectAtIndex: flag];
 					gradient = [col gradientForX: oX Y: oY withTolerance: (unit -> viewerData) -> minRadius];
+					if(gradient == nil) { 
+						gradient = [col baseGradient]; 
+					}
+					else {
+						cache = [gradient getColorCache];
+					}
+					sd = [gradient subdivisions];
 					if([gradient smoothing] > 0) {
 						loglog = (double)k + 
 							(log(2.0 * log((double) ((unit -> viewerData)->maxRadius)))
@@ -83,25 +97,23 @@
 						k = (int) loglog;
 						loglog = loglog - floor(loglog);
 						{
-							float* cache = [gradient getColorCache];
-							int index = 3*((k+1) % [gradient subdivisions]);
+							int index = 3*((k+1) % sd);
 							r = loglog*cache[index + 0]; g = loglog*cache[index + 1]; b = loglog*cache[index + 2];
 							loglog = 1.0 - loglog;
-							index = 3*(k % [gradient subdivisions]);
+							index = 3*(k % sd);
 							r += loglog*cache[index + 0]; g += loglog*cache[index + 1]; b += loglog*cache[index + 2];
 						}
 					}
 					else {
-						float* cache = [gradient getColorCache];
-						int index = 3*(k % [gradient subdivisions]);
+						int index = 3*(k % sd);
 						r = cache[index + 0]; g = cache[index + 1]; b = cache[index + 2];
 					}
 				}
 				if(r > 1.0) r = 1.0; if(g > 1.0) g = 1.0; if(b > 1.0) b = 1.0;
 				if(r < 0.0) r = 0.0; if(g < 0.0) g = 0.0; if(b < 0.0) b = 0.0;
-				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
-				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
-				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
+				((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
+				((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
+				((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
 			}
 		}
 	}

@@ -61,7 +61,7 @@ static BOOL miniLoads = YES;
 		[coder encodeObject: [browser namedVariablesRealParts] forKey: @"real parts"];
 		[coder encodeObject: [browser namedVariablesImagParts] forKey: @"imag parts"];
 		[coder encodeObject: [browser namedProbes] forKey: @"namedProbes"];
-		[coder encodeObject: [colorizer smoothnessArray] forKey: @"smoothing"];
+//		[coder encodeObject: [colorizer smoothnessArray] forKey: @"smoothing"];
 		[coder encodeObject: [NSNumber numberWithBool: [browser editorDisabled]] forKey: @"editor disabled?"];
 		[coder encodeObject: tools forKey: @"tools"];
 	}
@@ -129,7 +129,7 @@ static BOOL miniLoads = YES;
 			real = [[coder decodeObjectForKey: @"real parts"] retain];
 			imag = [[coder decodeObjectForKey: @"imag parts"] retain];
 			probes = [[coder decodeObjectForKey: @"namedProbes"] retain];
-			[colorizer readSmoothnessFrom: [coder decodeObjectForKey: @"smoothing"]];
+			//[colorizer readSmoothnessFrom: [coder decodeObjectForKey: @"smoothing"]];
 			disableEditor = [[coder decodeObjectForKey: @"editor disabled?"] boolValue];
 			tools = [[coder decodeObjectForKey: @"tools"] retain];
 		}

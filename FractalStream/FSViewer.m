@@ -8,21 +8,7 @@
 
 #import "FSViewer.h"
 
-#define DEBUGGING
-
-#ifndef DEBUGGING
-	void inline Debug(NSString* s, ...) { }
-#else
-	#define Debug NSLog
-#endif
-
-#ifndef WINDOWS
-//	void inline WinLog(NSString* s, ...) { }
-	#define WinLog NSLog
-#else
-	#define WinLog NSLog
-#endif
-
+#import "debug.h"
 
 @implementation FSViewerObject
 - (FSViewerItem*) itemPtr { return &item; }
@@ -49,6 +35,7 @@
 	
 	
 	Debug(@"FSViewer %@ is awaking from nib\n", self);
+	fswindow = [[FSFullscreenWindow alloc] init];
 	configured = NO;
 	readyToRender = NO;
 	readyToDisplay = NO;
@@ -101,6 +88,7 @@
 
 	WinLog(@"making background NSImage\n");
 	background = [[NSImage alloc] initWithSize: [self bounds].size];
+#ifdef WINDOWS
 	NSCachedImageRep* rep = [[NSCachedImageRep alloc] initWithSize: [self bounds].size depth: 8 separate: NO alpha: NO];
 	[rep setColorSpaceName: NSDeviceRGBColorSpace];
 	[rep setBitsPerSample: 8];
@@ -110,15 +98,18 @@
 	[rep setPixelsWide: [self bounds].size.width];
 	[background addRepresentation: rep];
 	WinLog(@"allocated background = %@\n", background);
+#endif
 	[background lockFocus];
 	[[NSColor blueColor] set];
 	NSRectFill([self bounds]);
 	[background unlockFocus];
 	WinLog(@"drew a blue square\n");
 	NSLog(@"background is now %@\n", background);
-//	[self allocateGState];
-//	[[self window] useOptimizedDrawing: YES];
-	
+
+#ifndef WINDOWS
+	[self allocateGState];
+	[[self window] useOptimizedDrawing: YES];
+#endif	
 }
 
 - (BOOL) isAwake { return awake; }
@@ -127,7 +118,6 @@
 - (void) registerForNotifications: (id) owningDocument { }
 
 - (void) setViewerData: (FSViewerData*) newData {
-	Debug(@"somebody set the viewer data with pixelSize %f\n", newData -> pixelSize);
 	readyToRender = YES;
 	nodeChanged = YES;
 	
@@ -234,7 +224,7 @@
 	
 #ifdef FS_USE_THREADING
 	#ifdef FS_USE_NSOPERATION
-		#define LogBoxSize 7
+		#define LogBoxSize 8
 	#else
 		#define LogBoxSize 7
 	#endif
@@ -257,6 +247,7 @@
 		else { renderQueueEntries = 2 * xBoxes * yBoxes; }
 		++renderBatch;
 	}
+	[viewerColorizer setCurrentBatch: renderBatch];
 	for(i = 0; i < 3; i++) {
 		if(i == 0) linearMultiplier = 0.5;
 		else if(i == 1) linearMultiplier = 1.0;
@@ -320,8 +311,8 @@
 			samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
 			colorSpaceName: NSDeviceRGBColorSpace
 	/*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
-			bytesPerRow: (size.width * 3)
-			bitsPerPixel: 24
+			bytesPerRow: (size.width * 4)
+			bitsPerPixel: 32
 		];
 		//WinLog(@"synchronizing for drawing\n");
 		synchronizeTo(drawing) {
@@ -361,7 +352,10 @@
 		}
 	}
 	if(([op unit] -> finished) && ([op unit] -> batch == renderBatch)) {
+#ifdef WINDOWS
 		[self performSelectorOnMainThread: @selector(viewerNeedsDisplay) withObject: nil waitUntilDone: NO];
+#endif
+		[self setNeedsDisplay: YES];
 	}
 }
 
@@ -371,14 +365,12 @@
 
 - (void) setDefaultsTo: (double*) def count: (int) n {
 	int i;
-	Debug(@"setDefaultsTo got count %i\n", n);
 	defaults = n;
-	if(n) for(i = 0; i < n; i++) { setting[i + 6] = def[i]; Debug(@"viewer set default %i to %f\n", i, def[i]); }
+	if(n) for(i = 0; i < n; i++) { setting[i + 6] = def[i];  }
 }
 
 - (void) viewDidEndLiveResize {
 	[super viewDidEndLiveResize];
-	Debug(@"viewDidEndLiveResize\n");
 	synchronizeTo(drawing) {
 		[background release];
 		background = [[NSImage alloc] initWithSize: [self bounds].size];
@@ -682,11 +674,9 @@
 			[self bounds].size.height / zoom
 		);
 		synchronizeTo(drawing) {
-			NSLog(@"\nfake zoom: background is %@ and backgroundCopy is %@\n", background, backgroundCopy);
 			[background lockFocus];
 			[backgroundCopy drawInRect: [self bounds] fromRect: rect operation: NSCompositeCopy fraction: 1.0];
 			[background unlockFocus];
-			NSLog(@"now background is %@\n\n", background);
 		}
 	}
 	else {
@@ -725,13 +715,12 @@
 
 
 - (IBAction) startFullScreen: (id) sender {
-	fswindow = [[FSFullscreenWindow alloc] init];
-	[fswindow startFullscreenWithView: self];
+	[fswindow toggleFullscreenWithView: self];
+	[self viewDidEndLiveResize];
+	
 }
 
 - (IBAction) endFullScreen: (id) sender {
-	[fswindow endFullscreen];
-	[fswindow release];
 }
 
 - (void) drawTexture {

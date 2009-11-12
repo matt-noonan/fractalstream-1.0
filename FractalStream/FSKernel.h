@@ -48,6 +48,8 @@
 	FSCustomDataManager* dataManager;
 	void* customDataPtr;
 	void* customQueryPtr;
+	void** dataSource;
+	void** mergeSource;
 }
 
 - (void) test;
