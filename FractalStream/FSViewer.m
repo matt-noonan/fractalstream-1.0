@@ -107,7 +107,7 @@
 	NSLog(@"background is now %@\n", background);
 
 #ifndef WINDOWS
-	[self allocateGState];
+//	[self allocateGState];
 	[[self window] useOptimizedDrawing: YES];
 #endif	
 }
@@ -144,7 +144,7 @@
 	
 	configured = YES; view = &fakeview; fakeview = *newData; 
 	[self render: self];
-	NSLog(@"done setting data\n");
+//	NSLog(@"done setting data\n");
 }
 - (void) getViewerDataTo: (FSViewerData*) savedData { memmove(savedData, view, sizeof(FSViewerData)); }
 
@@ -173,7 +173,7 @@
 		return;
 	}
 
-	WinLog(@"cancelling operations\n");
+//	WinLog(@"cancelling operations\n");
 	[workQueue cancelAllOperations];
 	
 #ifndef WINDOWS
@@ -224,7 +224,7 @@
 	
 #ifdef FS_USE_THREADING
 	#ifdef FS_USE_NSOPERATION
-		#define LogBoxSize 8
+		#define LogBoxSize 7
 	#else
 		#define LogBoxSize 7
 	#endif
@@ -240,13 +240,14 @@
 	if(yRemainder) ++yBoxes;
 	dx = (double)(1 << LogBoxSize) * view -> pixelSize * view -> aspectRatio;
 	dy = (double)(1 << LogBoxSize) * view -> pixelSize;
-	WinLog(@"using %i work units\n", xBoxes * yBoxes);
+//	WinLog(@"using %i work units\n", xBoxes * yBoxes);
 	
 	synchronizeTo(workQueue) {
 		if(highDetail) { renderQueueEntries = 3 * xBoxes * yBoxes; }
 		else { renderQueueEntries = 2 * xBoxes * yBoxes; }
 		++renderBatch;
 	}
+	synchronizeTo(drawing) { undrawnBlocks = 0; }
 	[viewerColorizer setCurrentBatch: renderBatch];
 	for(i = 0; i < 3; i++) {
 		if(i == 0) linearMultiplier = 0.5;
@@ -279,7 +280,7 @@
 			unit.offset[1] -= dy;
 		}
 	}
-	WinLog(@"ready... go!\n");
+//	WinLog(@"ready... go!\n");
 	[workQueue go]; /* no-op if using threading */
 	[viewDescription setString:
 		[NSString stringWithFormat: @"Drawing %@\nCentered on (%1.4e, %1.4e)\nWidth is %1.4e, Height is %1.4e\n",
@@ -307,15 +308,15 @@
 		planes[0] = (unsigned char*)([op unit] -> result);
 		//WinLog(@"making an NSBitmapImageRep\n");
 		bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
-			pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
-			samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
-			colorSpaceName: NSDeviceRGBColorSpace
-	/*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
-			bytesPerRow: (size.width * 4)
-			bitsPerPixel: 32
-		];
-		//WinLog(@"synchronizing for drawing\n");
+														 pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
+													samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
+													 colorSpaceName: NSDeviceRGBColorSpace
+				  /*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
+														bytesPerRow: (size.width * 4)
+													   bitsPerPixel: 32
+				  ];
 		synchronizeTo(drawing) {
+		//WinLog(@"synchronizing for drawing\n");
 			finalX = (int)([op unit] -> dimension[0] + 0.5);
 			finalY = (int)([op unit] -> dimension[1] + 0.5);
 			p.x = [op unit] -> location[0];
@@ -337,8 +338,13 @@
 			//WinLog(@"releasing bitmap\n");
 			[bitmap release];
 			readyToDisplay = YES;
+			[op release];
+			[self setNeedsDisplay: YES];
+			++undrawnBlocks;
+			if(undrawnBlocks == 16) { [self display]; undrawnBlocks = 0; }
 		}
 		//WinLog(@"drew bitmap\n");
+		//[self performSelectorOnMainThread: @selector(viewerNeedsDisplay) withObject: nil waitUntilDone: NO];
 	}
 	synchronizeTo(workQueue) {
 		if([op unit] -> batch == renderBatch) {
@@ -351,15 +357,11 @@
 			}
 		}
 	}
-	if(([op unit] -> finished) && ([op unit] -> batch == renderBatch)) {
-#ifdef WINDOWS
-		[self performSelectorOnMainThread: @selector(viewerNeedsDisplay) withObject: nil waitUntilDone: NO];
-#endif
-		[self setNeedsDisplay: YES];
-	}
 }
 
-- (void) viewerNeedsDisplay { [self setNeedsDisplay: YES]; }
+- (void) viewerNeedsDisplay { 
+	[self setNeedsDisplay: YES];
+}
 
 - (void) setRenderCompletedMessage: (SEL) message forObject: (id) obj { renderingFinished = message; renderingFinishedObject = obj; }
 

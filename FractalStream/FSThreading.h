@@ -14,6 +14,10 @@
 	#define FS_USE_NSOPERATION
 #endif
 
+#ifdef WINDOWS
+#error "Windows :("
+#endif
+
 #ifdef FS_USE_THREADING
 	#ifdef FS_USE_NSOPERATION
 	

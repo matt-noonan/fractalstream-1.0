@@ -43,9 +43,11 @@
 		if([self isCancelled] == YES) break;
 	}
 	unit.finished = [self isCancelled]? NO : YES;
-	if([self isCancelled] == NO) [colorizer colorUnit: &unit];
-	[unit.owner performSelectorOnMainThread: @selector(renderOperationFinished:) withObject: self waitUntilDone: NO];
-	if([self isCancelled] == YES) unit.freeResults = YES;
+	if(unit.finished == YES) [colorizer colorUnit: &unit];
+	unit.freeResults = YES;
+	[unit.owner performSelectorOnMainThread: @selector(renderOperationFinished:) withObject: [self retain] waitUntilDone: NO];
+//	[unit.owner renderOperationFinished: self];
+	if(unit.finished == NO) unit.freeResults = YES;
 }
 
 

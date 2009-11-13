@@ -45,7 +45,8 @@
 	
 	NSMutableArray* displayList;
 	int currentBatch;
-
+	int undrawnBlocks;
+	
 	double setting[512];
 	int defaults;
 	
@@ -68,7 +69,6 @@
 	FSFullscreenWindow* fswindow;
 	
 	BOOL configured;
-	
 	IBOutlet NSImageView* tView;
 }
 

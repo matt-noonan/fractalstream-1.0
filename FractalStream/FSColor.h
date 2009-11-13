@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "FSThreading.h"
 
 @interface FSGradient : NSObject <NSCoding> {
 	NSString* name;

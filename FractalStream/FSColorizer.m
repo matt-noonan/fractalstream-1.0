@@ -65,7 +65,6 @@
 	nearR = (unit -> viewerData) -> minRadius;
 	nearR *= nearR; farR *= farR;
 	prog = (unit -> viewerData) -> program;
-	
 	synchronizeTo(colorArray) {
 		for(y = 0; y < yMax; y++) {
 			for(x = 0; x < xMax; x++) {
@@ -83,12 +82,7 @@
 				else {
 					col = [colorArray objectAtIndex: flag];
 					gradient = [col gradientForX: oX Y: oY withTolerance: (unit -> viewerData) -> minRadius];
-					if(gradient == nil) { 
-						gradient = [col baseGradient]; 
-					}
-					else {
-						cache = [gradient getColorCache];
-					}
+					cache = [gradient getColorCache];
 					sd = [gradient subdivisions];
 					if([gradient smoothing] > 0) {
 						loglog = (double)k + 

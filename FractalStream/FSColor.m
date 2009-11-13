@@ -328,17 +328,23 @@
 	if(ac == NO) return gradient;
 	en = [subcolor objectEnumerator];
 	if(locked == NO) {
-		while((c = [en nextObject])) if([c isNearX: X Y: Y withTolerance: epsilon]) return [c gradient];
-		c = [self nextColorForX: X Y: Y];
-		[subcolor addObject: c]; 
-		// tell the world: we made a new color
-		[[NSNotificationCenter defaultCenter] postNotificationName: @"FSAutocolorChanged" object: self];
-		return [c gradient];
+		synchronizeTo(subcolor) {
+			while((c = [en nextObject])) if([c isNearX: X Y: Y withTolerance: epsilon]) return [c gradient];
+			c = [self nextColorForX: X Y: Y];
+			[subcolor addObject: c]; 
+			// tell the world: we made a new color
+			[self performSelectorOnMainThread: @selector(notifyAutocolorChanged) withObject: nil waitUntilDone: NO];
+			return [c gradient];
+		}
 	}
 	else {
 		// create blended gradient
 		return nil;
 	}
+}
+
+- (void) notifyAutocolorChanged {
+	[[NSNotificationCenter defaultCenter] postNotificationName: @"FSAutocolorChanged" object: self];
 }
 
 - (BOOL) isNearX: (double) X Y: (double) Y withTolerance: (double) epsilon {
