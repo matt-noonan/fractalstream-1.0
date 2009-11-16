@@ -16,6 +16,7 @@
 	IBOutlet FSGradientControl* editor;
 	IBOutlet NSOutlineView* outline;
 	IBOutlet NSPopUpButton* button;
+	int index;
 }
 
 - (IBAction) newColor: (id) sender;

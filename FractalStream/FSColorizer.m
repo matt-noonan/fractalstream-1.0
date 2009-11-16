@@ -127,15 +127,21 @@
 							}
 							if(i == cache -> subcolors[flag]) {
 								// make a new autocolor
-								[[[colorPicker colorArray] objectAtIndex: flag] createNewSubcolorForX: oX Y: oY];
-								[colorPicker makeColorCache];
-								cache = [colorPicker getColorCache];
-								for(i = 0; i < cache -> subcolors[flag]; i++) {
-									d = ((oX - cache->X[cache->locationIndex[flag]+i])*(oX - cache->X[cache->locationIndex[flag]+i]) + (oY - cache->Y[cache->locationIndex[flag]+i])*(oY - cache->Y[cache->locationIndex[flag]+i]));
-									if(d < D) break;
+								if(oX*oX + oY*oY < (unit->viewerData)->maxRadius*(unit->viewerData)->maxRadius) {
+									[[[colorPicker colorArray] objectAtIndex: flag] createNewSubcolorForX: oX Y: oY];
+									[colorPicker makeColorCache];
+									cache = [colorPicker getColorCache];
+									for(i = 0; i < cache -> subcolors[flag]; i++) {
+										d = ((oX - cache->X[cache->locationIndex[flag]+i])*(oX - cache->X[cache->locationIndex[flag]+i]) + (oY - cache->Y[cache->locationIndex[flag]+i])*(oY - cache->Y[cache->locationIndex[flag]+i]));
+										if(d < D) break;
+									}
+									if(i == cache -> subcolors[flag]) {
+										// failed to make a new color, must have run out.  Use the base gradient.
+										i = -1;
+									}
 								}
-								if(i == cache -> subcolors[flag]) {
-									// failed to make a new color, must have run out.  Use the base gradient.
+								else { 
+									[[[colorPicker colorArray] objectAtIndex: flag] setHasInfinity: YES];
 									i = -1;
 								}
 							}

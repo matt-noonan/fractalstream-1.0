@@ -165,12 +165,12 @@
 		
 		title = [[coder decodeObject] retain];
 		notes = [[coder decodeObject] retain];
-		children = [[coder decodeObject] intValue];
-		nextSibling = [[coder decodeObject] retain];
-		previousSibling = [[coder decodeObject] retain];
-		parent = [[coder decodeObject] retain];
-		firstChild = [[coder decodeObject] retain];
-		favoredChild = [[coder decodeObject] retain];
+		children = [[coder decodeObject] intValue]; //children = 0;
+		nextSibling = [[coder decodeObject] retain]; //nextSibling = nil;
+		previousSibling = [[coder decodeObject] retain]; //previousSibling = nil;
+		parent = [[coder decodeObject] retain]; //parent = nil;
+		firstChild = [[coder decodeObject] retain]; //firstChild = nil;
+		favoredChild = [[coder decodeObject] retain]; //favoredChild = nil;
 		nodeNumber = [[coder decodeObject] intValue];
 		if(nodeNumber == -1) extra = [[coder decodeObject] retain];
 		else extra = nil;
@@ -196,7 +196,6 @@
 - (void) awakeFromNib
 { 
 	[[historyView window] setTitle: sessionTitle];
-	NSLog(@"session %@ awoke from nib\n", self);
 }
 
 - (void) setTitle: (NSString*) title { sessionTitle = title; }
@@ -284,8 +283,7 @@
 
 - (IBAction) goBackward: (id) sender
 {
-	NSLog(@"currentNode->parent is %@, root is %@\n", currentNode->parent, root);
-	if(currentNode -> parent != root) [self changeTo: currentNode -> parent];
+	if(currentNode->parent && (currentNode != root)) [self changeTo: currentNode -> parent];
 //	NSLog(@"going backward\n");
 }
 
@@ -423,7 +421,6 @@
 }
 
 - (void) setFlags: (NSArray*) flagArray { 
-	NSLog(@"flags is %@\n", flagArray);
 	flagNames = [NSArray arrayWithArray: flagArray];
 } 
 - (NSArray*) flagNames { return flagNames; }

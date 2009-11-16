@@ -91,18 +91,16 @@
 		if([[theSession kernelWrapper] writeToFile: tmp atomically: YES updateFilenames: NO] == NO) {
 			NSLog(@"writeToFile failed with session %@ and data %@ writing to %@\n", theSession, [theSession kernelWrapper], tmp);
 		}
-		NSLog(@"Trying dlopen on \"%@\"\n", tmp);
 		[theKernel loadKernelFromFile: tmp];
 	}
 	else {
-		NSLog(@"going to try to build from script\n");
 		[theCompiler buildScript: [theSession program]];
+		specialTools = [[theCompiler specialTools] retain];
+		[self loadTools];
 		[theKernel buildKernelFromCompiler: theCompiler];
 	}
-	NSLog(@"getting kernel pointer\n");
 	kernel = [theKernel kernelPtr];
 	if(kernel == NULL) {
-		NSLog(@"could not extract kernel routine\n");
 		return;
 	}
 	rootData.kernel = kernel;
@@ -114,6 +112,7 @@
 
 - (BOOL) editorDisabled { return ([editorButton isEnabled] == YES)? NO : YES; }
 - (void) setAllowEditor: (BOOL) allow { [editorButton setEnabled: allow]; }
+- (void) loadTools { [theTools addSpecialTools: specialTools]; }
 
 - (void) reloadSession {
 	[self reloadSessionWithoutRefresh];
@@ -134,7 +133,6 @@
 	/*** replaced if for COCOTRON ***/
 	//if([panel runModal] == NSFileHandlingPanelOKButton) {
 	if(0) {
-		NSLog(@"going to embed directory at \"%@\"\n", [panel filename]);
 		toolsWrapper = [[NSFileWrapper alloc] initWithPath: [panel filename]];
 		[theTools addTools: toolsWrapper];
 	}
@@ -155,15 +153,16 @@
 
 - (IBAction) goUp: (id) sender {
 	int currentPlane;
-	FSSessionNode* cn;
+	FSSessionNode* cn, *lastGood;
+	lastGood = [theSession currentNode];
 	currentPlane = ([theSession currentNode] -> data).program;
-	while(1) {
+	while([theSession currentNode] != [theSession getRootNode]) {
 		cn = [theSession currentNode];
 		[theSession goBackward: self];
-		if((([theSession currentNode] -> data).program != currentPlane)) { NSLog(@"changed planes\n"); break; }
-		if([theSession currentNode] == cn) { NSLog(@"hit bottom\n"); [theSession changeTo: cn->firstChild]; break; }
+		if((([theSession currentNode] -> data).program != currentPlane)) break;
+		if([theSession currentNode] == cn) break;
+		lastGood = cn;
 	}
-	NSLog(@"telling the viewer to use node %@\n", [theSession currentNode]);
 	[theViewer setViewerData: &([theSession currentNode] -> data)];
 }
 
@@ -254,10 +253,10 @@
 	}
 	reducedVariableNames = [[NSArray arrayWithArray: unique] retain];
 	[unique release], unique = nil;	
-	NSLog(@"FSBrowser set variable names to %@ (%i unique names)\n", variableNames, uniqueVariableNames);
 }
 
 - (void) setProbeNamesTo: (NSArray*) names { probeNames = [[NSArray arrayWithArray: names] retain]; }
+- (void) setSpecialToolsTo: (NSArray*) names { specialTools = [[NSArray arrayWithArray: names] retain]; }
 
 - (void) setVariableValuesToReal: (NSArray*) rp imag: (NSArray*) ip {
 	realPart = [[NSArray arrayWithArray: rp] retain];
@@ -296,7 +295,6 @@
 		}
 		else [im addObject: [NSNull null]];
 	}
-	NSLog(@"uniqueVariableNames = %i, reducedVariableNames = %@\n", uniqueVariableNames, rvn);
 	free(defaults);
 	realPart = [[NSArray arrayWithArray: re] retain];
 	imagPart = [[NSArray arrayWithArray: im] retain];
@@ -348,7 +346,6 @@
 	NSMutableArray* ar;
 	int col, i;
 	col = [[tableColumn identifier] intValue];
-	NSLog(@"setObjectValue, identifier is %i, row is %i\n", col, row);
 	switch(col) {
 		case 1:
 			i = 0;
@@ -378,6 +375,7 @@
 	[self refresh: self];
 }
 
+- (NSArray*) specialTools { return specialTools; }
 - (NSArray*) namedVariables { return variableNames; }
 - (NSArray*) namedProbes { return probeNames; }
 - (NSArray*) namedVariablesRealParts { return realPart; }

@@ -53,6 +53,7 @@
 	NSArray* realPart;
 	NSArray* imagPart;
 	NSArray* probeNames;
+	NSArray* specialTools;
 	int uniqueVariableNames;
 	FSKernel* theKernel;
 	FSCustomDataManager* dataManager;

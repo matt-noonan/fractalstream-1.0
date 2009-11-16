@@ -28,6 +28,7 @@ typedef struct {
 	NSMutableArray* probes;
 	NSString* customPath;
 	NSRange lastRange;
+	NSMutableArray* specialTools;
 	FSEParseTree *tree;
 #define FSECOMPILER_VARIABLES 1024
 	FSEDict var[FSECOMPILER_VARIABLES];
@@ -64,6 +65,7 @@ typedef struct {
 - (FSEParseTree*) tree;
 - (int) dataSources;
 - (char*) nameForDataSource: (int) ds; 
+- (NSArray*) specialTools;
 
 - (BOOL) isParametric;
 - (BOOL) usesCustom;

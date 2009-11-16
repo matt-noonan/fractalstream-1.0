@@ -43,6 +43,8 @@
 	[browser resetDefaults];
 	[browser refreshAll];
 	if([compiler usesCustom] == YES) [browser addTools: [[[NSFileWrapper alloc] initWithPath: [compiler customPath]] autorelease]];
+	[browser setSpecialToolsTo: [compiler specialTools]];
+	[browser loadTools];
 	[browser changeTo: @"testing!" X: 0.0 Y: 0.0 p1: 0.0 p2: 0.0 pixelSize: (4.0 / 512.0) parametric: [compiler isParametric]];
 	
 	//[enclosingView selectNextTabViewItem: self];  
@@ -82,7 +84,10 @@
 - (NSArray*) state {
 	NSMutableArray* savedState;
 	NSRange range;
-	NSImage* img;
+	NSImage* img0, *img;
+	NSData* data;
+	NSBitmapImageRep* rep;
+	NSSize size;
 	
 	savedState = [[NSMutableArray alloc] init];
 	[savedState addObject: [titleField stringValue]];
@@ -92,12 +97,24 @@
 	[savedState addObject: [descriptionView RTFDFromRange: range]];
 	range.length = 0;
 	[descriptionView setSelectedRange: range];
-	//img = [[browser viewer] snapshot];
-	img = nil; // removes preview
-	if(img) {
-		[img setScalesWhenResized: YES];
-		[img setSize: NSMakeSize(128, 128)];
-		[savedState addObject: [img TIFFRepresentation]];
+	img0 = [[browser viewer] snapshot];
+	if(img0) {
+		img = [[NSImage alloc] initWithSize: NSMakeSize(128,128)];
+		size = [img0 size];
+		[img lockFocus];
+		[img0 drawInRect: NSMakeRect(0, 0, 128, 128) fromRect: NSMakeRect(0,0,size.width,size.height) operation: NSCompositeSourceOver fraction: 1.0];
+		[img unlockFocus];
+		data = [img0 TIFFRepresentation];
+		rep = [NSBitmapImageRep imageRepWithData: data];
+//		[savedState addObject: [img TIFFRepresentationUsingCompression: NSTIFFCompressionJPEG ]];
+		[savedState addObject:
+			[rep representationUsingType: NSJPEGFileType properties:
+					[NSDictionary dictionaryWithObject: [NSDecimalNumber numberWithFloat:0.1] 
+												forKey: NSImageCompressionFactor
+					 ]
+			 ]
+		 ];
+		[img release];
 	}
 //	[savedState retain]; // this should be autoreleased, check to see if other objects leak the returned state
 	return [savedState autorelease];

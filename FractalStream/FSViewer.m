@@ -196,7 +196,10 @@
 		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(reload:) name: @"FSColorsChanged" object: colorPicker];
 	}
 	if((configured == YES) && (view -> program != newData -> program) && (view -> program == 3)) [self lockAllAutocolor];
-	if(configured && (view -> program != newData -> program)) [self setShowParameterLocation: (newData->program == 3)? YES : NO forView: newData];
+	if(configured && (view -> program != newData -> program)) {
+		[self setShowParameterLocation: (newData->program == 3)? YES : NO forView: newData];
+		if(newData -> program != 3) [self removeObjectsBelowPlane: newData -> program];
+	}
 	/* If everything in the new view is the same except for zoom level / center, we can reuse the old texture as an approximation */
 	if(
 			(configured == YES) &&
@@ -459,6 +462,19 @@
 	return r;
 }
 
+- (void) removeObjectsBelowPlane: (int) plane {
+	NSEnumerator* objEnum;
+	FSViewerObject* theObj;
+	NSArray* oldDisplayList;
+	synchronizeTo(displayList) {
+		oldDisplayList = [NSArray arrayWithArray: displayList];
+		[displayList release];
+		displayList = [[NSMutableArray alloc] init];
+		objEnum = [oldDisplayList objectEnumerator];
+		while(theObj = (FSViewerObject*) [objEnum nextObject]) if(theObj->plane <= plane) [displayList addObject: theObj];
+	}
+}
+
 - (void) deleteObjectsInBatch: (int) batch {
 	NSEnumerator* objEnum;
 	FSViewerObject* theObj;
@@ -494,6 +510,7 @@
 
 - (void) drawObject: (FSViewerObject*) newObject {
 	synchronizeTo(displayList) {
+		newObject->plane = view->program;
 		[displayList addObject: newObject];
 	}
 } 

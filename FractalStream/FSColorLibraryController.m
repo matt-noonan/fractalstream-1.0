@@ -12,6 +12,7 @@
 
 - (void) awakeFromNib {
 	library = [[NSMutableArray alloc] init];
+	index = -1;
 	if(outline) [[NSNotificationCenter defaultCenter]
 		addObserver: self selector: @selector(outlineSelectedColor:)
 		name: NSOutlineViewSelectionDidChangeNotification object: outline
@@ -29,9 +30,13 @@
 - (IBAction) newColor: (id) sender {
 	[library addObject: [[[FSGradient alloc] init] autorelease]];
 	[outline reloadData];
+	[self saveColor: nil];
 }
 
 - (IBAction) deleteColor: (id) sender {
+	if([outline selectedRow] >= 0) [library removeObjectAtIndex: [outline selectedRow]];
+	[outline reloadData];
+	[self saveColor: nil];
 }
 
 - (IBAction) changeColor: (id) sender {
@@ -71,7 +76,7 @@
 }
 
 - (void) outlineSelectedColor: (NSNotification*) note {
-	[editor setGradient: [outline itemAtRow: [outline selectedRow]]];
+	if([outline selectedRow] >= 0) [editor setGradient: [outline itemAtRow: [outline selectedRow]]];
 }
 
 - (int) outlineView: (NSOutlineView*) outlineView numberOfChildrenOfItem: (id) item {

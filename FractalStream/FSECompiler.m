@@ -11,6 +11,7 @@
 	[flags addObject: [NSString stringWithString: @"Default Exit Condition"]];
 	probes = [[NSMutableArray alloc] init];
 	currentFlagID = 1;
+	specialTools = nil;
 	source = symbol = title = nil;
 	usesC = 0;
 	nextvar = 0;
@@ -602,6 +603,13 @@
 		}
 		else error = [NSString stringWithFormat: @"i do not know this syntax for if (symbol is %@)", symbol];
 	}
+	else if([symbol isEqualToString: @"load"]) {
+		[self readNextSymbol];
+		[specialTools addObject: symbol];
+		[self readNextSymbol];
+		if([symbol isEqualToString: @"."] == NO)
+			error = [NSString stringWithFormat: @"expected \"load toolname.\", got %@ instead.", symbol];
+	}
 	else if([symbol isEqualToString: @"using"]) {
 		[self readNextSymbol];
 		if([symbol isEqualToString: @"each"]) {
@@ -761,6 +769,7 @@
 - (BOOL) usesCustom { return useCustom; }
 - (NSString*) customPath { /*NSLog(@"customPath is \"%@\"\n", customPath);*/ return customPath; }
 
+- (NSArray*) specialTools { return [NSArray arrayWithArray: specialTools]; }
 
 - (IBAction) compile: (id) sender
 {
@@ -776,6 +785,8 @@
 	[probes release], probes = nil;
 	flags = [[NSMutableArray alloc] init];
 	probes = [[NSMutableArray alloc] init];
+	[specialTools release];
+	specialTools = [[NSMutableArray alloc] init];
 	[flags addObject: [NSString stringWithString: @"Default Exit Condition"]];
 	currentFlagID = 1;
 	dataSourceID = 0;

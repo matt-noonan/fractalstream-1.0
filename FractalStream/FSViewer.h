@@ -21,7 +21,7 @@
 
 
 
-@interface FSViewerObject : NSObject { FSViewerItem item; }
+@interface FSViewerObject : NSObject { FSViewerItem item; @public int plane; }
 - (FSViewerItem*) itemPtr;
 - (void) setItem: (FSViewerItem) newItem;
 @end

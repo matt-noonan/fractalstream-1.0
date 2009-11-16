@@ -42,7 +42,6 @@ static BOOL miniLoads = YES;
 	colorizer = [col retain];
 	editor = [[edit state] retain];
 	browser = [brow retain];
-	NSLog(@"FSSave set type to %@\n", newType);
 }
 
 - (void) encodeWithCoder: (NSCoder*) coder {
@@ -50,7 +49,6 @@ static BOOL miniLoads = YES;
 	if(tools == nil) tools = [NSNull null];
 	[coder encodeObject: type forKey: @"type"];
 	if([type isEqualToString: @"editor"]) {
-		NSLog(@"encoding editor\n");
 		[coder encodeObject: editor forKey: @"editor"];
 	}
 	else if([type isEqualToString: @"full session [22oct]"]) {
@@ -121,7 +119,6 @@ static BOOL miniLoads = YES;
 	}
 	else if([type isEqualToString: @"full session [22oct]"]) {
 		if([coder containsValueForKey: @"type"]) {
-			NSLog(@"doing a keyed loading of saved data, query = %@\n", [NSNumber numberWithBool: [coder containsValueForKey: @"editor"]]? @"T" : @"F");
 			editor = [[coder decodeObjectForKey: @"editor"] retain];
 			session = [[coder decodeObjectForKey: @"session"] retain];
 			colorizer = [[coder decodeObjectForKey: @"colorizer"] retain];

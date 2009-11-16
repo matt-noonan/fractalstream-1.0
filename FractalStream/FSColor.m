@@ -287,6 +287,15 @@
 	return [c autorelease];
 }
 
+- (BOOL) hasInfinity { return infinity; }
+- (void) setHasInfinity: (BOOL) inf { 
+	if((infinity != inf) && (inf == YES)) {
+		infinity = inf;
+		[[NSNotificationCenter defaultCenter] postNotificationName: @"FSAutocolorChanged" object: self];
+	}
+	else infinity = inf;
+}
+
 - (FSColor*) subcolor: (int) i { return ((i < 0) || (i >= [subcolor count]))? nil : [subcolor objectAtIndex: i]; }
 
 - (void) removeAllSubcolors {
@@ -310,6 +319,7 @@
 	locked = NO;
 	nextAutocolor = 0;
 	ac = NO;
+	infinity = NO;
 	return self;
 }
 
@@ -325,6 +335,7 @@
 	gradient = [[coder decodeObjectForKey: @"color"] retain];
 	locked = [[coder decodeObjectForKey: @"locked"] boolValue];
 	ac = [[coder decodeObjectForKey: @"useAutocolor"] boolValue];
+	infinity = NO;
 	nextAutocolor = [[coder decodeObjectForKey: @"nextAutocolor"] intValue];
 	return self;
 }

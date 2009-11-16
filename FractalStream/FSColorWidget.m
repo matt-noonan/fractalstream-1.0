@@ -110,7 +110,8 @@
 	float c[3];
 	BOOL acChanged;
 
-	
+	NSLog(@"****** got change from %@ ******\n", sender);
+	return;
 
 	newColor = [colorButton indexOfSelectedItem];
 	
@@ -192,11 +193,16 @@
 }
 
 - (IBAction) acDelete: (id) sender {
-	if([acList indexOfSelectedItem] >= 0) [[colors objectAtIndex: currentColor] removeSubcolorAtIndex: [acList indexOfSelectedItem]];
+	if([acList indexOfSelectedItem] >= 0) {
+		if([acList indexOfSelectedItem] == [[[colors objectAtIndex: currentColor] subcolors] count])
+			[[colors objectAtIndex: currentColor] setHasInfinity: NO];
+		else [[colors objectAtIndex: currentColor] removeSubcolorAtIndex: [acList indexOfSelectedItem]];
+	}
 	[self updateColorInformation: self];
 }
 
 - (IBAction) acDeleteAll: (id) sender {
+	[[colors objectAtIndex: currentColor] setHasInfinity: NO];
 	[[colors objectAtIndex: currentColor] removeAllSubcolors];
 	[self updateColorInformation: self];
 }
@@ -373,7 +379,13 @@
 	if(colors == nil) return;
 	synchronizeTo(colors) {
 		gradient = [[colors objectAtIndex: currentColor] gradient];
-		if(gradient == nil) gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
+		if(gradient == nil) {
+			if([acList indexOfSelectedItem] == [[[colors objectAtIndex: currentColor] subcolors] count]) {
+				// selected infinity
+				gradient = [[colors objectAtIndex: currentColor] baseGradient];
+			}
+			else gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
+		}
 		if(sender == smoothnessField) {
 			if([gradient smoothing] != [smoothnessField intValue]) wasChanged = YES;
 			[gradient setSmoothing: [smoothnessField intValue]];
@@ -387,7 +399,13 @@
 		if(currentColor < 0) currentColor = 0;
 		if((sender == autocolorBox) || (sender == self)) {
 			BOOL state = ([autocolorBox state] == NSOnState)? YES : NO;
-			if((sender == autocolorBox) && ([[colors objectAtIndex: currentColor] usesAutocolor] != state)) wasChanged = YES;
+			if((sender == autocolorBox) && ([[colors objectAtIndex: currentColor] usesAutocolor] != state)) {
+				if(([[colors objectAtIndex: currentColor] usesAutocolor] == NO) && ([[colors objectAtIndex: currentColor] hasInfinity] == NO)) { // autocolor just got turned on for this color
+					[[[colors objectAtIndex: currentColor] baseGradient] resetToColor: [NSColor colorWithDeviceRed: 0.7 green: 0.7 blue: 0.7 alpha: 1.0]];
+					[[[colors objectAtIndex: currentColor] baseGradient] addColor: [NSColor colorWithDeviceRed: 1.0 green: 1.0 blue: 1.0 alpha: 1.0] atStop: 0.5];
+				}
+				wasChanged = YES;
+			}
 			[[colors objectAtIndex: currentColor] useAutocolor: state];
 			[acList removeAllItems];
 			NSEnumerator* en = [[[colors objectAtIndex: currentColor] subcolors] objectEnumerator];
@@ -397,6 +415,7 @@
 					[NSString stringWithFormat: @"%0.3e + i %0.3e", [c xVal], [c yVal]]
 				];
 			}
+			if([[colors objectAtIndex: currentColor] hasInfinity]) [acList addItemWithTitle: @"infinity"];
 			if([[[colors objectAtIndex: currentColor] subcolors] count]) [acList selectItemAtIndex: 0];
 			[acList setEnabled: state];
 			[acEditButton setEnabled: state];
@@ -408,7 +427,13 @@
 		if(([autocolorBox state] == NSOnState) && [[[colors objectAtIndex: currentColor] subcolors] count])
 			[acLockButton setState: [[colors objectAtIndex: currentColor] isLocked]? NSOnState : NSOffState];
 		gradient = [[colors objectAtIndex: currentColor] gradient];
-		if(gradient == nil) gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
+		if(gradient == nil) {
+			if([acList indexOfSelectedItem] == [[[colors objectAtIndex: currentColor] subcolors] count]) {
+				// selected infinity
+				gradient = [[colors objectAtIndex: currentColor] baseGradient];
+			}
+			else gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
+		}		
 		[gradientControl setGradient: gradient];
 		[smoothnessField setIntValue: [gradient smoothing]];
 		[subdivisionField setIntValue: [gradient subdivisions]];

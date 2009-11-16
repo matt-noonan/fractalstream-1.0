@@ -348,6 +348,7 @@
 	}
 #endif	
 	probeTools = [[theBrowser namedProbes] count];
+	
 	[popupMenu removeAllItems];
 	[popupMenu addItemWithTitle: @"Zoom"];
 	[popupMenu addItemWithTitle: @"Dynamics"];
@@ -390,6 +391,43 @@
 		toolBundle = [NSBundle bundleWithPath: bundleName];
 		pclass = [toolBundle principalClass];
 //		NSLog(@"Found an extra tool with class %@\n", pclass);
+		[toolClasses addObject: pclass];
+		[pclass preload: toolBundle];
+		aTool = [[pclass alloc] init];
+		[aTool setOwnerTo: viewport];
+		if([aTool respondsToSelector: @selector(setDataManager:)]) [aTool setDataManager: dataManager];
+		[aTool unfreeze];
+		[tools addObject: aTool];
+		[popupMenu addItemWithTitle: [aTool menuName]];
+		[[popupMenu itemWithTitle: [aTool menuName]] setKeyEquivalent: [aTool keyEquivalent]];
+		[aTool release];
+	}
+	tool = (id*) malloc([tools count] * sizeof(id));
+	en = [tools objectEnumerator];
+	i = 0; while(aTool = [en nextObject]) tool[i++] = aTool;
+}
+
+- (void) addSpecialTools: (NSArray*) specialTools {
+	NSEnumerator* en;
+	NSString* bundleName, *bundleDir, *filename;
+	NSBundle* toolBundle;
+	NSString* toolName;
+	id <FSTool> aTool;
+	Class pclass;
+	int i;
+	
+	NSLog(@"FSTools was asked to load the special tools %@\n", specialTools);
+	en = [specialTools objectEnumerator];
+	while(toolName = [en nextObject]) {
+		bundleName = [NSString stringWithFormat: @"%@/%@.fstool",
+			[[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent: @"Special Tools/"],
+			toolName
+		];
+		NSLog(@"trying %@\n", bundleName);
+		toolBundle = [NSBundle bundleWithPath: bundleName];
+		if(toolBundle == nil) { NSLog(@"failed\n"); continue; }
+		pclass = [toolBundle principalClass];
+		//		NSLog(@"Found an extra tool with class %@\n", pclass);
 		[toolClasses addObject: pclass];
 		[pclass preload: toolBundle];
 		aTool = [[pclass alloc] init];

@@ -63,7 +63,7 @@
 	FSGradient* gradient;		// When gradient is nil, we are an autocolorer and
 	NSMutableArray* subcolor;	//		subcolor will contain our array of FSColors 
 	double x, y;
-	BOOL locked, ac;
+	BOOL locked, ac, infinity;
 	int nextAutocolor;
 }
 
@@ -88,5 +88,7 @@
 - (NSArray*) subcolors;
 - (double) xVal;
 - (double) yVal;
+- (BOOL) hasInfinity;
+- (void) setHasInfinity: (BOOL) inf;
 
 @end

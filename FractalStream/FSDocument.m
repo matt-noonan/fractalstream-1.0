@@ -79,6 +79,7 @@
 			[browser setAllowEditor: [savedData allowEditor]]; [self log: @"."];
 			[browser reloadSession]; [self log: @"."];
 			if([savedData hasTools]) [browser addTools: [savedData customTools]];
+			[browser loadTools];
 			[self log: @"ok\n"];
 			[mainTabView selectTabViewItemAtIndex: 2];
 		}
@@ -140,7 +141,7 @@
 	editorState = [editor state];
 	[libraryTitleField setStringValue: [editorState objectAtIndex: 0]];
 	[libraryDescriptionView setString: @""];
-	[libraryDescriptionView replaceCharactersInRange: NSMakeRange(0,0) withRTF: [editorState objectAtIndex: 2]];
+	[libraryDescriptionView replaceCharactersInRange: NSMakeRange(0,0) withRTFD: [editorState objectAtIndex: 2]];
 	if([editorState count] > 3) {
 		id ob;
 		ob = [editorState objectAtIndex: 3];
