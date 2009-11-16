@@ -12,6 +12,7 @@
 		6802824810AB1A060077048E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6802824510AB1A060077048E /* MainMenu.xib */; };
 		6802828F10ABC1C30077048E /* henonc.fs in Copy Files (Hénon Map) */ = {isa = PBXBuildFile; fileRef = 681AF1AD0F699B8F00E8DE1B /* henonc.fs */; };
 		6802829010ABC1C30077048E /* henona.fs in Copy Files (Hénon Map) */ = {isa = PBXBuildFile; fileRef = 681AF1AE0F699B8F00E8DE1B /* henona.fs */; };
+		6816EB7F10B1CCBC00B01D0E /* mandelbrot.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6816EB7E10B1CCBC00B01D0E /* mandelbrot.icns */; };
 		681AF1470F699AF900E8DE1B /* FSScriptLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */; };
 		681AF1480F699AF900E8DE1B /* FSColorLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1140F699AF900E8DE1B /* FSColorLibraryController.m */; };
 		681AF1490F699AF900E8DE1B /* FSColorWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF1180F699AF900E8DE1B /* FSColorWidget.m */; };
@@ -393,6 +394,7 @@
 		6802824410AB1A060077048E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FSDocument.xib; sourceTree = "<group>"; };
 		6802824610AB1A060077048E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		6802831810ABD0CF0077048E /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		6816EB7E10B1CCBC00B01D0E /* mandelbrot.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mandelbrot.icns; sourceTree = "<group>"; };
 		681AF1110F699AF900E8DE1B /* FSScriptLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSScriptLibraryController.h; sourceTree = "<group>"; };
 		681AF1120F699AF900E8DE1B /* FSScriptLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSScriptLibraryController.m; sourceTree = "<group>"; };
 		681AF1130F699AF900E8DE1B /* FSColorLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColorLibraryController.h; sourceTree = "<group>"; };
@@ -486,7 +488,6 @@
 		681AF4C30F6CCE8000E8DE1B /* FSFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSFullscreenWindow.h; sourceTree = "<group>"; };
 		681AF4C40F6CCE8000E8DE1B /* FSFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSFullscreenWindow.m; sourceTree = "<group>"; };
 		683CAB960FD787500071EEAB /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		683CAB980FD787500071EEAB /* Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info copy.plist"; sourceTree = "<group>"; };
 		68411691100306F000C5323F /* FSColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColor.h; sourceTree = "<group>"; };
 		68411692100306F000C5323F /* FSColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColor.m; sourceTree = "<group>"; };
 		68605DB60F6DCEE500189C8C /* FSCustomDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCustomDataManager.h; sourceTree = "<group>"; };
@@ -596,13 +597,13 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6816EB7E10B1CCBC00B01D0E /* mandelbrot.icns */,
 				6802824310AB1A060077048E /* FSDocument.xib */,
 				6802824510AB1A060077048E /* MainMenu.xib */,
 				681AF1B60F699BCC00E8DE1B /* julia.icns */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
-				683CAB980FD787500071EEAB /* Info copy.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1053,6 +1054,7 @@
 				681AF1B70F699BCC00E8DE1B /* julia.icns in Resources */,
 				6802824710AB1A060077048E /* FSDocument.xib in Resources */,
 				6802824810AB1A060077048E /* MainMenu.xib in Resources */,
+				6816EB7F10B1CCBC00B01D0E /* mandelbrot.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1433,6 +1435,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OTHER_LDFLAGS = (
 					"-lLLVMAsmPrinter",
 					"-lLLVMSelectionDAG",
@@ -1450,7 +1453,7 @@
 					"-lpthread",
 				);
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 			};
 			name = Release;

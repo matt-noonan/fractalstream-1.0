@@ -331,12 +331,16 @@
 - (id) initWithCoder: (NSCoder*) coder {
 	self = [super init];
 	name = [[coder decodeObjectForKey: @"name"] retain];
-	subcolor = [[coder decodeObjectForKey: @"subcolor"] retain];
+	//subcolor = [[coder decodeObjectForKey: @"subcolor"] retain];
+	//nextAutocolor = [[coder decodeObjectForKey: @"nextAutocolor"] intValue];
+	// ignore saved autocolors
+	subcolor = [[NSMutableArray alloc] init];
+	nextAutocolor = 0;
 	gradient = [[coder decodeObjectForKey: @"color"] retain];
 	locked = [[coder decodeObjectForKey: @"locked"] boolValue];
 	ac = [[coder decodeObjectForKey: @"useAutocolor"] boolValue];
 	infinity = NO;
-	nextAutocolor = [[coder decodeObjectForKey: @"nextAutocolor"] intValue];
+	
 	return self;
 }
 

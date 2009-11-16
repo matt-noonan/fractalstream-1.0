@@ -171,7 +171,7 @@
 			NSRunAlertPanel(@"No Title", @"Please enter a title for the script.  This title will be displayed in the script library.", nil, nil, nil);
 			continue;
 		}
-		[[self dataRepresentationOfType: @"DocumentType"] writeToFile: [panel filename] atomically: YES];
+		[[self dataRepresentationOfType: @"FractalStream Script"] writeToFile: [panel filename] atomically: YES];
 		break;
 	}
 #endif

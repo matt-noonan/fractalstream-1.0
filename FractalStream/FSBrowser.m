@@ -225,7 +225,6 @@
 	data.aspectRatio = [aspectBox floatValue];
 	data.eventManager = theTools;
 	[theSession addChildWithData: data andMakeCurrent: YES];
-	NSLog(@"currentNode is %@\n", [theSession currentNode]);
 	[theTools updateMenuForParametric: isPar];
 	[self sendDefaultsToViewer];
 	[theViewer setViewerData: &data];

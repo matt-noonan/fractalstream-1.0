@@ -65,7 +65,6 @@
 - (void) restoreFrom: (NSArray*) savedState {
 	NSRange range;
 //	NSLog(@"savedState 0 = %@, 1 = %@\n", [savedState objectAtIndex: 0], [savedState objectAtIndex: 1]);
-	NSLog(@"savedState[2] = %@\n", [savedState objectAtIndex: 2]);
 	[titleField setStringValue: [savedState objectAtIndex: 0]];
 	[sourceView setString: [savedState objectAtIndex: 1]];
 	[descriptionView selectAll: self];

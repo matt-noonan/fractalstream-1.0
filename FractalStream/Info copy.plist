@@ -14,7 +14,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>julia.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>DocumentType</string>
+			<string>FractalStream Script</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>fsdy</string>
