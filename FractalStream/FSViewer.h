@@ -57,22 +57,37 @@
 	IBOutlet NSButton* denormalButton;
 	IBOutlet NSTextField* timerField;
 	IBOutlet NSTextView* viewDescription;
+	IBOutlet NSWindow* controllingWindow;
 	IBOutlet id document;
+	IBOutlet NSButton* insetButton;
+	
 	FSColorizer* viewerColorizer;
 	BOOL useFakeZoom;
 	FSOperationQueue* workQueue;
 	NSString* drawing;
 	
 	NSImage* background;
+	NSBitmapImageRep** tile;
+	NSImage* inset;
+	BOOL showInset;
+	double insetMarker[2];
+	
+	unsigned char** tileData;
+	int tilesPerRow;
+	int totalTiles;
 	FSViewer_Autocolor_Cache acCache[64];
 	int renderQueueEntries;
 	FSFullscreenWindow* fswindow;
 	
 	BOOL configured;
 	IBOutlet NSImageView* tView;
+	NSConditionLock* queueLock;
+	
+	
 }
 
 - (IBAction) tTest: (id) sender;
+- (IBAction) toggleInset: (id) sender; 
 
 - (id) initWithCoder: (NSCoder*) coder;
 - (IBAction) render: (id) sender;

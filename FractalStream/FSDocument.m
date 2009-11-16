@@ -25,16 +25,13 @@
 + (BOOL) isNativeType: (NSString*) type { return YES; } // need this for GNUstep?  maybe a problem with Info-gnustep.plist?
 
 - (void) awakeFromNib { 
-	NSLog(@"document %@ awoke from nib\n", self);
 }
 
 - (void) windowDidBecomeMain: (NSNotification*) notification {
-	NSLog(@"document %@ became active\n", self);
 	[[NSNotificationCenter defaultCenter] postNotificationName: @"FSDocumentDidBecomeActive" object: self];
 }
 
 - (void) windowDidResignMain: (NSNotification*) notification {
-	NSLog(@"document %@ resigned active\n", self);
 	[[NSNotificationCenter defaultCenter] postNotificationName: @"FSDocumentDidResignActive" object: self];
 }
 
@@ -63,12 +60,9 @@
 
 - (void) windowControllerDidLoadNib: (NSWindowController *) aController {
     [super windowControllerDidLoadNib:aController];
-	NSLog(@"windowControllerDidLoadNib for document %@\n", self);
 	[self doDocumentLoadWithLibrary: YES];
-	NSLog(@"associating FSPanels\n");
 	[panelHelper associatePanelsToDocument: self];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
-	NSLog(@"finished with windowControllerDidLoadNib for document %@\n", self);
 }
 
 - (void) doDocumentLoadWithLibrary: (BOOL) lib {
@@ -122,7 +116,6 @@
 	FSSave* save;
 	
 	save = [[FSSave alloc] init];
-	NSLog(@"about to set type, going to send to object %@", save);
 	if([mainTabView indexOfTabViewItem: [mainTabView selectedTabViewItem]] == 1) 
 		[save setType: @"editor" session: nil colorizer: nil editor: editor browser: nil];
 	else
@@ -132,10 +125,8 @@
 
 - (BOOL)loadDataRepresentation:(NSData *)data ofType:(NSString *)aType
 {
-	NSLog(@"##### start NSKeyedUnarchiver, type is %@\n", aType);
 	[FSSave useMiniLoads: NO];
 	savedData = [[NSKeyedUnarchiver unarchiveObjectWithData: data] retain];
-	NSLog(@"##### NSKeyedUnarchiver finished\n");
 	newSession = NO;
     return YES;
 }

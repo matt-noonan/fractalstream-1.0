@@ -73,6 +73,11 @@ void gaussian2(double* R) {
 	return self;
 }
 
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[super dealloc];
+}
+
 - (void) reloadDataSources {
 	int dataSources, i;
 	dataSources = [compiler dataSources];
@@ -118,7 +123,7 @@ void gaussian2(double* R) {
 	AllocaInst *reportedP = (AllocaInst*) _reportedP, *probeP = (AllocaInst*) _probeP;
 	Value *big2 = (Value*) _big2, *tiny2 = (Value*) _tiny2;
 	Value *maxIt = (Value*) _maxIt, *loop_i = (Value*) _loop_i;
-	AllocaInst *dsInP = (AllocaInst*) _dsInP, *dsOutP = (AllocaInst*) _dsOutP;
+	AllocaInst *dsInP = (AllocaInst*) _dsInP, *dsOutP = (AllocaInst*) _dsOutP, *dsResPl = (AllocaInst*) _dsResPl, *dsResPf = (AllocaInst*) _dsResPf;
 	BasicBlock *commenceBlock = (BasicBlock*) _commenceBlock;
 	
 	#define thisBlock builder -> GetInsertBlock()
@@ -403,9 +408,15 @@ void gaussian2(double* R) {
 							Function* mathf = cast<Function>(c);
 							mathf -> setCallingConv(CallingConv::C);
 							EE -> addGlobalMapping(mathf, dataSourcePtr);
-							
-							NSLog(@"added global mapping to %p\n", dataSourcePtr);
-							
+							void* dataEvalPtr = [dataManager getFunctionPointerForEval: [NSString stringWithUTF8String: tree[node].name]];
+							Constant* c0 = mod -> getOrInsertFunction([[NSString stringWithFormat: @"data evaluator %s", name] cString],
+																	 IntegerType::get(32),
+																	 PointerType::get(Type::DoubleTy, 0),
+																	 PointerType::get(IntegerType::get(32), 0),
+																	 NULL);
+							Function* mathf0 = cast<Function>(c0);
+							mathf0 -> setCallingConv(CallingConv::C);
+							EE -> addGlobalMapping(mathf0, dataEvalPtr);
 							if(dataSourcePtr) { 
 								int child = tree[node].firstChild;
 								BasicBlock* incomingBlock = thisBlock;
@@ -414,63 +425,112 @@ void gaussian2(double* R) {
 								BasicBlock* skipLoopBlock = BasicBlock::Create("FSE_DataLoop skip", llvmKernel);
 								BasicBlock* mergeLoopBlock = BasicBlock::Create("FSE_DataLoop merge", llvmKernel);
 						
-								NSLog(@"one\n");
-								NSLog(@"point 0\n");
 								rhs = (Value*) [self emit: tree[child].firstChild]; 
-								NSLog(@"point 1\n");
 								ptr = GetElementPtrInst::Create(dsInP, LLVMi32(0), "&dataSourceIn[0]", thisBlock);
-								NSLog(@"point 2\n");
 								builder -> CreateStore(rhs, ptr, "dataSourceIn[0]");
-								NSLog(@"point 3\n");
 								rhs = (Value*) [self emit: tree[tree[child].firstChild].nextSibling];
-								NSLog(@"point 4\n");
 								child = tree[child].nextSibling;
-								NSLog(@"point 5\n");
 								ptr = GetElementPtrInst::Create(dsInP, LLVMi32(1), "&dataSourceIn[1]", thisBlock);
-								NSLog(@"point 6\n");
 								builder -> CreateStore(rhs, ptr, "dataSourceIn[1]");
 
-								NSLog(@"two\n");
 								std::vector<Value*> args;
 								args.push_back(dsInP);
 								args.push_back(dsOutP);
 								Value* count = builder -> CreateCall(mathf, args.begin(), args.end(), name);
 								// at this point, count is set and dsOutP is loaded with data.  skip loop if count is nonpositive.
-								NSLog(@"three\n");
 								Value* jZeroCond = builder -> CreateICmpSLE(count, LLVMi32(0));
 								builder -> CreateCondBr(jZeroCond, skipLoopBlock, loopBlock);
 								builder -> SetInsertPoint(loopBlock);
 								PHINode* j = builder -> CreatePHI(IntegerType::get(32), [[NSString stringWithFormat: @"j%i.", jDepth] cString]);
 								j -> addIncoming(LLVMi32(0), incomingBlock);
 								
-								NSLog(@"four\n");
 								// load the data for this iteration into the specified variable
 								int v = tree[tree[child].firstChild].auxi[0]; 
+								int v0 = v;
 								Value* idx = builder -> CreateMul(j, LLVMi32(2));
-								Value* rhsP = GetElementPtrInst::Create(dsOutP, idx, [[NSString stringWithFormat: @"&dsOutP[2*%i]", v] cString], thisBlock);
-								rhs = builder -> CreateLoad(rhsP, [[NSString stringWithFormat: @"dsOutP[2*%i]", v] cString]);
+								Value* rhsP = GetElementPtrInst::Create(dsOutP, idx, [[NSString stringWithFormat: @"&dsOutP[2*j[%i]]", jDepth] cString], thisBlock);
+								rhs = builder -> CreateLoad(rhsP, [[NSString stringWithFormat: @"dsOutP[2*j[%i]]", jDepth] cString]);
 								ptr = GetElementPtrInst::Create(xP, LLVMi32(v), [[NSString stringWithFormat: @"&x[%i]", v] cString], thisBlock);
 								builder -> CreateStore(rhs, ptr, [[NSString stringWithFormat: @"x[%i]", v] cString]);
 								v = tree[tree[tree[child].firstChild].nextSibling].auxi[0];
+								int v1 = v;
 								child = tree[child].nextSibling;
 								Value* idxp1 = builder -> CreateAdd(idx, LLVMi32(1));
-								rhsP = GetElementPtrInst::Create(dsOutP, idxp1, [[NSString stringWithFormat: @"&dsOutP[2*%i+1]", v] cString], thisBlock);
-								rhs = builder -> CreateLoad(rhsP, [[NSString stringWithFormat: @"dsOutP[2*%i+1]", v] cString]);
+								rhsP = GetElementPtrInst::Create(dsOutP, idxp1, [[NSString stringWithFormat: @"&dsOutP[2*j[%i]+1]", jDepth] cString], thisBlock);
+								rhs = builder -> CreateLoad(rhsP, [[NSString stringWithFormat: @"dsOutP[2*j[%i]+1]", jDepth] cString]);
 								ptr = GetElementPtrInst::Create(xP, LLVMi32(v), [[NSString stringWithFormat: @"&x[%i]", v] cString], thisBlock);
 								builder -> CreateStore(rhs, ptr, [[NSString stringWithFormat: @"x[%i]", v] cString]);
 								
-								NSLog(@"loop body\n");
 								[self emit: child]; // emit loop body
-								
+								NSLog(@"here\n");
+								ptr = GetElementPtrInst::Create(xP, LLVMi32(v0), [[NSString stringWithFormat: @"&x[%i]", v0] cString], thisBlock);
+								rhs = builder -> CreateLoad(ptr, [[NSString stringWithFormat: @"x[%i]", v0] cString]);
+								lhs = GetElementPtrInst::Create(dsResPl, idx, [[NSString stringWithFormat: @"dataSourceResLoc[_]"] cString], thisBlock);
+								builder -> CreateStore(rhs, lhs, [[NSString stringWithFormat: @"s"] cString]);
+								NSLog(@".\n");
+								ptr = GetElementPtrInst::Create(xP, LLVMi32(v1), [[NSString stringWithFormat: @"&x[%i]", v1] cString], thisBlock);
+								rhs = builder -> CreateLoad(ptr, [[NSString stringWithFormat: @"x[%i]", v1] cString]);
+								lhs = GetElementPtrInst::Create(dsResPl, idxp1, [[NSString stringWithFormat: @"dataSourceResLoc[_+1]"] cString], thisBlock);
+								builder -> CreateStore(rhs, lhs, [[NSString stringWithFormat: @"s"] cString]);
+								NSLog(@".\n");
+								rhs = builder -> CreateLoad(flagP, [[NSString stringWithFormat: @"flag"] cString]);
+								lhs = GetElementPtrInst::Create(dsResPf, idx, [[NSString stringWithFormat: @"dataSourceResFlag[_]"] cString], thisBlock);
+								builder -> CreateStore(rhs, lhs, [[NSString stringWithFormat: @"s"] cString]);
+								NSLog(@".\n");
+								ptr = GetElementPtrInst::Create(jP, LLVMi32(jDepth+1), [[NSString stringWithFormat: @"j[%i]", jDepth] cString], thisBlock);
+								rhs = builder -> CreateLoad(ptr, [[NSString stringWithFormat: @"j[%i]", jDepth] cString]);
+								lhs = GetElementPtrInst::Create(dsResPf, idxp1, [[NSString stringWithFormat: @"dataSourceResFlag[_+1]"] cString], thisBlock);
+								builder -> CreateStore(rhs, lhs, [[NSString stringWithFormat: @"s"] cString]);
+								NSLog(@".\n");
+
+														  
 								Value* nextj = builder -> CreateAdd(j, LLVMi32(1),
-									[[NSString stringWithFormat: @"(j%i + 1)", jDepth] cString]);
-								Value* jCond = builder -> CreateICmpSLT(nextj, count);
-								builder -> CreateCondBr(jCond, loopBlock, loopEndBlock);
+									[[NSString stringWithFormat: @"(j[%i] + 1)", jDepth] cString]);
+								Value* jCond = builder -> CreateICmpEQ(nextj, count);
+								builder -> CreateCondBr(jCond, loopEndBlock, loopBlock);
 								j -> addIncoming(nextj, thisBlock);
 							
 								builder -> SetInsertPoint(loopEndBlock);
-								ptr = GetElementPtrInst::Create(jP, LLVMi32(jDepth), [[NSString stringWithFormat: @"&j[%i]", jDepth] cString], thisBlock);
-								builder -> CreateStore(j, ptr);
+//								ptr = GetElementPtrInst::Create(jP, LLVMi32(jDepth), [[NSString stringWithFormat: @"&j[%i]", jDepth] cString], thisBlock);
+//								builder -> CreateStore(count, ptr);
+
+								NSLog(@"ok\n");
+								std::vector<Value*> args0;
+								args0.push_back(dsResPl);
+								args0.push_back(dsResPf);
+								builder -> CreateCall(mathf0, args0.begin(), args0.end(), name);
+								NSLog(@".\n");
+
+								lhs = GetElementPtrInst::Create(xP, LLVMi32(v0), [[NSString stringWithFormat: @"&x[%i]", v0] cString], thisBlock);
+								ptr = GetElementPtrInst::Create(dsResPl, LLVMi32(0), [[NSString stringWithFormat: @"&dataSourceResLoc[0]"] cString], thisBlock);
+								NSLog(@".\n");
+								rhs = builder -> CreateLoad(ptr, [[NSString stringWithFormat: @"dataSourceResLoc[0]"] cString]);
+								NSLog(@".\n");
+								builder -> CreateStore(rhs, lhs, [[NSString stringWithFormat: @"s"] cString]);
+								NSLog(@".\n");
+
+ 
+								NSLog(@".\n");
+								lhs = GetElementPtrInst::Create(xP, LLVMi32(v1), [[NSString stringWithFormat: @"&x[%i]", v1] cString], thisBlock);
+								ptr = GetElementPtrInst::Create(dsResPl, LLVMi32(1), [[NSString stringWithFormat: @"&dataSourceResLoc[1]"] cString], thisBlock);
+								rhs = builder -> CreateLoad(ptr, [[NSString stringWithFormat: @"dataSourceResLoc[1]"] cString]);
+								builder -> CreateStore(rhs, lhs, [[NSString stringWithFormat: @"s"] cString]);
+								NSLog(@".\n");
+
+								NSLog(@".\n");
+								ptr = GetElementPtrInst::Create(dsResPf, LLVMi32(0), [[NSString stringWithFormat: @"&dataSourceResFlag[0]"] cString], thisBlock);
+								rhs = builder -> CreateLoad(ptr, [[NSString stringWithFormat: @"dataSourceResFlag[0]"] cString]);
+								builder -> CreateStore(rhs, flagP, [[NSString stringWithFormat: @"->flag"] cString]);
+								NSLog(@". [jDepth = %i]\n", jDepth);
+								lhs = GetElementPtrInst::Create(jP, LLVMi32(jDepth), [[NSString stringWithFormat: @"&j[%i]", jDepth] cString], thisBlock);
+								ptr = GetElementPtrInst::Create(dsResPf, LLVMi32(1), [[NSString stringWithFormat: @"&dataSourceResFlag[1]"] cString], thisBlock);
+								rhs = builder -> CreateLoad(ptr, [[NSString stringWithFormat: @"dataSourceResFlag[0]"] cString]);
+								builder -> CreateStore(rhs, lhs, [[NSString stringWithFormat: @"->j[%i]", jDepth] cString]);
+								NSLog(@".\n");
+								
+
+								
+								
 								builder -> CreateBr(mergeLoopBlock);
 								
 								builder -> SetInsertPoint(skipLoopBlock);
@@ -953,7 +1013,9 @@ void gaussian2(double* R) {
 	AllocaInst* reportxP = builder.CreateAlloca(Type::DoubleTy, 0, "reportX");
 	AllocaInst* reportyP = builder.CreateAlloca(Type::DoubleTy, 0, "reportY");
 	AllocaInst* dsInP = builder.CreateAlloca(Type::DoubleTy, LLVMi32(2), "dataSourceIn[]");
-	AllocaInst* dsOutP = builder.CreateAlloca(Type::DoubleTy, LLVMi32(256), "dataSourceOut[]");
+	AllocaInst* dsOutP = builder.CreateAlloca(Type::DoubleTy, LLVMi32(512), "dataSourceOut[]");
+	AllocaInst* dsResPl = builder.CreateAlloca(Type::DoubleTy, LLVMi32(512), "dataSourceResLoc[]");
+	AllocaInst* dsResPf = builder.CreateAlloca(IntegerType::get(32), LLVMi32(512), "dataSourceResFlag[]");
 	
 	Value* big2 = builder.CreateMul(maxRadius, maxRadius, "huge");
 	Value* tiny2 = builder.CreateMul(minRadius, minRadius, "tiny");
@@ -984,6 +1046,7 @@ void gaussian2(double* R) {
 	_reportedP = (void*) reportedP; _probeP = (void*) probeP;
 	_maxIt = (void*) maxIter; _big2 = (void*) big2; _tiny2 = (void*) tiny2;
 	_dsInP = (void*) dsInP; _dsOutP = (void*) dsOutP;
+	_dsResPf = (void*) dsResPf; _dsResPl = (void*) dsResPl;
 	
 	defaults = 0; pass = 0;
 	
@@ -1244,7 +1307,6 @@ void gaussian2(double* R) {
 
 	if(verifyModule(*mod, PrintMessageAction)) { NSLog(@"module did not verify\n"); llvmKernel -> dump(); return; }
 	else NSLog(@"module verified\n");
-
 
 	ExistingModuleProvider* MP = new ExistingModuleProvider(mod);
 	[jitter addModuleProvider: (void*) MP];

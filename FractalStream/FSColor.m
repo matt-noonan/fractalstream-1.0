@@ -187,17 +187,25 @@
 	library = lib;
 }
 
-- (void) setGradient: (FSGradient*) grad { gradient = grad; [self setNeedsDisplay: YES]; }
+- (void) setNotificationSender: (id) ns { noteSender = ns; }
+
+- (void) setGradient: (FSGradient*) grad { 
+	[gradient release];
+	gradient = [grad retain];
+	[self setNeedsDisplay: YES];
+}
 
 - (void) insertGradient: (FSGradient*) grad {
 //	NSLog(@"telling gradient %@ to copy from gradient %@\n", gradient, grad);
 	[gradient setStops: [grad stopArray] andColors: [grad colorArray]];
+	if(noteSender) [[NSNotificationCenter defaultCenter] postNotificationName: @"FSColorsChanged" object: noteSender];
 	[self setNeedsDisplay: YES];
 }
 
 - (IBAction) fill: (id) sender {
 	[gradient resetToColor: [colorWell color]];
 	if(library != nil) [library saveColor: gradient];
+	if(noteSender) [[NSNotificationCenter defaultCenter] postNotificationName: @"FSColorsChanged" object: noteSender];
 	[self setNeedsDisplay: YES];
 }
 
@@ -209,6 +217,7 @@
 	if((stop >= 0.0) && (stop <= 1.0)) {
 		[gradient addColor: [colorWell color] atStop: stop];
 		if(library != nil) [library saveColor: gradient];
+		if(noteSender) [[NSNotificationCenter defaultCenter] postNotificationName: @"FSColorsChanged" object: noteSender];
 		[self setNeedsDisplay: YES];
 	}
 }
@@ -280,6 +289,15 @@
 
 - (FSColor*) subcolor: (int) i { return ((i < 0) || (i >= [subcolor count]))? nil : [subcolor objectAtIndex: i]; }
 
+- (void) removeAllSubcolors {
+	[subcolor release];
+	subcolor = [[NSMutableArray alloc] init];
+}
+
+- (void) removeSubcolorAtIndex: (int) i {
+	[subcolor removeObjectAtIndex: i];
+}
+
 - (NSArray*) subcolors { return subcolor; }
 - (double) xVal { return x; }
 - (double) yVal { return y; }
@@ -321,15 +339,23 @@
 	return;
 }
 
-- (FSGradient*) gradientForX: (double) X Y: (double) Y withTolerance: (double) epsilon {
+- (void) createNewSubcolorForX: (double) X Y: (double) Y {
+	[subcolor addObject: [self nextColorForX: X Y: Y]]; 
+	NSLog(@"createNewSubcolorForX: %f Y: %f\n", X, Y);
+	// tell the world: we made a new color
+	[self performSelectorOnMainThread: @selector(notifyAutocolorChanged) withObject: nil waitUntilDone: NO];
+}
+
+- (FSGradient*) gradientForX: (double) X Y: (double) Y withTolerance: (double) epsilon allowNew: (BOOL) allow {
 	NSEnumerator* en;
 	FSColor* c;
 	
 	if(ac == NO) return gradient;
 	en = [subcolor objectEnumerator];
-	if(locked == NO) {
+	if((locked == NO) && (allow == YES)) {
 		synchronizeTo(subcolor) {
 			while((c = [en nextObject])) if([c isNearX: X Y: Y withTolerance: epsilon]) return [c gradient];
+			if([subcolor count] >= 100) return [[[FSGradient alloc] initWithR: 0.4 G: 0.4 B: 0.4] autorelease];
 			c = [self nextColorForX: X Y: Y];
 			[subcolor addObject: c]; 
 			// tell the world: we made a new color
@@ -339,7 +365,43 @@
 	}
 	else {
 		// create blended gradient
-		return nil;
+		int i,j;
+		double weight;
+		double w[1024];
+		double d;
+		float r, g, b, t, dt;
+		int s;
+		FSGradient* gr;
+		NSColor* co;
+		weight = 0.0; i = 0;
+		while((c = [en nextObject])) { 
+			d = (([c xVal] - X) * ([c xVal] - X) + ([c yVal] - Y) * ([c yVal] - Y)); 
+			if(d <= 0.00000001) d = 0.00000001;
+			weight += 1.0 / d; 
+			w[i++] = 1.0 / d;
+		}
+		if(weight <= 0.0) { 
+			gr = [[FSGradient alloc] initWithR: 0.2 G: 0.2 B: 0.2];
+			return [gr autorelease];
+		}
+		gr = [[FSGradient alloc] init];
+		s = [[self baseGradient] subdivisions]; if(s <= 0) s = 1;
+		t = 0.0; dt = 1.0 / (float) s;
+		for(i = 0; i < s; i++) {
+			r = 0.0; g = 0.0; b = 0.0;
+			j = 0;
+			en = [subcolor objectEnumerator];
+			while((c = [en nextObject])) {
+				co = [[[c baseGradient] colorArray] objectAtIndex: j];
+				r += w[j] * [co redComponent] / weight;
+				g += w[j] * [co greenComponent] / weight;
+				b += w[j] * [co blueComponent] / weight;
+				++j;
+			}
+			if(i == 0) [gr resetToColor: [NSColor colorWithDeviceRed: r green: g blue: b alpha: 1.0]];
+			else [gr addColor: [NSColor colorWithDeviceRed: r green: g blue: b alpha: 1.0] atStop: t];
+		}
+		return [gr autorelease];
 	}
 }
 
@@ -369,6 +431,7 @@
 }
 
 - (void) useAutocolor: (BOOL) a { ac = a; }
+- (BOOL) usesAutocolor { return ac; }
 
 - (BOOL) isLocked { return locked; }
 - (void) setLocked: (BOOL) l { locked = l; }

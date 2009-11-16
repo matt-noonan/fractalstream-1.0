@@ -37,7 +37,7 @@
 	void *_f_cosh, *_f_sinh, *_f_tanh, *_f_acos, *_f_asin, *_f_atan;	// (Function*) f_cosh etc
 	void *_f_atan2, *_f_fmod;	// (Function*) f_atan2 etc
 	void *_f_frandom, *_f_gaussian;	// (Function*) f_random, etc
-	void *_dsInP, *_dsOutP;
+	void *_dsInP, *_dsOutP, *_dsResPf, *_dsResPl;
 	int eSF_was_const;
 	double eSF_const_x;
 	double eSF_const_y;

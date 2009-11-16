@@ -64,6 +64,8 @@
 - (IBAction) goBackward: (id) sender;
 - (IBAction) refresh: (id) sender;
 - (IBAction) goHome: (id) sender;
+- (IBAction) goUp: (id) sender;
+
 - (void) testAndRefresh: (NSNotification*) note ;
 - (void) changeTo: (NSString*) newName X: (double) x Y: (double) y p1: (double) p1 p2: (double) p2 pixelSize: (double) pixelSize parametric: (BOOL) isPar;
 - (void) sendDefaultsToViewer;

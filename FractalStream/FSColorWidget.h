@@ -9,12 +9,29 @@
 #import <Cocoa/Cocoa.h>
 #include <stdlib.h>
 #import "FSColorLibraryController.h"
+#import "FSThreading.h"
 
 typedef struct {
 	NSString* name;
 	float r, g, b;
 } FSCW_named_color;
 
+typedef struct {
+	float* color;
+	int* colorIndex;
+	int* subdivisions;
+	BOOL* smoothing;
+	BOOL* locked;
+	BOOL* usesAutocolor;
+	int* subcolors;
+	int* locationIndex;
+	double* X;
+	double* Y;
+	int totalColors;
+	BOOL needsLock;
+	int dependencies;
+	NSConditionLock* lock;
+} FSColorCache;
 
 @interface FSColorWidget : NSObject <NSCoding> {
 	IBOutlet NSMatrix* colorMatrix;
@@ -49,6 +66,10 @@ typedef struct {
 	
 	int currentColor;
 	int smoothness[64];
+	
+	FSColorCache colorCache;
+	BOOL colorsCached;
+	BOOL unarchiving;
 }
 
 - (IBAction) reset: (id) sender;

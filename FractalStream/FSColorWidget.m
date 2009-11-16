@@ -14,8 +14,28 @@
 
 - (id) init {
 	self = [super init];
-	colors = [[NSMutableArray alloc] init];
+	colors = nil;
+	unarchiving = NO;
+	
+	colorsCached = NO;
+	colorCache.color = NULL;
+	colorCache.colorIndex = NULL;
+	colorCache.subdivisions = NULL;
+	colorCache.smoothing = NULL;
+	colorCache.usesAutocolor = NULL;
+	colorCache.locked = NULL;
+	colorCache.locationIndex = NULL;
+	colorCache.X = NULL;
+	colorCache.Y = NULL;
+	colorCache.subcolors = NULL;
+	colorCache.lock = [[NSConditionLock alloc] initWithCondition: 0];
 	return self;
+}
+
+- (void) dealloc {
+	NSLog(@"color widget dealloc\n");
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[super dealloc];
 }
 
 - (void) awakeFromNib {
@@ -24,7 +44,7 @@
 		name: @"FSAutocolorChanged"
 		object: nil
 	];
-	NSLog(@"color widget done awaking\n");
+	[gradientControl setNotificationSender: self];
 }
 
 - (void) reset: (id) sender {
@@ -61,8 +81,17 @@
 	lockedAutocolor[c] = lk;
 }
 
+- (void) lockAllAutocolor {
+	NSEnumerator* en;
+	id ob;
+	en = [colors objectEnumerator];
+	while((ob = [en nextObject])) [ob setLocked: YES];
+	[self updateColorInformation: self];
+}
+
 - (IBAction) updateAutocolorLockState: (id) sender {
 	lockedAutocolor[[colorButton indexOfSelectedItem]] = ([acLockButton state] == NSOnState)? YES : NO;
+	[[colors objectAtIndex: [colorButton indexOfSelectedItem]] setLocked: ([acLockButton state] == NSOnState)? YES : NO];
 }
 
 - (IBAction) smoothnessChanged: (id) sender { smoothness[currentColor] = [smoothnessField intValue]; }
@@ -74,11 +103,15 @@
 }
 
 - (IBAction) change: (id) sender {
+	
+	
 	/* user selected a different color */
 	int newColor, i, j, k;
 	float c[3];
 	BOOL acChanged;
+
 	
+
 	newColor = [colorButton indexOfSelectedItem];
 	
 	smoothness[currentColor] = [smoothnessField intValue];
@@ -86,7 +119,7 @@
 	acChanged = usesAutocolor[currentColor];
 	usesAutocolor[currentColor] = ([autocolorBox state] == NSOnState)? YES : NO;
 	acChanged = (acChanged == usesAutocolor[currentColor])? NO : YES;
-	if(usesAutocolor[newColor]) {
+	if([[colors objectAtIndex: currentColor] usesAutocolor]) {
 		NSEnumerator* acEnum;
 		id ob;
 		[acList setEnabled: YES];
@@ -96,17 +129,16 @@
 		[acDeleteAllButton setEnabled: YES];
 		[autocolorBox setState: NSOnState];
 		[acLockButton setEnabled: YES];
-		[acLockButton setState: (lockedAutocolor[currentColor] == YES)? NSOnState : NSOffState];
-		if(acChanged || (newColor != currentColor) || ([autocolor[newColor] count] / 4 != [acList numberOfItems])) {
-			acEnum = [autocolor[newColor] objectEnumerator];
+		[acLockButton setState: [[colors objectAtIndex: currentColor] isLocked]? NSOnState : NSOffState];
+		if(acChanged || (newColor != currentColor) || ([[[colors objectAtIndex: newColor] subcolors] count] != [acList numberOfItems])) {
+			acEnum = [[[colors objectAtIndex: newColor] subcolors] objectEnumerator];
 			[acList removeAllItems];
-			while(ob = [acEnum nextObject]) {
-				[acList addItemWithTitle: ob];
-				[acEnum nextObject]; [acEnum nextObject]; [acEnum nextObject];
-			}
+			while(ob = [acEnum nextObject]) 
+				[acList addItemWithTitle: [NSString stringWithFormat: @"%0.3e + %0.3e i", [ob xVal], [ob yVal]]];
 			[acList selectItemAtIndex: 0];
 		}
-		for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++) {
+/*
+ for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++) {
 			if([acList indexOfSelectedItem] != -1) 
 				[[autocolor[newColor] objectAtIndex: 1 + 4 * [acList indexOfSelectedItem]]
 					putRGBAtMagnitude: j andPhase: i into: c
@@ -118,6 +150,7 @@
 			[[colorMatrix cellAtRow: i column: j] untoggle];
 			[colorMatrix drawCellAtRow: i column: j];
 		}
+*/
 	}
 	else {
 		[acList setEnabled: NO];
@@ -131,13 +164,15 @@
 		[acList removeAllItems];
 		
 		[gradientControl setGradient: [[colors objectAtIndex: currentColor] gradient]];
-		for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++) {
+/*
+ for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(k = 0; k < 3; k++) {
 			fullColorArray[currentColor][i][j][k] = colorArray[i][j][k];
 			colorArray[i][j][k] = fullColorArray[newColor][i][j][k];
 			[[colorMatrix cellAtRow: i column: j] setColorToR: colorArray[i][j][0] G: colorArray[i][j][1] B: colorArray[i][j][2] ];	
 			[[colorMatrix cellAtRow: i column: j] untoggle];
 			[colorMatrix drawCellAtRow: i column: j];
 		}
+*/
 	}
 	currentColor = newColor;
 }
@@ -157,11 +192,109 @@
 }
 
 - (IBAction) acDelete: (id) sender {
+	if([acList indexOfSelectedItem] >= 0) [[colors objectAtIndex: currentColor] removeSubcolorAtIndex: [acList indexOfSelectedItem]];
+	[self updateColorInformation: self];
 }
 
 - (IBAction) acDeleteAll: (id) sender {
+	[[colors objectAtIndex: currentColor] removeAllSubcolors];
+	[self updateColorInformation: self];
 }
 
+- (void) waitForColoringToFinish {
+	synchronizeTo(colors) {
+		[colorCache.lock lockWhenCondition: 0];
+	}
+}
+
+- (void) makeColorCache {
+	NSEnumerator *en, *suben;
+	FSColor *color, *subcolor;
+	int totalColors = 0, totalSubcolors = 0;
+	int colorSize = 0;
+	int i, j, k, m;
+	NSColor* c;
+	float x, dx;
+	en = [colors objectEnumerator];
+	while((color = [en nextObject])) {
+		++totalColors;
+		colorSize += (1 + [[color subcolors] count]) * [[color baseGradient] subdivisions];
+		totalSubcolors += [[color subcolors] count];
+	}
+	[colorCache.lock lockWhenCondition: 0];
+	{
+		colorCache.dependencies = 0;
+		free(colorCache.color);
+		free(colorCache.colorIndex);
+		free(colorCache.subdivisions);
+		free(colorCache.smoothing);
+		free(colorCache.locked);
+		free(colorCache.usesAutocolor);
+		free(colorCache.locationIndex);
+		free(colorCache.X);
+		free(colorCache.Y);
+		free(colorCache.subcolors);
+		colorCache.totalColors = totalColors;
+		colorCache.color = (float*) malloc(colorSize * 3 * sizeof(float));
+		colorCache.colorIndex = (int*) malloc(totalColors * sizeof(int));
+		colorCache.subcolors = (int*) malloc(totalColors * sizeof(int));
+		colorCache.subdivisions = (int*) malloc(totalColors * sizeof(int));
+		colorCache.smoothing = (BOOL*) malloc(totalColors * sizeof(BOOL));
+		colorCache.locked = (BOOL*) malloc(totalColors * sizeof(BOOL));
+		colorCache.usesAutocolor = (BOOL*) malloc(totalColors * sizeof(BOOL));
+		colorCache.locationIndex = (int*) malloc(totalColors * sizeof(int));
+		colorCache.X = (double*) malloc(totalSubcolors * sizeof(double));
+		colorCache.Y = (double*) malloc(totalSubcolors * sizeof(double));
+		colorCache.needsLock = NO;
+		i = j = m = 0;
+		en = [colors objectEnumerator];
+		while((color = [en nextObject])) {
+			colorCache.colorIndex[i] = j;
+			colorCache.subdivisions[i] = [[color baseGradient] subdivisions];
+			if(colorCache.subdivisions[i] <= 0) colorCache.subdivisions[i] = 1;
+			colorCache.smoothing[i] = [[color baseGradient] smoothing];
+			colorCache.locked[i] = [color isLocked];
+			colorCache.usesAutocolor[i] = [color usesAutocolor];
+			colorCache.subcolors[i] = 0;
+			if(colorCache.usesAutocolor[i] && (colorCache.locked[i] == NO)) colorCache.needsLock = YES;
+			x = 0.0; dx = 1.0 / (float) colorCache.subdivisions[i];
+			for(k = 0; k < colorCache.subdivisions[i]; k++) {
+				c = [[color baseGradient] colorForOffset: x];
+				colorCache.color[j++] = [c redComponent];
+				colorCache.color[j++] = [c greenComponent];
+				colorCache.color[j++] = [c blueComponent];
+				x += dx;
+			}
+			suben = [[color subcolors] objectEnumerator];
+			colorCache.locationIndex[i] = m;
+			while((subcolor = [suben nextObject])) {
+				++colorCache.subcolors[i];
+				x = 0.0; dx = 1.0 / (float) colorCache.subdivisions[i];
+				for(k = 0; k < colorCache.subdivisions[i]; k++) {
+					c = [[subcolor baseGradient] colorForOffset: x];
+					colorCache.color[j++] = [c redComponent];
+					colorCache.color[j++] = [c greenComponent];
+					colorCache.color[j++] = [c blueComponent];
+					x += dx;
+				}
+				colorCache.X[m] = [subcolor xVal];
+				colorCache.Y[m] = [subcolor yVal];
+				m++;
+			}
+			++i;
+		}
+		colorsCached = YES;
+	}
+	[colorCache.lock unlockWithCondition: 0];
+}
+
+- (FSColorCache*) getColorCache {
+	if(colorsCached == NO) {
+		[self makeColorCache];
+	}
+	++colorCache.dependencies;
+	return &colorCache;
+}
 
 - (int) numberOfColors { return [names count]; }
 
@@ -176,15 +309,25 @@
 	FSColor* color;
 	FSGradient* gradient;
 	float r, g, b;
+	NSArray* rawNames;
+	NSMutableArray* cleanedNames;
+	NSArray* subNames;
+	BOOL makeNewColors;
 	
-	names = [[NSArray arrayWithArray: newNames] retain];
-	[self setup];
-	nameEnum = [names objectEnumerator];
+	cleanedNames = [[NSMutableArray alloc] init];
+	nameEnum = [newNames objectEnumerator];
 	i = 0;
+	makeNewColors = NO;
+	NSLog(@"setting names to %@, colors is %@\n", newNames, colors);
+	if((colors == nil) || ([newNames count] != [colors count])) { colors = [[NSMutableArray alloc] init]; makeNewColors = YES; }
+	unarchiving = NO;
 	while(name = [nameEnum nextObject]) {
+		subNames = [name componentsSeparatedByString: @"|"];
+		name = [[subNames objectAtIndex: [subNames count] - 1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+		[cleanedNames addObject: [[subNames objectAtIndex: 0] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]]];
 		k = 0;
 		namedColor = NO;
-/*		while(named_color[k].name != nil) {
+		while(named_color[k].name != nil) {
 			if([name caseInsensitiveCompare: named_color[k].name] == NSOrderedSame) {
 				namedColor = YES;
 				break;
@@ -192,72 +335,87 @@
 			++k;
 		}
 		if(namedColor) {
-			c = [names indexOfObject: name];
-			for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
-				shade = (float) i / 4.0;
-				if(shade > 1.0) shade = 2.0 - shade;
-				shade *= 0.5;
-				shade += 0.5;
-				fullColorArray[c][j][(i+4)&7][0] = named_color[k].r * shade;
-				fullColorArray[c][j][(i+4)&7][1] = named_color[k].g * shade;
-				fullColorArray[c][j][(i+4)&7][2] = named_color[k].b * shade;
+			r = named_color[k].r;
+			g = named_color[k].g;
+			b = named_color[k].b;
+		}
+		else {
+			switch(i & 7) {
+				case 0:		r = 0.0;	g = 0.0;	b = 1.0;	break;
+				case 1:		r = 0.0;	g = 1.0;	b = 0.0;	break;
+				case 2:		r = 1.0;	g = 0.0;	b = 0.0;	break;
+				case 3:		r = 0.0;	g = 1.0;	b = 1.0;	break;
+				case 4:		r = 1.0;	g = 1.0;	b = 0.0;	break;
+				case 5:		r = 1.0;	g = 0.0;	b = 1.0;	break;
+				case 6:		r = 1.0;	g = 0.5;	b = 0.5;	break;
+				case 7:		r = 1.0;	g = 1.0;	b = 1.0;	break;
 			}
+			if(i & 8) { r *= 0.5; g *= 0.5; b *= 0.5; }	
 		}
-		else */
-		switch(i & 7) {
-			case 0:		r = 0.0;	g = 0.0;	b = 1.0;	break;
-			case 1:		r = 0.0;	g = 1.0;	b = 0.0;	break;
-			case 2:		r = 1.0;	g = 0.0;	b = 0.0;	break;
-			case 3:		r = 0.0;	g = 1.0;	b = 1.0;	break;
-			case 4:		r = 1.0;	g = 1.0;	b = 0.0;	break;
-			case 5:		r = 1.0;	g = 0.0;	b = 1.0;	break;
-			case 6:		r = 1.0;	g = 0.5;	b = 0.5;	break;
-			case 7:		r = 1.0;	g = 1.0;	b = 1.0;	break;
-		}
-		if(i & 8) { r *= 0.5; g *= 0.5; b *= 0.5; }	
 		color = [[FSColor alloc] init];
 		gradient = [[FSGradient alloc] initWithR: r G: g B: b];
 		[color setGradient: gradient];
-		[colors addObject: color];
+		if(makeNewColors) [colors addObject: color];
 		[gradient release];
 		[color release];
 		i++;
 	}
+	names = [[NSArray arrayWithArray: cleanedNames] retain];
+	[self setup];
 	[self updateColorInformation: self];
 }
 
 - (IBAction) updateColorInformation: (id) sender {
 	FSGradient* gradient;
-	gradient = [[colors objectAtIndex: currentColor] gradient];
-	if(gradient == nil) gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
-	if(sender == smoothnessField) [gradient setSmoothing: [smoothnessField intValue]];
-	if(sender == subdivisionField) [gradient setSubdivisions: [subdivisionField intValue]];
-	currentColor = [colorButton indexOfSelectedItem];
-	if(currentColor < 0) currentColor = 0;
-	if((sender == autocolorBox) || (sender == self)) {
-		BOOL state = ([autocolorBox state] == NSOnState)? YES : NO;
-		[[colors objectAtIndex: currentColor] useAutocolor: state];
-		[acList removeAllItems];
-		NSEnumerator* en = [[[colors objectAtIndex: currentColor] subcolors] objectEnumerator];
-		FSColor* c;
-		while((c = [en nextObject])) {
-			[acList addItemWithTitle: 
-				[NSString stringWithFormat: @"%0.3e + i %0.3e", [c xVal], [c yVal]]
-			];
+	BOOL wasChanged;
+	
+	wasChanged = NO;
+	if(colors == nil) return;
+	synchronizeTo(colors) {
+		gradient = [[colors objectAtIndex: currentColor] gradient];
+		if(gradient == nil) gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
+		if(sender == smoothnessField) {
+			if([gradient smoothing] != [smoothnessField intValue]) wasChanged = YES;
+			[gradient setSmoothing: [smoothnessField intValue]];
 		}
-		if([[[colors objectAtIndex: currentColor] subcolors] count]) [acList selectItemAtIndex: 0];
-		[acList setEnabled: state];
-		[acEditButton setEnabled: state];
-		[acRefineButton setEnabled: state];
-		[acDeleteButton setEnabled: state];
-		[acDeleteAllButton setEnabled: state];
-		[acLockButton setEnabled: state];
+		if(sender == subdivisionField) {
+			if([gradient subdivisions] != [subdivisionField intValue]) wasChanged = YES;
+			[gradient setSubdivisions: [subdivisionField intValue]];
+		}
+		if(sender == acLockButton) [[colors objectAtIndex: currentColor] setLocked: ([acLockButton state] == NSOnState)? YES : NO];
+		currentColor = [colorButton indexOfSelectedItem];
+		if(currentColor < 0) currentColor = 0;
+		if((sender == autocolorBox) || (sender == self)) {
+			BOOL state = ([autocolorBox state] == NSOnState)? YES : NO;
+			if((sender == autocolorBox) && ([[colors objectAtIndex: currentColor] usesAutocolor] != state)) wasChanged = YES;
+			[[colors objectAtIndex: currentColor] useAutocolor: state];
+			[acList removeAllItems];
+			NSEnumerator* en = [[[colors objectAtIndex: currentColor] subcolors] objectEnumerator];
+			FSColor* c;
+			while((c = [en nextObject])) {
+				[acList addItemWithTitle: 
+					[NSString stringWithFormat: @"%0.3e + i %0.3e", [c xVal], [c yVal]]
+				];
+			}
+			if([[[colors objectAtIndex: currentColor] subcolors] count]) [acList selectItemAtIndex: 0];
+			[acList setEnabled: state];
+			[acEditButton setEnabled: state];
+			[acRefineButton setEnabled: state];
+			[acDeleteButton setEnabled: state];
+			[acDeleteAllButton setEnabled: state];
+			[acLockButton setEnabled: state];
+		}
+		if(([autocolorBox state] == NSOnState) && [[[colors objectAtIndex: currentColor] subcolors] count])
+			[acLockButton setState: [[colors objectAtIndex: currentColor] isLocked]? NSOnState : NSOffState];
+		gradient = [[colors objectAtIndex: currentColor] gradient];
+		if(gradient == nil) gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
+		[gradientControl setGradient: gradient];
+		[smoothnessField setIntValue: [gradient smoothing]];
+		[subdivisionField setIntValue: [gradient subdivisions]];
 	}
-	gradient = [[colors objectAtIndex: currentColor] gradient];
-	if(gradient == nil) gradient = [[[colors objectAtIndex: currentColor] subcolor: [acList indexOfSelectedItem]] gradient];
-	[gradientControl setGradient: gradient];
-	[smoothnessField setIntValue: [gradient smoothing]];
-	[subdivisionField setIntValue: [gradient subdivisions]];
+	if(wasChanged) {
+		[[NSNotificationCenter defaultCenter] postNotificationName: @"FSColorsChanged" object: self];
+	}
 }
 
 - (void) setup {
@@ -265,37 +423,23 @@
 	NSString* aName;
 	int i;
 	i = 0;
-	NSLog(@"FSColorWidget setup got names = %@\n", names);
 	namesEnumerator = [names objectEnumerator];
 	[colorButton removeAllItems];
 	while(aName = [namesEnumerator nextObject]) { [colorButton addItemWithTitle: aName]; }
 	[colorButton selectItemAtIndex: 0];
 	currentColor = 0;
-	[smoothnessField setIntValue: smoothness[currentColor]]; 
 }
 
 - (void) getColorsFrom: (FSColorWidget*) cw {
 	[self setNamesTo: [cw names]];
 	colors = [(cw->colors) retain];
+	[self updateColorInformation: self];
 }
 
-- (void) encodeWithCoder: (NSCoder*) coder
-{
-	NSMutableArray* floats;
-	int i, j, k, c, l, size;
-	
-	// version 0
-	size = 8 * 8 * 3 * [self numberOfColors];
-	l = 0;
-//	floats = [[NSMutableArray alloc] init];
-//	for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
-//		[floats addObject: [NSNumber numberWithFloat: fullColorArray[k][i][j][c]]];
+- (void) encodeWithCoder: (NSCoder*) coder {
 	[coder encodeObject: [NSNumber numberWithBool: YES] forKey: @"keyed"];
 	[coder encodeObject: names forKey: @"names"];
-	NSLog(@"encoding colors\n");
 	[coder encodeObject: colors forKey: @"colors"];
-	NSLog(@"did it\n");
-//	[floats release];
 }
 
 - (id) initWithCoder: (NSCoder*) coder
@@ -308,29 +452,14 @@
 	self = [super init];
 	colors = [[NSMutableArray alloc] init];
 	
-	// version 0
 	if([coder containsValueForKey: @"keyed"]) {
 		names = [[coder decodeObjectForKey: @"names"] retain];
-/*		floats = [coder decodeObjectForKey: @"data"];
-		en = [floats objectEnumerator];
-		for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
-			fullColorArray[k][i][j][c] = [[en nextObject] floatValue];
-*/
 		colors = [[coder decodeObjectForKey: @"colors"] retain];
 	}
 	else {
 		FSColor* c;
 		FSGradient* gradient;
 		names = [[coder decodeObject] retain];
-		NSLog(@"FSColorWidget decoded the names %@\n", names);
-/*		size = 8 * 8 * 3 * [self numberOfColors];
-		flat = malloc(sizeof(float) * size);
-		for(i = 0; i < size; i++) flat[i] = [[coder decodeObject] floatValue];
-		l = 0;
-		for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) for(c = 0; c < 3; c++) 
-			fullColorArray[k][i][j][c] = flat[l++];
-		free(flat);
-*/
 
 		for(k = 0; k < [self numberOfColors]; k++) for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
 			r = [[coder decodeObject] floatValue];

@@ -45,14 +45,23 @@
 - (void*) getFunctionPointerForData: (NSString*) name {
 	// returns a pointer to a function of type int(double* in, double* out)
 	id ob;
-	NSLog(@"dataManager (%@): somebody is requesting a data source named \"%@\"\n", self, name);
+//	NSLog(@"dataManager (%@): somebody is requesting a data source named \"%@\"\n", self, name);
 	ob = [dataDictionary objectForKey: name];
-	NSLog(@"ob is %@\n", ob);
+//	NSLog(@"ob is %@\n", ob);
 	if([ob respondsToSelector: @selector(dataNamed:)]) {
-		NSLog(@"responds to selector\n");
+//		NSLog(@"responds to selector\n");
 		return [ob dataNamed: name];
 	}
-	NSLog(@"!!!! does not respond to selector ????\n");
+//	NSLog(@"!!!! does not respond to selector ????\n");
+	return NULL;	
+}
+
+- (void*) getFunctionPointerForEval: (NSString*) name {
+	id ob;
+	ob = [dataDictionary objectForKey: name];
+	if([ob respondsToSelector: @selector(evalNamed:)]) {
+		return [ob evalNamed: name];
+	}
 	return NULL;	
 }
 

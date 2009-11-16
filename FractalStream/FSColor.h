@@ -45,10 +45,11 @@
 	FSGradient* gradient;
 	IBOutlet NSColorWell* colorWell; 
 	BOOL connectedToLibrary;
-	id library;
+	id library, noteSender;
 }
 
 - (void) connectToLibrary: (id) lib;
+- (void) setNotificationSender: (id) ns;
 - (void) setGradient: (FSGradient*) grad;
 - (void) insertGradient: (FSGradient*) grad;
 - (IBAction) fill: (id) sender;
@@ -69,13 +70,17 @@
 - (id) init;
 - (void) dealloc;
 - (FSColor*) nextColorForX: (double) X Y: (double) Y;
-- (FSGradient*) gradientForX: (double) X Y: (double) Y withTolerance: (double) epsilon;
+- (void) createNewSubcolorForX: (double) X Y: (double) Y;
+- (FSGradient*) gradientForX: (double) X Y: (double) Y withTolerance: (double) epsilon allowNew: (BOOL) allow;
 - (BOOL) isNearX: (double) X Y: (double) Y withTolerance: (double) epsilon;
 - (void) setGradient: (FSGradient*) grad;
 - (void) setGradient: (FSGradient*) grad forColor: (int) color;
 - (BOOL) isLocked;
 - (void) setLocked: (BOOL) l;
 - (void) useAutocolor: (BOOL) a;
+- (BOOL) usesAutocolor;
+- (void) removeAllSubcolors;
+- (void) removeSubcolorAtIndex: (int) i;
 - (NSString*) name;
 - (void) setName: (NSString*) n;
 - (FSGradient*) gradient;

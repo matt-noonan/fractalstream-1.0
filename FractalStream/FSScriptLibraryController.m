@@ -219,7 +219,7 @@
 	if([item description]) { 
 		[description selectAll: self];
 		[description replaceCharactersInRange: [description selectedRange]
-			withRTF: (NSData*) [item description]];
+			withRTFD: (NSData*) [item description]];
 	}
 	else [description setString: @""];
 	if([item image]) [previewer setImage: [item image]];

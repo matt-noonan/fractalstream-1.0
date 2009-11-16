@@ -10,6 +10,17 @@
 
 #import "debug.h"
 
+#ifdef FS_USE_THREADING
+	#ifdef FS_USE_NSOPERATION
+		#define LogBoxSize 7
+	#else
+		#define LogBoxSize 7
+	#endif
+#else
+	#define LogBoxSize 5
+#endif
+
+
 @implementation FSViewerObject
 - (FSViewerItem*) itemPtr { return &item; }
 - (void) setItem: (FSViewerItem) newItem { item = newItem; }
@@ -31,7 +42,7 @@
 }
 
 - (void) awakeFromNib {
-	int i, j;
+	int i, j, xBoxes, yBoxes;
 	
 	
 	Debug(@"FSViewer %@ is awaking from nib\n", self);
@@ -86,7 +97,6 @@
 	displayLocked = NO;	
 	awake = YES;
 
-	WinLog(@"making background NSImage\n");
 	background = [[NSImage alloc] initWithSize: [self bounds].size];
 #ifdef WINDOWS
 	NSCachedImageRep* rep = [[NSCachedImageRep alloc] initWithSize: [self bounds].size depth: 8 separate: NO alpha: NO];
@@ -100,28 +110,93 @@
 	WinLog(@"allocated background = %@\n", background);
 #endif
 	[background lockFocus];
-	[[NSColor blueColor] set];
+	[[NSColor whiteColor] set];
 	NSRectFill([self bounds]);
 	[background unlockFocus];
-	WinLog(@"drew a blue square\n");
-	NSLog(@"background is now %@\n", background);
-
+	xBoxes = tilesPerRow =  (((int) [self bounds].size.width) >> LogBoxSize);
+	yBoxes = (((int) [self bounds].size.height) >> LogBoxSize);
+	totalTiles = xBoxes * yBoxes;
+	if(((int) [self bounds].size.width) - (xBoxes << LogBoxSize)) xBoxes++;
+	if(((int) [self bounds].size.height) - (yBoxes << LogBoxSize)) yBoxes++;
+	tile = (NSBitmapImageRep**) malloc(xBoxes * yBoxes * sizeof(NSBitmapImageRep*));
+	tileData = (unsigned char**) malloc(xBoxes * yBoxes * sizeof(unsigned char*));
+	for(i = 0; i < xBoxes * yBoxes; i++) {
+		tileData[i] = (unsigned char*) malloc((1 << LogBoxSize) * (1 << LogBoxSize) * sizeof(unsigned char));
+		tile[i] = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: &(tileData[i])
+														 pixelsWide: (1<<LogBoxSize) pixelsHigh: (1<<LogBoxSize) bitsPerSample: 8
+													samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
+													 colorSpaceName: NSDeviceRGBColorSpace
+				  /*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
+														bytesPerRow: ((1<<LogBoxSize) * 4)
+													   bitsPerPixel: 32
+				  ];
+		
+	}
+	
 #ifndef WINDOWS
 //	[self allocateGState];
 	[[self window] useOptimizedDrawing: YES];
 #endif	
+	
+	queueLock = [[NSConditionLock alloc] initWithCondition: 0];
+	inset = nil;
+	showInset = NO;
 }
 
+- (void) stopAllRenderOperations: (NSNotification*) note {
+//	NSLog(@"FSViewer %@ decided to stop rendering, controllingWindow is %@, note is %@.\n", self, controllingWindow, note);
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	++renderBatch;
+	[workQueue cancelAllOperations];
+//	[viewerColorizer setCurrentBatch: renderBatch+1];
+	[queueLock lockWhenCondition: 0];
+	[queueLock unlockWithCondition: 0];
+}
+	
+																					
 - (BOOL) isAwake { return awake; }
+
+- (void) dealloc {
+	[workQueue release];
+	[queueLock release];
+	[super dealloc];
+}
 
 - (id) document { return document; }
 - (void) registerForNotifications: (id) owningDocument { }
+
+- (void) reload: (NSNotification*) note {
+	[self setViewerData: view];
+}
+
+- (void) setShowParameterLocation: (BOOL) doShow forView: (FSViewerData*) newView {
+	synchronizeTo(drawing) {
+		if(doShow) {
+			NSPoint p;
+			if(inset != nil) [inset release];
+			inset = [[self snapshot] retain];
+			p = [self locationOfPoint: newView -> par];
+			insetMarker[0] = (p.x - [self bounds].origin.x) / [self bounds].size.width; 
+			insetMarker[1] = (p.y - [self bounds].origin.y) / [self bounds].size.height; 
+			showInset = ([insetButton state] == NSOnState)? YES : NO;
+		}
+		else {
+			showInset = NO;
+		}
+	}
+	[self setNeedsDisplay: YES];
+}
 
 - (void) setViewerData: (FSViewerData*) newData {
 	readyToRender = YES;
 	nodeChanged = YES;
 	
-	if((configured == YES) && (view -> program != newData -> program)) [self lockAllAutocolor];
+	if(configured == NO) {
+		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(stopAllRenderOperations:) name: @"NSWindowWillCloseNotification" object: controllingWindow];
+		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(reload:) name: @"FSColorsChanged" object: colorPicker];
+	}
+	if((configured == YES) && (view -> program != newData -> program) && (view -> program == 3)) [self lockAllAutocolor];
+	if(configured && (view -> program != newData -> program)) [self setShowParameterLocation: (newData->program == 3)? YES : NO forView: newData];
 	/* If everything in the new view is the same except for zoom level / center, we can reuse the old texture as an approximation */
 	if(
 			(configured == YES) &&
@@ -154,6 +229,7 @@
 	colorPicker = newColorPicker;
 	[viewerColorizer setColorWidget: colorPicker autocolorCache: acCache];
 }
+
 
 - (IBAction) render: (id) sender {
 	int i; 
@@ -203,9 +279,15 @@
 	unit.freeResults = YES;
 	unit.setting = setting;
 	unit.settings = defaults;
+	unit.parametric = (view -> program == 3)? NO : YES;
+	unit.queueLock = queueLock;
 	
+	synchronizeTo([colorPicker colorArray]) {
+		[colorPicker makeColorCache];
+	}
 	/* Set up the autocolor cache */
-	for(i = 0; i < 64; i++) {
+/*
+ for(i = 0; i < 64; i++) {
 		acCache[i].active = [colorPicker useAutocolorForColor: i];
 		if(acCache[i].active) {
 			int acCount;
@@ -221,16 +303,7 @@
 			[colorPicker cacheAutocolor: i to: acCache[i].color X: acCache[i].x Y: acCache[i].y];
 		}
 	}
-	
-#ifdef FS_USE_THREADING
-	#ifdef FS_USE_NSOPERATION
-		#define LogBoxSize 7
-	#else
-		#define LogBoxSize 7
-	#endif
-#else
-	#define LogBoxSize 5
-#endif
+*/	
 	/* Subdivide the viewport into 128x128 regions (or smaller), give each one its own unit */
 	xBoxes = (((int) [self bounds].size.width) >> LogBoxSize);
 	yBoxes = (((int) [self bounds].size.height) >> LogBoxSize);
@@ -240,7 +313,6 @@
 	if(yRemainder) ++yBoxes;
 	dx = (double)(1 << LogBoxSize) * view -> pixelSize * view -> aspectRatio;
 	dy = (double)(1 << LogBoxSize) * view -> pixelSize;
-//	WinLog(@"using %i work units\n", xBoxes * yBoxes);
 	
 	synchronizeTo(workQueue) {
 		if(highDetail) { renderQueueEntries = 3 * xBoxes * yBoxes; }
@@ -280,7 +352,6 @@
 			unit.offset[1] -= dy;
 		}
 	}
-//	WinLog(@"ready... go!\n");
 	[workQueue go]; /* no-op if using threading */
 	[viewDescription setString:
 		[NSString stringWithFormat: @"Drawing %@\nCentered on (%1.4e, %1.4e)\nWidth is %1.4e, Height is %1.4e\n",
@@ -467,7 +538,8 @@
 	
 	[self deleteObjectsInBatch: 0];
 	[self drawItem: item];
-	[self setNeedsDisplay: YES];
+	//[self setNeedsDisplay: YES];
+	[self display];
 }
 
 - (void) draw: (int) nTraces tracesFrom: (NSPoint*) traceList steps: (int) nSteps {
@@ -639,10 +711,7 @@
 }
 
 - (void) lockAllAutocolor {
-	int i;
-	for(i = 0; i < 64; i++) { 
-		if([colorPicker useAutocolorForColor: i]) [colorPicker setAutocolor: i toLocked: YES];
-	}
+	[colorPicker lockAllAutocolor];
 }
 
 - (void) setUsesFakeZoom: (BOOL) z { useFakeZoom = z; }
@@ -739,13 +808,52 @@
 */
 //		[background drawInRect: [self bounds] fromRect: backgroundRect operation: NSCompositeCopy fraction: 1.0];
 		//NSLog(@"best image rep for %@ is %@\n", background, [background bestRepresentationForDevice: nil]);
-		[[background bestRepresentationForDevice: nil] drawInRect: [self bounds]];
+		[background drawInRect: [self bounds] fromRect: backgroundRect operation: NSCompositeCopy fraction: 1.0];
 	}
 }
 
+- (void) drawInset {
+	float scale = 0.15;
+	NSBezierPath* path;
+	NSPoint pointList[3];
+	
+	if(inset && showInset) {
+		[[NSColor whiteColor] set];
+		pointList[0].x = [self bounds].origin.x + [self bounds].size.width*scale;
+		pointList[0].y = [self bounds].origin.y;
+		pointList[1].x = [self bounds].origin.x + [self bounds].size.width*scale;
+		pointList[1].y = [self bounds].origin.y + [self bounds].size.height*scale;
+		pointList[2].x = [self bounds].origin.x;
+		pointList[2].y = [self bounds].origin.y + [self bounds].size.height*scale;
+		path = [NSBezierPath bezierPath];
+		[path setLineWidth: 3];
+		[path appendBezierPathWithPoints: pointList count: 3];
+		[path stroke];				
+		[inset drawInRect: NSMakeRect([self bounds].origin.x, [self bounds].origin.y, [self bounds].size.width*scale, [self bounds].size.height*scale)
+				 fromRect: NSZeroRect operation: NSCompositeCopy fraction: 0.75];
+		path = [NSBezierPath bezierPath];
+		[path setLineWidth: 1.5];
+		[path appendBezierPathWithOvalInRect: NSMakeRect(
+			[self bounds].origin.x + scale*[self bounds].size.width*insetMarker[0] - 2,
+		    [self bounds].origin.y + scale*[self bounds].size.height*insetMarker[1] - 2,
+			4, 4
+		)];
+		[path fill];
+		
+	}
+}
+	
+- (IBAction) toggleInset: (id) sender 
+{
+	synchronizeTo(drawing) { 
+		showInset = ([insetButton state] == NSOnState)? YES : NO;
+	}
+	[self setNeedsDisplay: YES];
+}
 /* drawRect */
 - (void) drawRect: (NSRect) rect
 {
+	int i, j;
 	if(readyToDisplay == NO) {
 		[[NSColor redColor] set];
 		NSRectFill(rect);
@@ -753,10 +861,10 @@
 	}
 	[self drawTexture];
 	[self drawObjects]; 
+	[self drawInset];
 
 	if([self inLiveResize] == YES) {
-		/* draw a transparent rect over the whole view */
-		
+		/* draw a transparent rect over the whole view */		
 	}
 }
 

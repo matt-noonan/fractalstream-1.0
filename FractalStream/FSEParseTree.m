@@ -321,7 +321,7 @@
 }
 
  - (NSString*) realifyFrom: (int) here {
-	int i, children, child, child1, child2, replacement, x, y, newNode, nx, ny, u, v, t, n;
+	int i, children, child, child1, child2, replacement, x, y, newNode, nx, ny, u, v, t, n, nnot;
 	int bits, lastbit;
 	NSString* error;
 	
@@ -925,8 +925,10 @@
 						node[here].auxi[0] = -1;
 						v = node[here].auxi[1];
 						n = [self newNodeOfType: FSE_Var | FSE_Join at: here];
-						for(i = 0; i < nchilds; i++) 
-							node[[self newNodeOfType: FSE_Var | FSE_Variable at: n]].auxi[0] = v++;
+						for(i = 0; i < nchilds; i++) {
+							nnot = [self newNodeOfType: FSE_Var | FSE_Variable at: n];
+							node[nnot].auxi[0] = v++;
+						}
 						return [self realifyFrom: here];
 					}
 					break;
@@ -1009,16 +1011,20 @@
 						if(t == (FSE_Command | FSE_Set)) { // here is the dumb part:
 							tn = node[c1].auxi[0];
 							newNode = [self newNodeOfType: FSE_Command | FSE_Set at: here];
-							node[[self newNodeOfType: FSE_Var | FSE_Variable at: newNode]].auxi[0] = tempVar;
+							nnot = [self newNodeOfType: FSE_Var | FSE_Variable at: newNode];
+							node[nnot].auxi[0] = tempVar;
 							[self cloneSubtreeFrom: c2 to: newNode];
 							c1 = node[c1].nextSibling;
 							c2 = node[c2].nextSibling;
 							newNode = [self newNodeOfType: FSE_Command | FSE_Set at: here];
-							node[[self newNodeOfType: FSE_Var | FSE_Variable at: newNode]].auxi[0] = node[c1].auxi[0];
+							nnot = [self newNodeOfType: FSE_Var | FSE_Variable at: newNode];
+							node[nnot].auxi[0] = node[c1].auxi[0];
 							[self cloneSubtreeFrom: c2 to: newNode];
 							newNode = [self newNodeOfType: FSE_Command | FSE_Set at: here];
-							node[[self newNodeOfType: FSE_Var | FSE_Variable at: newNode]].auxi[0] = tn;
-							node[[self newNodeOfType: FSE_Var | FSE_Variable at: newNode]].auxi[0] = tempVar;
+							nnot = [self newNodeOfType: FSE_Var | FSE_Variable at: newNode];
+							node[nnot].auxi[0] = tn;
+							nnot = [self newNodeOfType: FSE_Var | FSE_Variable at: newNode];
+							node[nnot].auxi[0] = tempVar;
 						} // end of the dumb part					
 /*
 						for(i = 0; i < node[child2].children; i++) {

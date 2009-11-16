@@ -11,6 +11,11 @@
 	return self;
 }
 
+- (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[super dealloc];
+}
+
 - (void) awakeFromNib {
 	NSString* path;
 	void* loadedModule;
@@ -148,6 +153,20 @@
 	[theViewer setViewerData: &([theSession currentNode] -> data)];
 }
 
+- (IBAction) goUp: (id) sender {
+	int currentPlane;
+	FSSessionNode* cn;
+	currentPlane = ([theSession currentNode] -> data).program;
+	while(1) {
+		cn = [theSession currentNode];
+		[theSession goBackward: self];
+		if((([theSession currentNode] -> data).program != currentPlane)) { NSLog(@"changed planes\n"); break; }
+		if([theSession currentNode] == cn) { NSLog(@"hit bottom\n"); [theSession changeTo: cn->firstChild]; break; }
+	}
+	NSLog(@"telling the viewer to use node %@\n", [theSession currentNode]);
+	[theViewer setViewerData: &([theSession currentNode] -> data)];
+}
+
 - (IBAction) goForward: (id) sender {
 	[theSession goForward: sender];
 	([theSession currentNode] -> data).kernel = kernel;
@@ -207,6 +226,7 @@
 	data.aspectRatio = [aspectBox floatValue];
 	data.eventManager = theTools;
 	[theSession addChildWithData: data andMakeCurrent: YES];
+	NSLog(@"currentNode is %@\n", [theSession currentNode]);
 	[theTools updateMenuForParametric: isPar];
 	[self sendDefaultsToViewer];
 	[theViewer setViewerData: &data];

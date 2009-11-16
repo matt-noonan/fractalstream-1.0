@@ -3,6 +3,7 @@
 @implementation FSEController
 
 - (void) awakeFromNib {
+//	NSLog(@"FSEController is in window %@\n", [sourceView window]);
 	[sourceView setRichText: NO];
 }
 
@@ -28,9 +29,9 @@
 	}
 	[browser setVariableNamesTo: [compiler parameters]];
 	[browser setProbeNamesTo: [compiler probeArray]];
-	NSLog(@"set probe names in the browser to %@\n", [compiler probeArray]);
+//	NSLog(@"set probe names in the browser to %@\n", [compiler probeArray]);
 	[[browser session] setFlags: [compiler flagArray]];
-	NSLog(@"set flag names in the session to %@\n", [compiler flagArray]);
+//	NSLog(@"set flag names in the session to %@\n", [compiler flagArray]);
 	if([compiler usesCustom] == YES) {
 		[[browser session] readKernelFrom: [NSString stringWithFormat: @"%@kernel", [compiler customPath]]];
 		[browser setAllowEditor: NO];
@@ -46,9 +47,9 @@
 	
 	//[enclosingView selectNextTabViewItem: self];  
 	// selectNextTabViewItem not implemented in Cocotron, so use this instead:
-	NSLog(@"about to change tab, enclosingView is %@\n", enclosingView);
+//	NSLog(@"about to change tab, enclosingView is %@\n", enclosingView);
 	[enclosingView selectTabViewItemAtIndex: [enclosingView indexOfTabViewItem: [enclosingView selectedTabViewItem]] + 1];
-	NSLog(@"did it.\n");
+//	NSLog(@"did it.\n");
 }
 
 - (IBAction) insertPi: (id) sender {
@@ -61,18 +62,21 @@
 
 - (void) restoreFrom: (NSArray*) savedState {
 	NSRange range;
-	NSLog(@"savedState 0 = %@, 1 = %@\n", [savedState objectAtIndex: 0], [savedState objectAtIndex: 1]);
+//	NSLog(@"savedState 0 = %@, 1 = %@\n", [savedState objectAtIndex: 0], [savedState objectAtIndex: 1]);
+	NSLog(@"savedState[2] = %@\n", [savedState objectAtIndex: 2]);
 	[titleField setStringValue: [savedState objectAtIndex: 0]];
 	[sourceView setString: [savedState objectAtIndex: 1]];
 	[descriptionView selectAll: self];
 	range = [descriptionView selectedRange];
-	[descriptionView replaceCharactersInRange: range withRTF: [savedState objectAtIndex: 2]];
-	[descriptionView setString: [NSString stringWithFormat: @"first 4 bytes are: %c %c %c %c\n",
+	[descriptionView replaceCharactersInRange: range withRTFD: [savedState objectAtIndex: 2]];
+/*
+ [descriptionView setString: [NSString stringWithFormat: @"first 4 bytes are: %c %c %c %c\n",
 		((char*) [[savedState objectAtIndex: 2] bytes])[0],
 		((char*) [[savedState objectAtIndex: 2] bytes])[1],
 		((char*) [[savedState objectAtIndex: 2] bytes])[2],
 		((char*) [[savedState objectAtIndex: 2] bytes])[3]
 	]];
+*/
 }
 
 - (NSArray*) state {
@@ -85,7 +89,7 @@
 	[savedState addObject: [sourceView string]];
 	[descriptionView selectAll: self];
 	range = [descriptionView selectedRange];
-	[savedState addObject: [descriptionView RTFFromRange: range]];
+	[savedState addObject: [descriptionView RTFDFromRange: range]];
 	range.length = 0;
 	[descriptionView setSelectedRange: range];
 	//img = [[browser viewer] snapshot];

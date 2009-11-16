@@ -14,7 +14,7 @@
 @interface FSEParseTree : NSObject {
 
 	int nodes, nextNode;
-	FSEParseNode* node;
+	volatile FSEParseNode* node;
 	BOOL reordered;
 	int tempVar;
 }

@@ -18,7 +18,6 @@
 - (void) associatePanelsToDocument: (id) sender {
 	NSEnumerator* en;
 	id panel;
-	NSLog(@"panels is %@\n", panels);
 	if(panels) {
 		en = [panels objectEnumerator];
 		while(panel = [en nextObject]) 

@@ -284,6 +284,7 @@
 
 - (IBAction) goBackward: (id) sender
 {
+	NSLog(@"currentNode->parent is %@, root is %@\n", currentNode->parent, root);
 	if(currentNode -> parent != root) [self changeTo: currentNode -> parent];
 //	NSLog(@"going backward\n");
 }
@@ -410,8 +411,9 @@
 
 - (void) getSessionFrom: (FSSession*) session
 {
-	root = session -> root;
-	currentNode = session -> currentNode;
+	//root = session -> root;
+	root = currentNode = session -> currentNode;
+	currentNode->children = 0; currentNode->firstChild = nil;
 	sessionTitle = session -> sessionTitle;
 	sessionProgram = session -> sessionProgram;
 	sessionNotes = session -> sessionNotes;
@@ -420,7 +422,10 @@
 	historyView = nil;
 }
 
-- (void) setFlags: (NSArray*) flagArray { flagNames = [NSArray arrayWithArray: flagArray]; }
+- (void) setFlags: (NSArray*) flagArray { 
+	NSLog(@"flags is %@\n", flagArray);
+	flagNames = [NSArray arrayWithArray: flagArray];
+} 
 - (NSArray*) flagNames { return flagNames; }
 
 - (BOOL) kernelIsCached { return kernelIsCached; }

@@ -29,6 +29,8 @@
 - (void) main {
 	int row, i;
 	double in[512];	
+	[unit.queueLock lock];
+	[unit.queueLock unlockWithCondition: [unit.queueLock condition] + 1];
 	
 	for(i = 0; i < unit.settings + 6; i++) in[i] = unit.setting[i];
 	for(row = 0; row < unit.dimension[1]; row++) {
@@ -43,11 +45,19 @@
 		if([self isCancelled] == YES) break;
 	}
 	unit.finished = [self isCancelled]? NO : YES;
-	if(unit.finished == YES) [colorizer colorUnit: &unit];
 	unit.freeResults = YES;
-	[unit.owner performSelectorOnMainThread: @selector(renderOperationFinished:) withObject: [self retain] waitUntilDone: NO];
-//	[unit.owner renderOperationFinished: self];
-	if(unit.finished == NO) unit.freeResults = YES;
+	if(unit.finished == NO) {
+		[unit.queueLock lock];
+		[unit.queueLock unlockWithCondition: [unit.queueLock condition] - 1];
+	}
+	else {
+		[colorizer colorUnit: &unit];
+		unit.freeResults = YES;
+		[unit.owner performSelectorOnMainThread: @selector(renderOperationFinished:) withObject: [self retain] waitUntilDone: NO];
+		[unit.queueLock lock];
+		[unit.queueLock unlockWithCondition: [unit.queueLock condition] - 1];
+	}
+		//	[unit.owner renderOperationFinished: self];
 }
 
 

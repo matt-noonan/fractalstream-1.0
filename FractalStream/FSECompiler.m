@@ -247,7 +247,7 @@
 			if([symbol isEqualToString: function[i].word] == YES) {
 				lastSymbol = [NSString stringWithString: symbol];
 				oldparent = parent;
-				NSLog(@"found function %@\n", symbol);
+//				NSLog(@"found function %@\n", symbol);
 				parent = [tree newNodeOfType: (FSE_Func | function[i].code) at: oldparent];
 //				if((function[i].code != FSE_Random) && (function[i].code != FSE_Gaussian))
 					[self extractArithBelowNode: parent];
@@ -524,7 +524,7 @@
 			var[v].par = YES;
 			[tree nodeAt: ch] -> auxi[1] = [self parameterNumberOfVariableAtIndex: v];
 		}
-		NSLog(@"made variable %i into parametric variable %i\n", [tree nodeAt: ch] -> auxi[0], [tree nodeAt: ch] -> auxi[1]);
+//		NSLog(@"made variable %i into parametric variable %i\n", [tree nodeAt: ch] -> auxi[0], [tree nodeAt: ch] -> auxi[1]);
 		[self readNextSymbol];
 		if([symbol isEqualToString: @"to"] == NO) {
 			error = [NSString stringWithFormat: @"error: expected \"to\" clause (\"default x to y.\")"];
@@ -615,14 +615,14 @@
 				[self readNextSymbol];
 				if([symbol getCString: [tree nodeAt: node] -> name maxLength: 64 encoding: NSUTF8StringEncoding]) {
 					[self readNextSymbol];
-					if([symbol isEqualToString: @"for"]) {
+					if([symbol isEqualToString: @"at"]) {
 						[self extractArithBelowNode: node];
 						[tree swapBirthOrderAt: node];
 						++loopDepth;
 						[self extractCommandBelowNode: node];
 						--loopDepth;
 					}
-					else error = [NSString stringWithFormat: @"expected \"using each ___ in ___ for ___\", got %@ instead", symbol]; 
+					else error = [NSString stringWithFormat: @"expected \"using each ___ in ___ at ___\", got %@ instead", symbol]; 
 				}
 				else error = [NSString stringWithFormat: @"bad name for data source (must be no more than 64 bytes in UTF-8 encoding)."];
 			}
@@ -759,7 +759,7 @@
 
 
 - (BOOL) usesCustom { return useCustom; }
-- (NSString*) customPath { NSLog(@"customPath is \"%@\"\n", customPath); return customPath; }
+- (NSString*) customPath { /*NSLog(@"customPath is \"%@\"\n", customPath);*/ return customPath; }
 
 
 - (IBAction) compile: (id) sender
@@ -770,7 +770,7 @@
 	BOOL reported, autopop, custom;
 	FSEOpStream opstream;
 	
-	NSLog(@"compiler %@ asked to compile by sender %@\n", self, sender);
+//	NSLog(@"compiler %@ asked to compile by sender %@\n", self, sender);
 	error = nil;
 	[flags release], flags = nil;
 	[probes release], probes = nil;
@@ -819,7 +819,7 @@
 				range.location = savedindex; range.length = index - savedindex;
 				customPath = [[NSString stringWithFormat: @"%@/", [literalSource substringWithRange: range]] retain];
 				useCustom = YES;
-				NSLog(@"found custom path \"%@\"\n", customPath);
+//				NSLog(@"found custom path \"%@\"\n", customPath);
 			}
 			else break;
 		}
@@ -848,12 +848,12 @@
 	
 	[tree setTempVar: [self indexOfVariableWithName: @".temp"]];
 	error = [tree realifyFrom: FSE_RootNode];
-	if(error) { NSLog(@"ERROR -----> \"%@\", tree is:\n", error); [tree log]; return; }
-	else NSLog(@"realification completed\n");
+	if(error) {  NSLog(@"ERROR -----> \"%@\", tree is:\n", error); [tree log]; return; }
+//	else NSLog(@"realification completed\n");
 //	[tree log];
 //	[tree postprocessReserving: nextvar];
 
-	[self printVariableStack];
+//	[self printVariableStack];
 
 	symbol = nil;
 }
@@ -872,7 +872,7 @@
 
 - (void) buildScript: (NSString*) newSource {
 	if([[newSource lowercaseString] isEqualToString: source] != YES) {
-		NSLog(@"Compiler is going to build script \"%@\"\n", newSource);
+//		NSLog(@"Compiler is going to build script \"%@\"\n", newSource);
 		[self setTitle: @"" source: newSource andDescription: @""];
 		[self compile: self];
 	}
@@ -940,7 +940,7 @@
 - (void) setOutputFilename: (NSString*) newFilename { filename = [newFilename retain]; }
 
 - (BOOL) isParametric {
-	NSLog(@"isParametric: useComplexVars is %i, usesC is %i, I eval %i\n", useComplexVars? 1 : 0, usesC, (usesC > (useComplexVars? 1 : 2))? 1 : 0);
+//	NSLog(@"isParametric: useComplexVars is %i, usesC is %i, I eval %i\n", useComplexVars? 1 : 0, usesC, (usesC > (useComplexVars? 1 : 2))? 1 : 0);
 	return (usesC > (useComplexVars? 1 : 2))? YES : NO;
 }
 

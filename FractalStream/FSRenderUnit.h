@@ -18,10 +18,12 @@ typedef struct {
 	float location[2];
 	int multiplier;
 	id owner;
+	BOOL parametric;
 	BOOL freeResults;
 	double* setting;
 	int settings;
 	double* result;
 	BOOL finished;
 	int batch;
+	NSConditionLock* queueLock;
 } FSRenderUnit;
