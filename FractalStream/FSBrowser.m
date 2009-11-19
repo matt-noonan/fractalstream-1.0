@@ -163,6 +163,7 @@
 		if([theSession currentNode] == cn) break;
 		lastGood = cn;
 	}
+//	if([theSession currentNode] == [theSession getRootNode]) [theSession goForward: self];
 	[theViewer setViewerData: &([theSession currentNode] -> data)];
 }
 

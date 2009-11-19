@@ -10,15 +10,7 @@
 
 #import "debug.h"
 
-#ifdef FS_USE_THREADING
-	#ifdef FS_USE_NSOPERATION
-		#define LogBoxSize 7
-	#else
-		#define LogBoxSize 7
-	#endif
-#else
-	#define LogBoxSize 5
-#endif
+#define LogBoxSize 7
 
 
 @implementation FSViewerObject
@@ -45,7 +37,9 @@
 	int i, j, xBoxes, yBoxes;
 	
 	
-	Debug(@"FSViewer %@ is awaking from nib\n", self);
+	view = &fakeview;
+	fakeview.eventManager = nil;
+	
 	fswindow = [[FSFullscreenWindow alloc] init];
 	configured = NO;
 	readyToRender = NO;
@@ -72,7 +66,7 @@
 	useFakeZoom = YES;
 	
 //	[[self window] makeFirstResponder: self];
-//	[[self window] setAcceptsMouseMovedEvents: YES];
+	[[self window] setAcceptsMouseMovedEvents: NO];
 	
 	//[progress setDisplayedWhenStopped: NO];
 	//[progress setUsesThreadedAnimation: YES];
@@ -107,32 +101,12 @@
 	[rep setPixelsHigh: [self bounds].size.height];
 	[rep setPixelsWide: [self bounds].size.width];
 	[background addRepresentation: rep];
-	WinLog(@"allocated background = %@\n", background);
 #endif
 	[background lockFocus];
 	[[NSColor whiteColor] set];
 	NSRectFill([self bounds]);
 	[background unlockFocus];
-	xBoxes = tilesPerRow =  (((int) [self bounds].size.width) >> LogBoxSize);
-	yBoxes = (((int) [self bounds].size.height) >> LogBoxSize);
-	totalTiles = xBoxes * yBoxes;
-	if(((int) [self bounds].size.width) - (xBoxes << LogBoxSize)) xBoxes++;
-	if(((int) [self bounds].size.height) - (yBoxes << LogBoxSize)) yBoxes++;
-	tile = (NSBitmapImageRep**) malloc(xBoxes * yBoxes * sizeof(NSBitmapImageRep*));
-	tileData = (unsigned char**) malloc(xBoxes * yBoxes * sizeof(unsigned char*));
-	for(i = 0; i < xBoxes * yBoxes; i++) {
-		tileData[i] = (unsigned char*) malloc((1 << LogBoxSize) * (1 << LogBoxSize) * sizeof(unsigned char));
-		tile[i] = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: &(tileData[i])
-														 pixelsWide: (1<<LogBoxSize) pixelsHigh: (1<<LogBoxSize) bitsPerSample: 8
-													samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
-													 colorSpaceName: NSDeviceRGBColorSpace
-				  /*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
-														bytesPerRow: ((1<<LogBoxSize) * 4)
-													   bitsPerPixel: 32
-				  ];
-		
-	}
-	
+
 #ifndef WINDOWS
 //	[self allocateGState];
 	[[self window] useOptimizedDrawing: YES];
@@ -252,7 +226,6 @@
 		return;
 	}
 
-//	WinLog(@"cancelling operations\n");
 	[workQueue cancelAllOperations];
 	
 #ifndef WINDOWS
@@ -376,11 +349,10 @@
 	NSImage* partialImage;
 	
 	if(([op unit] -> finished) && ([op unit] -> batch == renderBatch)) {
-		//WinLog(@"got unit for batch %i\n", renderBatch);
 		size.width = [op unit] -> dimension[0];
 		size.height = [op unit] -> dimension[1];
 		planes[0] = (unsigned char*)([op unit] -> result);
-		//WinLog(@"making an NSBitmapImageRep\n");
+#ifndef WINDOWS
 		bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
 														 pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
 													samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
@@ -389,8 +361,17 @@
 														bytesPerRow: (size.width * 4)
 													   bitsPerPixel: 32
 				  ];
+#else
+		bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: planes
+														 pixelsWide: size.width pixelsHigh: size.height bitsPerSample: 8
+													samplesPerPixel: 3 hasAlpha: NO isPlanar: NO
+													 colorSpaceName: NSDeviceRGBColorSpace
+				  /*		bitmapFormat: NSFloatingPointSamplesBitmapFormat*/
+														bytesPerRow: (size.width * 3)
+													   bitsPerPixel: 24
+				  ];
+#endif
 		synchronizeTo(drawing) {
-		//WinLog(@"synchronizing for drawing\n");
 			finalX = (int)([op unit] -> dimension[0] + 0.5);
 			finalY = (int)([op unit] -> dimension[1] + 0.5);
 			p.x = [op unit] -> location[0];
@@ -398,7 +379,6 @@
 			if([op unit] -> multiplier == -1) r = NSMakeRect(p.x, p.y, finalX * 2, finalY * 2);
 			else if([op unit] -> multiplier == 1) r = NSMakeRect(p.x, p.y, finalX / 2, finalY / 2);
 			else r = NSMakeRect(p.x, p.y, finalX, finalY);
-			//WinLog(@"locking focus on background %@\n", background);
 			[background lockFocus];
 			#ifdef WINDOWS
 				partialImage = [[NSImage alloc] initWithSize: size];
@@ -409,7 +389,6 @@
 				[bitmap drawInRect: r];
 			#endif
 			[background unlockFocus];
-			//WinLog(@"releasing bitmap\n");
 			[bitmap release];
 			readyToDisplay = YES;
 			[op release];
@@ -417,8 +396,7 @@
 			++undrawnBlocks;
 			if(undrawnBlocks == 16) { [self display]; undrawnBlocks = 0; }
 		}
-		//WinLog(@"drew bitmap\n");
-		//[self performSelectorOnMainThread: @selector(viewerNeedsDisplay) withObject: nil waitUntilDone: NO];
+//		[self performSelectorOnMainThread: @selector(viewerNeedsDisplay) withObject: nil waitUntilDone: NO];
 	}
 	synchronizeTo(workQueue) {
 		if([op unit] -> batch == renderBatch) {
@@ -825,7 +803,11 @@
 */
 //		[background drawInRect: [self bounds] fromRect: backgroundRect operation: NSCompositeCopy fraction: 1.0];
 		//NSLog(@"best image rep for %@ is %@\n", background, [background bestRepresentationForDevice: nil]);
+#ifndef WINDOWS
 		[background drawInRect: [self bounds] fromRect: backgroundRect operation: NSCompositeCopy fraction: 1.0];
+#else
+		[[background bestRepresentationForDevice: nil] drawInRect: [self bounds]];
+#endif
 	}
 }
 
@@ -872,7 +854,7 @@
 {
 	int i, j;
 	if(readyToDisplay == NO) {
-		[[NSColor redColor] set];
+		[[NSColor whiteColor] set];
 		NSRectFill(rect);
 		return;
 	}
@@ -907,6 +889,7 @@
 - (void) rightMouseDown: (NSEvent*) theEvent { if(view -> eventManager != nil) [view -> eventManager rightMouseDown: theEvent]; }
 - (void) scrollWheel: (NSEvent*) theEvent { if(view -> eventManager != nil) [view -> eventManager scrollWheel: theEvent]; }
 - (BOOL) acceptsFirstResponder { return YES; }
+
 /* end of mouse events */
 
 /* coordinate conversion methods */

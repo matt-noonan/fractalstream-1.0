@@ -44,7 +44,7 @@
 	[browser refreshAll];
 	if([compiler usesCustom] == YES) [browser addTools: [[[NSFileWrapper alloc] initWithPath: [compiler customPath]] autorelease]];
 	[browser setSpecialToolsTo: [compiler specialTools]];
-	[browser loadTools];
+//	[browser loadTools];
 	[browser changeTo: @"testing!" X: 0.0 Y: 0.0 p1: 0.0 p2: 0.0 pixelSize: (4.0 / 512.0) parametric: [compiler isParametric]];
 	
 	//[enclosingView selectNextTabViewItem: self];  
@@ -106,6 +106,7 @@
 		data = [img0 TIFFRepresentation];
 		rep = [NSBitmapImageRep imageRepWithData: data];
 //		[savedState addObject: [img TIFFRepresentationUsingCompression: NSTIFFCompressionJPEG ]];
+#ifndef WINDOWS
 		[savedState addObject:
 			[rep representationUsingType: NSJPEGFileType properties:
 					[NSDictionary dictionaryWithObject: [NSDecimalNumber numberWithFloat:0.1] 
@@ -113,6 +114,7 @@
 					 ]
 			 ]
 		 ];
+#endif
 		[img release];
 	}
 //	[savedState retain]; // this should be autoreleased, check to see if other objects leak the returned state

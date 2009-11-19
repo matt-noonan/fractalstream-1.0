@@ -133,6 +133,11 @@
 	BOOL isDirectory;
 	NSString* path;
 	
+#ifdef WINDOWS
+	NSLog(@"FSScriptLibraryController needs builtInPlugInsPath, not available in Cocotron\n");
+	library = nil;
+	return;
+#endif
 	path = [NSString stringWithFormat: @"%@/", [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent: @"Scripts/"]];
 	if(library) [library release];
 	library = [[NSMutableArray alloc] init];

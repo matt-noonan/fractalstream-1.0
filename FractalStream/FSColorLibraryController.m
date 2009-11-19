@@ -54,6 +54,10 @@
 	BOOL isDirectory;
 	NSString* path;
 	
+#ifdef WINDOWS
+	NSLog(@"FSColorLibraryController needed plugins, broken on Cocotron\n");
+	return;
+#endif
 //	NSLog(@"color library %@ got loadColorLibrary from %@\n", self, sender);
 	path = [NSString stringWithFormat: @"%@/", [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent: @"Colors/"]];
 	if(library) [library release];
@@ -70,6 +74,9 @@
 
 - (void) saveColor: (FSGradient*) grad {
 	NSString* path;
+#ifdef WINDOWS
+	return;
+#endif
 	path = [NSString stringWithFormat: @"%@/ColorLibrary", [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent: @"Colors/"]];
 	[NSKeyedArchiver archiveRootObject: library toFile: path];
 	[self loadColorLibrary: self];

@@ -344,6 +344,7 @@
 		tool = (id*) malloc([tools count] * sizeof(id));
 		toolEnum = [tools objectEnumerator];
 		i = 0; while(aTool = [toolEnum nextObject]) tool[i++] = aTool;
+		NSLog(@"setupMenu: tools is %@\n", tools);
 		NSLog(@"done\n");
 	}
 #endif	
@@ -405,6 +406,7 @@
 	tool = (id*) malloc([tools count] * sizeof(id));
 	en = [tools objectEnumerator];
 	i = 0; while(aTool = [en nextObject]) tool[i++] = aTool;
+	NSLog(@"addTools: tools is %@\n", tools);
 }
 
 - (void) addSpecialTools: (NSArray*) specialTools {
@@ -431,6 +433,7 @@
 		[toolClasses addObject: pclass];
 		[pclass preload: toolBundle];
 		aTool = [[pclass alloc] init];
+		NSLog(@"a tool is %@\n", aTool);
 		[aTool setOwnerTo: viewport];
 		if([aTool respondsToSelector: @selector(setDataManager:)]) [aTool setDataManager: dataManager];
 		[aTool unfreeze];
@@ -442,6 +445,7 @@
 	tool = (id*) malloc([tools count] * sizeof(id));
 	en = [tools objectEnumerator];
 	i = 0; while(aTool = [en nextObject]) tool[i++] = aTool;
+	NSLog(@"addSpecialTools is %@\n", tools);
 }
 
 - (void) updateMenuForParametric: (BOOL) isPar {
@@ -474,6 +478,7 @@
 			[[probeTextField window] orderOut: self];
 		}
 		if(selected >= builtInTools) {
+			NSLog(@"telling additional tool %i (%@) to activate\n", selected - builtInTools, tool[selected - builtInTools]);
 			[tool[selected - builtInTools] activate];
 		}
 		else if(selected > 1) {

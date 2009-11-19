@@ -79,7 +79,7 @@
 			[browser setAllowEditor: [savedData allowEditor]]; [self log: @"."];
 			[browser reloadSession]; [self log: @"."];
 			if([savedData hasTools]) [browser addTools: [savedData customTools]];
-			[browser loadTools];
+//			[browser loadTools];
 			[self log: @"ok\n"];
 			[mainTabView selectTabViewItemAtIndex: 2];
 		}

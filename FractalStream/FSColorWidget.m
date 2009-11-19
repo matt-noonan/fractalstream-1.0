@@ -329,7 +329,9 @@
 	unarchiving = NO;
 	while(name = [nameEnum nextObject]) {
 		subNames = [name componentsSeparatedByString: @"|"];
+		NSLog(@"subnames is %@\n", subNames);
 		name = [[subNames objectAtIndex: [subNames count] - 1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+		NSLog(@"name is %@\n", name);
 		[cleanedNames addObject: [[subNames objectAtIndex: 0] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]]];
 		k = 0;
 		namedColor = NO;

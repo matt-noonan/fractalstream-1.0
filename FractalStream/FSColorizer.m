@@ -180,9 +180,15 @@
 					}
 					if(r > 1.0) r = 1.0; if(g > 1.0) g = 1.0; if(b > 1.0) b = 1.0;
 					if(r < 0.0) r = 0.0; if(g < 0.0) g = 0.0; if(b < 0.0) b = 0.0;
+#ifndef WINDOWS
 					((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
 					((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
 					((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
+#else
+					((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
+					((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
+					((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
+#endif					
 				}
 			}			
 		}
@@ -253,9 +259,15 @@
 				}
 				if(r > 1.0) r = 1.0; if(g > 1.0) g = 1.0; if(b > 1.0) b = 1.0;
 				if(r < 0.0) r = 0.0; if(g < 0.0) g = 0.0; if(b < 0.0) b = 0.0;
+#ifndef WINDOWS
 				((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
 				((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
 				((unsigned char*) unit -> result)[(4 * x) + (y * 4 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
+#else
+				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 0] = (unsigned char)(255.0 * r + 0.5);
+				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 1] = (unsigned char)(255.0 * g + 0.5);
+				((unsigned char*) unit -> result)[(3 * x) + (y * 3 * xMax) + 2] = (unsigned char)(255.0 * b + 0.5);
+#endif					
 			}
 		}
 		[cache -> lock lock];

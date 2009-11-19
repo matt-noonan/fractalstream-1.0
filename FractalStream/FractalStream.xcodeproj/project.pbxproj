@@ -58,6 +58,8 @@
 		681AF2140F69A9BC00E8DE1B /* arcsinp1.fs in Copy Files (Transcendental Dynamics) */ = {isa = PBXBuildFile; fileRef = 681AF1A90F699B3900E8DE1B /* arcsinp1.fs */; };
 		681AF2150F69A9BC00E8DE1B /* exp.fs in Copy Files (Transcendental Dynamics) */ = {isa = PBXBuildFile; fileRef = 681AF1AA0F699B3900E8DE1B /* exp.fs */; };
 		681AF4C50F6CCE8000E8DE1B /* FSFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 681AF4C40F6CCE8000E8DE1B /* FSFullscreenWindow.m */; };
+		683942D010B39DEB00A6A993 /* FSDocument-windows.xib in Resources */ = {isa = PBXBuildFile; fileRef = 683942CC10B39DEB00A6A993 /* FSDocument-windows.xib */; };
+		683942D110B39DEB00A6A993 /* MainMenu-windows.xib in Resources */ = {isa = PBXBuildFile; fileRef = 683942CE10B39DEB00A6A993 /* MainMenu-windows.xib */; };
 		683CAB330FD787500071EEAB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		683CAB340FD787500071EEAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		683CAB370FD787500071EEAB /* henonc.fs in Resources */ = {isa = PBXBuildFile; fileRef = 681AF1AD0F699B8F00E8DE1B /* henonc.fs */; };
@@ -112,6 +114,14 @@
 		68605DB80F6DCEE500189C8C /* FSCustomDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68605DB70F6DCEE500189C8C /* FSCustomDataManager.m */; };
 		688F109A0FD9BED700FAFC60 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */; };
 		688F109B0FD9BED700FAFC60 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
+		68A3108A10B3B78E0019C1F8 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D15AC360486D014006FF6A4 /* Info.plist */; };
+		68A3108B10B3B79D0019C1F8 /* mandelbrot.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6816EB7E10B1CCBC00B01D0E /* mandelbrot.icns */; };
+		68A3108C10B3B79D0019C1F8 /* FSDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6802824310AB1A060077048E /* FSDocument.xib */; };
+		68A3108D10B3B79D0019C1F8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6802824510AB1A060077048E /* MainMenu.xib */; };
+		68A3108E10B3B79D0019C1F8 /* FSDocument-windows.xib in Resources */ = {isa = PBXBuildFile; fileRef = 683942CC10B39DEB00A6A993 /* FSDocument-windows.xib */; };
+		68A3108F10B3B79D0019C1F8 /* MainMenu-windows.xib in Resources */ = {isa = PBXBuildFile; fileRef = 683942CE10B39DEB00A6A993 /* MainMenu-windows.xib */; };
+		68A3109010B3B79D0019C1F8 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D15AC360486D014006FF6A4 /* Info.plist */; };
+		68A310C610B3C1040019C1F8 /* FSPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6802822C10AB17CF0077048E /* FSPanel.m */; };
 		68AF3AA51049EB7600967604 /* FSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 68411692100306F000C5323F /* FSColor.m */; };
 		68CB40A81065EA5E0005403B /* LLVMExecutionEngine.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 681AF1B90F699DEA00E8DE1B /* LLVMExecutionEngine.o */; };
 		68CB40A91065EA5E0005403B /* LLVMJIT.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 681AF1BA0F699DEA00E8DE1B /* LLVMJIT.o */; };
@@ -128,7 +138,7 @@
 /* Begin PBXBuildRule section */
 		683CAB9D0FD7878C0071EEAB /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
-			compilerSpec = org.cocotron.1.0.windows.i386.gcc.4.3.1;
+			compilerSpec = org.cocotron.1.0.windows.i386.gcc.default;
 			fileType = sourcecode.cpp;
 			isEditable = 1;
 			outputFiles = (
@@ -136,7 +146,7 @@
 		};
 		683CAB9E0FD7878C0071EEAB /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
-			compilerSpec = org.cocotron.1.0.windows.i386.gcc.4.3.1;
+			compilerSpec = org.cocotron.1.0.windows.i386.gcc.default;
 			fileType = sourcecode.c;
 			isEditable = 1;
 			outputFiles = (
@@ -487,6 +497,8 @@
 		681AF1BE0F699DEA00E8DE1B /* LLVMX86CodeGen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LLVMX86CodeGen.o; sourceTree = "<group>"; };
 		681AF4C30F6CCE8000E8DE1B /* FSFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSFullscreenWindow.h; sourceTree = "<group>"; };
 		681AF4C40F6CCE8000E8DE1B /* FSFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSFullscreenWindow.m; sourceTree = "<group>"; };
+		683942CD10B39DEB00A6A993 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = "English.lproj/FSDocument-windows.xib"; sourceTree = "<group>"; };
+		683942CF10B39DEB00A6A993 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = "English.lproj/MainMenu-windows.xib"; sourceTree = "<group>"; };
 		683CAB960FD787500071EEAB /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68411691100306F000C5323F /* FSColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSColor.h; sourceTree = "<group>"; };
 		68411692100306F000C5323F /* FSColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSColor.m; sourceTree = "<group>"; };
@@ -601,6 +613,8 @@
 				6802824310AB1A060077048E /* FSDocument.xib */,
 				6802824510AB1A060077048E /* MainMenu.xib */,
 				681AF1B60F699BCC00E8DE1B /* julia.icns */,
+				683942CC10B39DEB00A6A993 /* FSDocument-windows.xib */,
+				683942CE10B39DEB00A6A993 /* MainMenu-windows.xib */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
@@ -1035,8 +1049,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				683CAB330FD787500071EEAB /* Credits.rtf in Resources */,
+				68A3108B10B3B79D0019C1F8 /* mandelbrot.icns in Resources */,
+				68A3108C10B3B79D0019C1F8 /* FSDocument.xib in Resources */,
+				68A3108D10B3B79D0019C1F8 /* MainMenu.xib in Resources */,
+				68A3108E10B3B79D0019C1F8 /* FSDocument-windows.xib in Resources */,
+				68A3108F10B3B79D0019C1F8 /* MainMenu-windows.xib in Resources */,
+				68A3109010B3B79D0019C1F8 /* Info.plist in Resources */,
 				683CAB340FD787500071EEAB /* InfoPlist.strings in Resources */,
+				683CAB330FD787500071EEAB /* Credits.rtf in Resources */,
 				683CAB370FD787500071EEAB /* henonc.fs in Resources */,
 				683CAB380FD787500071EEAB /* henona.fs in Resources */,
 				683CAB390FD787500071EEAB /* julia.icns in Resources */,
@@ -1047,14 +1067,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6816EB7F10B1CCBC00B01D0E /* mandelbrot.icns in Resources */,
+				6802824710AB1A060077048E /* FSDocument.xib in Resources */,
+				6802824810AB1A060077048E /* MainMenu.xib in Resources */,
+				681AF1B70F699BCC00E8DE1B /* julia.icns in Resources */,
+				683942D010B39DEB00A6A993 /* FSDocument-windows.xib in Resources */,
+				683942D110B39DEB00A6A993 /* MainMenu-windows.xib in Resources */,
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
+				68A3108A10B3B78E0019C1F8 /* Info.plist in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
 				681AF1AF0F699B8F00E8DE1B /* henonc.fs in Resources */,
 				681AF1B00F699B8F00E8DE1B /* henona.fs in Resources */,
-				681AF1B70F699BCC00E8DE1B /* julia.icns in Resources */,
-				6802824710AB1A060077048E /* FSDocument.xib in Resources */,
-				6802824810AB1A060077048E /* MainMenu.xib in Resources */,
-				6816EB7F10B1CCBC00B01D0E /* mandelbrot.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1106,6 +1129,7 @@
 				683CAB520FD787500071EEAB /* FSFullscreenWindow.m in Sources */,
 				683CAB530FD787500071EEAB /* FSCustomDataManager.m in Sources */,
 				68AF3AA51049EB7600967604 /* FSColor.m in Sources */,
+				68A310C610B3C1040019C1F8 /* FSPanel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1177,6 +1201,22 @@
 			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
+		683942CC10B39DEB00A6A993 /* FSDocument-windows.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				683942CD10B39DEB00A6A993 /* English */,
+			);
+			name = "FSDocument-windows.xib";
+			sourceTree = "<group>";
+		};
+		683942CE10B39DEB00A6A993 /* MainMenu-windows.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				683942CF10B39DEB00A6A993 /* English */,
+			);
+			name = "MainMenu-windows.xib";
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1196,6 +1236,7 @@
 				GCC_FAST_OBJC_DISPATCH = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PLATFORM_DEFINES = "-DWINDOWS";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1208,7 +1249,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = /Users/noonan/winlib/include;
-				INFOPLIST_FILE = "/Users/noonan/Desktop/FractalStream/Info copy.plist";
+				INFOPLIST_FILE = /Users/noonan/Desktop/FractalStream/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					/Users/noonan/winlib/local/lib,
@@ -1262,7 +1303,7 @@
 				GCC_FAST_OBJC_DISPATCH = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					__MINGW__,
 					__STDC_CONSTANT_MACROS,
@@ -1272,13 +1313,15 @@
 					_DEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = /Users/noonan/winlib/include;
-				INFOPLIST_FILE = "/Users/noonan/Desktop/FractalStream/Info copy.plist";
+				INFOPLIST_FILE = /Users/noonan/Desktop/FractalStream/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					/Users/noonan/winlib/local/lib,
 					/Users/noonan/winlib/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_LDFLAGS = (
 					"-lpthread",
 					./win/LLVMX86AsmPrinter.o,
@@ -1304,6 +1347,7 @@
 					"-mconsole",
 					"-mwindows",
 				);
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
 				PRODUCT_NAME = FractalStream;
 				SDKROOT = "";
 				SYMROOT = build/Windows;
@@ -1435,7 +1479,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = (
 					"-lLLVMAsmPrinter",
 					"-lLLVMSelectionDAG",
