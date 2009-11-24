@@ -11,9 +11,23 @@
 
 @implementation FSFullscreenWindow
 
+
 - (id) init { 
 	self = [super init];
 	isFullscreen = NO;
+	return self;
+}
+
+- (id) initForWindow: (NSWindow*) w {
+	self = [super init];
+	isFullscreen = NO;
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(restoreMenu:) name: @"NSWindowWillCloseNotification" object: w];	
+	return self;
+}
+
+- (void) restoreMenu: (NSNotification*) note {
+	if(isFullscreen)
+		if([[[savedView window] screen] isEqual: [[NSScreen screens] objectAtIndex: 0]]) [NSMenu setMenuBarVisible: YES];
 }
 
 - (void) startFullscreenWithView: (NSView*) view {
