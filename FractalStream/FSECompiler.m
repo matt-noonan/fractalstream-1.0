@@ -864,7 +864,7 @@
 //	[tree log];
 //	[tree postprocessReserving: nextvar];
 
-//	[self printVariableStack];
+	[self printVariableStack];
 
 	symbol = nil;
 }
