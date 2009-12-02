@@ -83,7 +83,11 @@
 	IBOutlet NSImageView* tView;
 	NSConditionLock* queueLock;
 	
-	
+	BOOL proposingView;
+	double proposedZoomMultiple;
+	double proposedCenter[2], proposedTranslation[2];
+	double initialTouchLocation[2];
+	BOOL followingTouches;
 }
 
 - (IBAction) tTest: (id) sender;
