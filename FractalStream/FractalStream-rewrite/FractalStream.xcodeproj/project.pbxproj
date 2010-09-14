@@ -1,0 +1,619 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD582C0DA1D0D100B32029 /* FSDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* FSDocument.xib */; };
+		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
+		684D9A081219DFC80042A74A /* FSWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A071219DFC80042A74A /* FSWorker.m */; };
+		684D9A0B1219DFF00042A74A /* FSWorkerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A0A1219DFF00042A74A /* FSWorkerManager.m */; };
+		684D9A0C1219DFF00042A74A /* FSWorkerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A0A1219DFF00042A74A /* FSWorkerManager.m */; };
+		684D9A0D1219E0020042A74A /* FSWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A071219DFC80042A74A /* FSWorker.m */; };
+		684D9A111219E61E0042A74A /* FSKernel.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A101219E61E0042A74A /* FSKernel.m */; };
+		684D9A121219E61E0042A74A /* FSKernel.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A101219E61E0042A74A /* FSKernel.m */; };
+		684D9A151219E89D0042A74A /* FSKernelManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A141219E89D0042A74A /* FSKernelManager.m */; };
+		684D9A161219E89D0042A74A /* FSKernelManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9A141219E89D0042A74A /* FSKernelManager.m */; };
+		684D9AE3121A585E0042A74A /* FSViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9AE2121A585E0042A74A /* FSViewer.m */; };
+		684D9AE4121A585E0042A74A /* FSViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9AE2121A585E0042A74A /* FSViewer.m */; };
+		684D9AFC121A5BA40042A74A /* FSDynamics.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9AFB121A5BA40042A74A /* FSDynamics.m */; };
+		684D9AFD121A5BA40042A74A /* FSDynamics.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9AFB121A5BA40042A74A /* FSDynamics.m */; };
+		684D9B00121A5BB30042A74A /* FSOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9AFF121A5BB30042A74A /* FSOverlay.m */; };
+		684D9B01121A5BB30042A74A /* FSOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9AFF121A5BB30042A74A /* FSOverlay.m */; };
+		684D9B04121A5BF10042A74A /* FSInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9B03121A5BF10042A74A /* FSInteraction.m */; };
+		684D9B05121A5BF10042A74A /* FSInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9B03121A5BF10042A74A /* FSInteraction.m */; };
+		684D9B0F121A5DD30042A74A /* FSCustomDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9B0E121A5DD30042A74A /* FSCustomDataManager.m */; };
+		684D9B10121A5DD30042A74A /* FSCustomDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9B0E121A5DD30042A74A /* FSCustomDataManager.m */; };
+		684D9B19121A604A0042A74A /* FSHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9B18121A604A0042A74A /* FSHistory.m */; };
+		684D9B1A121A604A0042A74A /* FSHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9B18121A604A0042A74A /* FSHistory.m */; };
+		684D9FE8121B98170042A74A /* FSScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9FE7121B98170042A74A /* FSScene.m */; };
+		684D9FE9121B98170042A74A /* FSScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9FE7121B98170042A74A /* FSScene.m */; };
+		684D9FEC121B99570042A74A /* FSComplexNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9FEB121B99570042A74A /* FSComplexNumber.m */; };
+		684D9FED121B99570042A74A /* FSComplexNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 684D9FEB121B99570042A74A /* FSComplexNumber.m */; };
+		684DA024121C58500042A74A /* FSVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 684DA023121C58500042A74A /* FSVariable.m */; };
+		684DA025121C58500042A74A /* FSVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 684DA023121C58500042A74A /* FSVariable.m */; };
+		6874B10912188A2E00B0367D /* FSEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6874B10812188A2E00B0367D /* FSEditController.m */; };
+		6874B10C12188C6900B0367D /* Interacting with FractalStream.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6874B10B12188C6900B0367D /* Interacting with FractalStream.pdf */; };
+		6877B418121985DC00A084F1 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
+		6877B419121985DC00A084F1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
+		6877B41A121985DC00A084F1 /* FSDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* FSDocument.xib */; };
+		6877B41B121985DC00A084F1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
+		6877B41C121985DC00A084F1 /* Interacting with FractalStream.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6874B10B12188C6900B0367D /* Interacting with FractalStream.pdf */; };
+		6877B41E121985DC00A084F1 /* FSDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* FSDocument.m */; settings = {ATTRIBUTES = (); }; };
+		6877B41F121985DC00A084F1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		6877B420121985DC00A084F1 /* FSEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6874B10812188A2E00B0367D /* FSEditController.m */; };
+		6877B422121985DC00A084F1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		6877B4E51219860B00A084F1 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */; };
+		6877B5671219861300A084F1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
+		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
+		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
+		8D15AC310486D014006FF6A4 /* FSDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* FSDocument.m */; settings = {ATTRIBUTES = (); }; };
+		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		6877B583121989D900A084F1 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = org.cocotron.1.0.windows.i386.gcc.4.3.1;
+			fileType = sourcecode.cpp;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+		6877B584121989D900A084F1 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = org.cocotron.1.0.windows.i386.gcc.4.3.1;
+			fileType = sourcecode.c;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXFileReference section */
+		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FSDocument.xib; sourceTree = "<group>"; };
+		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		2564AD2C0F5327BB00F57823 /* FractalStream_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FractalStream_Prefix.pch; sourceTree = "<group>"; };
+		2A37F4ACFDCFA73011CA2CEA /* FSDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSDocument.m; sourceTree = "<group>"; };
+		2A37F4AEFDCFA73011CA2CEA /* FSDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSDocument.h; sourceTree = "<group>"; };
+		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2A37F4BAFDCFA73011CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
+		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		684D9A061219DFC80042A74A /* FSWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSWorker.h; sourceTree = "<group>"; };
+		684D9A071219DFC80042A74A /* FSWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSWorker.m; sourceTree = "<group>"; };
+		684D9A091219DFF00042A74A /* FSWorkerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSWorkerManager.h; sourceTree = "<group>"; };
+		684D9A0A1219DFF00042A74A /* FSWorkerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSWorkerManager.m; sourceTree = "<group>"; };
+		684D9A0E1219E26F0042A74A /* FSKernelData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSKernelData.h; sourceTree = "<group>"; };
+		684D9A0F1219E61E0042A74A /* FSKernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSKernel.h; sourceTree = "<group>"; };
+		684D9A101219E61E0042A74A /* FSKernel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSKernel.m; sourceTree = "<group>"; };
+		684D9A131219E89D0042A74A /* FSKernelManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSKernelManager.h; sourceTree = "<group>"; };
+		684D9A141219E89D0042A74A /* FSKernelManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSKernelManager.m; sourceTree = "<group>"; };
+		684D9AE1121A585E0042A74A /* FSViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewer.h; sourceTree = "<group>"; };
+		684D9AE2121A585E0042A74A /* FSViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSViewer.m; sourceTree = "<group>"; };
+		684D9AFA121A5BA40042A74A /* FSDynamics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSDynamics.h; sourceTree = "<group>"; };
+		684D9AFB121A5BA40042A74A /* FSDynamics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSDynamics.m; sourceTree = "<group>"; };
+		684D9AFE121A5BB30042A74A /* FSOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSOverlay.h; sourceTree = "<group>"; };
+		684D9AFF121A5BB30042A74A /* FSOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSOverlay.m; sourceTree = "<group>"; };
+		684D9B02121A5BF10042A74A /* FSInteraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSInteraction.h; sourceTree = "<group>"; };
+		684D9B03121A5BF10042A74A /* FSInteraction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSInteraction.m; sourceTree = "<group>"; };
+		684D9B0D121A5DD30042A74A /* FSCustomDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCustomDataManager.h; sourceTree = "<group>"; };
+		684D9B0E121A5DD30042A74A /* FSCustomDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCustomDataManager.m; sourceTree = "<group>"; };
+		684D9B17121A604A0042A74A /* FSHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSHistory.h; sourceTree = "<group>"; };
+		684D9B18121A604A0042A74A /* FSHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSHistory.m; sourceTree = "<group>"; };
+		684D9FE6121B98170042A74A /* FSScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSScene.h; sourceTree = "<group>"; };
+		684D9FE7121B98170042A74A /* FSScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSScene.m; sourceTree = "<group>"; };
+		684D9FEA121B99570042A74A /* FSComplexNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSComplexNumber.h; sourceTree = "<group>"; };
+		684D9FEB121B99570042A74A /* FSComplexNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSComplexNumber.m; sourceTree = "<group>"; };
+		684DA022121C58500042A74A /* FSVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSVariable.h; sourceTree = "<group>"; };
+		684DA023121C58500042A74A /* FSVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSVariable.m; sourceTree = "<group>"; };
+		6874B10712188A2E00B0367D /* FSEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEditController.h; sourceTree = "<group>"; };
+		6874B10812188A2E00B0367D /* FSEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEditController.m; sourceTree = "<group>"; };
+		6874B10B12188C6900B0367D /* Interacting with FractalStream.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Interacting with FractalStream.pdf"; sourceTree = "<group>"; };
+		6877B426121985DC00A084F1 /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6877B428121985DD00A084F1 /* FractalStream-Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FractalStream-Info copy.plist"; sourceTree = "<group>"; };
+		8D15AC360486D014006FF6A4 /* FractalStream-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "FractalStream-Info.plist"; sourceTree = "<group>"; };
+		8D15AC370486D014006FF6A4 /* FractalStream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FractalStream.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6877B421121985DC00A084F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6877B422121985DC00A084F1 /* Cocoa.framework in Frameworks */,
+				6877B4E51219860B00A084F1 /* AppKit.framework in Frameworks */,
+				6877B5671219861300A084F1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D15AC330486D014006FF6A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
+				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB0FE9D524F11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D15AC370486D014006FF6A4 /* FractalStream.app */,
+				6877B426121985DC00A084F1 /* FractalStream.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A37F4AAFDCFA73011CA2CEA /* FractalStream */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4ABFDCFA73011CA2CEA /* Classes */,
+				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
+				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
+				19C28FB0FE9D524F11CA2CBB /* Products */,
+			);
+			name = FractalStream;
+			sourceTree = "<group>";
+		};
+		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				684D9FEA121B99570042A74A /* FSComplexNumber.h */,
+				684D9FEB121B99570042A74A /* FSComplexNumber.m */,
+				684DA022121C58500042A74A /* FSVariable.h */,
+				684DA023121C58500042A74A /* FSVariable.m */,
+				684D9B23121ABAF60042A74A /* Document */,
+				684D9B22121ABAC30042A74A /* Controllers */,
+				684D9B21121ABA8B0042A74A /* Compiler */,
+				684D9B1D121AB9FD0042A74A /* Viewer */,
+				684D9B1E121ABA110042A74A /* Kernels */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				2564AD2C0F5327BB00F57823 /* FractalStream_Prefix.pch */,
+				2A37F4B0FDCFA73011CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6874B10B12188C6900B0367D /* Interacting with FractalStream.pdf */,
+				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
+				8D15AC360486D014006FF6A4 /* FractalStream-Info.plist */,
+				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
+				1DDD58280DA1D0D100B32029 /* FSDocument.xib */,
+				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
+				6877B428121985DD00A084F1 /* FractalStream-Info copy.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
+				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		684D9B1D121AB9FD0042A74A /* Viewer */ = {
+			isa = PBXGroup;
+			children = (
+				684D9FE6121B98170042A74A /* FSScene.h */,
+				684D9FE7121B98170042A74A /* FSScene.m */,
+				684D9B17121A604A0042A74A /* FSHistory.h */,
+				684D9B18121A604A0042A74A /* FSHistory.m */,
+				684D9AE1121A585E0042A74A /* FSViewer.h */,
+				684D9AE2121A585E0042A74A /* FSViewer.m */,
+				684D9AFF121A5BB30042A74A /* FSOverlay.m */,
+				684D9AFE121A5BB30042A74A /* FSOverlay.h */,
+				684D9B02121A5BF10042A74A /* FSInteraction.h */,
+				684D9B03121A5BF10042A74A /* FSInteraction.m */,
+			);
+			name = Viewer;
+			sourceTree = "<group>";
+		};
+		684D9B1E121ABA110042A74A /* Kernels */ = {
+			isa = PBXGroup;
+			children = (
+				684D9B0D121A5DD30042A74A /* FSCustomDataManager.h */,
+				684D9B0E121A5DD30042A74A /* FSCustomDataManager.m */,
+				684D9A0E1219E26F0042A74A /* FSKernelData.h */,
+				684D9AFA121A5BA40042A74A /* FSDynamics.h */,
+				684D9AFB121A5BA40042A74A /* FSDynamics.m */,
+				684D9A061219DFC80042A74A /* FSWorker.h */,
+				684D9A071219DFC80042A74A /* FSWorker.m */,
+				684D9A091219DFF00042A74A /* FSWorkerManager.h */,
+				684D9A0A1219DFF00042A74A /* FSWorkerManager.m */,
+				684D9A0F1219E61E0042A74A /* FSKernel.h */,
+				684D9A101219E61E0042A74A /* FSKernel.m */,
+				684D9A131219E89D0042A74A /* FSKernelManager.h */,
+				684D9A141219E89D0042A74A /* FSKernelManager.m */,
+			);
+			name = Kernels;
+			sourceTree = "<group>";
+		};
+		684D9B21121ABA8B0042A74A /* Compiler */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Compiler;
+			sourceTree = "<group>";
+		};
+		684D9B22121ABAC30042A74A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6874B10712188A2E00B0367D /* FSEditController.h */,
+				6874B10812188A2E00B0367D /* FSEditController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		684D9B23121ABAF60042A74A /* Document */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4AEFDCFA73011CA2CEA /* FSDocument.h */,
+				2A37F4ACFDCFA73011CA2CEA /* FSDocument.m */,
+			);
+			name = Document;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6877B416121985DC00A084F1 /* FractalStream-win32 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6877B423121985DC00A084F1 /* Build configuration list for PBXNativeTarget "FractalStream-win32" */;
+			buildPhases = (
+				6877B417121985DC00A084F1 /* Resources */,
+				6877B41D121985DC00A084F1 /* Sources */,
+				6877B421121985DC00A084F1 /* Frameworks */,
+				6877B59312199EC800A084F1 /* ShellScript */,
+			);
+			buildRules = (
+				6877B583121989D900A084F1 /* PBXBuildRule */,
+				6877B584121989D900A084F1 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = "FractalStream-win32";
+			productInstallPath = "$(HOME)/Applications";
+			productName = FractalStream;
+			productReference = 6877B426121985DC00A084F1 /* FractalStream.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8D15AC270486D014006FF6A4 /* FractalStream */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "FractalStream" */;
+			buildPhases = (
+				8D15AC2B0486D014006FF6A4 /* Resources */,
+				8D15AC300486D014006FF6A4 /* Sources */,
+				8D15AC330486D014006FF6A4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FractalStream;
+			productInstallPath = "$(HOME)/Applications";
+			productName = FractalStream;
+			productReference = 8D15AC370486D014006FF6A4 /* FractalStream.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "FractalStream" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* FractalStream */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D15AC270486D014006FF6A4 /* FractalStream */,
+				6877B416121985DC00A084F1 /* FractalStream-win32 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6877B417121985DC00A084F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6877B418121985DC00A084F1 /* Credits.rtf in Resources */,
+				6877B419121985DC00A084F1 /* InfoPlist.strings in Resources */,
+				6877B41A121985DC00A084F1 /* FSDocument.xib in Resources */,
+				6877B41B121985DC00A084F1 /* MainMenu.xib in Resources */,
+				6877B41C121985DC00A084F1 /* Interacting with FractalStream.pdf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D15AC2B0486D014006FF6A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
+				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
+				1DDD582C0DA1D0D100B32029 /* FSDocument.xib in Resources */,
+				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
+				6874B10C12188C6900B0367D /* Interacting with FractalStream.pdf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6877B59312199EC800A084F1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/Developer/Cocotron/1.0/bin/retargetBundle -framework Foundation -framework AppKit -destination $TARGET_BUILD_DIR\"/\"$EXECUTABLE_FOLDER_PATH";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6877B41D121985DC00A084F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6877B41E121985DC00A084F1 /* FSDocument.m in Sources */,
+				6877B41F121985DC00A084F1 /* main.m in Sources */,
+				6877B420121985DC00A084F1 /* FSEditController.m in Sources */,
+				684D9A0C1219DFF00042A74A /* FSWorkerManager.m in Sources */,
+				684D9A0D1219E0020042A74A /* FSWorker.m in Sources */,
+				684D9A121219E61E0042A74A /* FSKernel.m in Sources */,
+				684D9A161219E89D0042A74A /* FSKernelManager.m in Sources */,
+				684D9AE4121A585E0042A74A /* FSViewer.m in Sources */,
+				684D9AFD121A5BA40042A74A /* FSDynamics.m in Sources */,
+				684D9B01121A5BB30042A74A /* FSOverlay.m in Sources */,
+				684D9B05121A5BF10042A74A /* FSInteraction.m in Sources */,
+				684D9B10121A5DD30042A74A /* FSCustomDataManager.m in Sources */,
+				684D9B1A121A604A0042A74A /* FSHistory.m in Sources */,
+				684D9FE9121B98170042A74A /* FSScene.m in Sources */,
+				684D9FED121B99570042A74A /* FSComplexNumber.m in Sources */,
+				684DA025121C58500042A74A /* FSVariable.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D15AC300486D014006FF6A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC310486D014006FF6A4 /* FSDocument.m in Sources */,
+				8D15AC320486D014006FF6A4 /* main.m in Sources */,
+				6874B10912188A2E00B0367D /* FSEditController.m in Sources */,
+				684D9A081219DFC80042A74A /* FSWorker.m in Sources */,
+				684D9A0B1219DFF00042A74A /* FSWorkerManager.m in Sources */,
+				684D9A111219E61E0042A74A /* FSKernel.m in Sources */,
+				684D9A151219E89D0042A74A /* FSKernelManager.m in Sources */,
+				684D9AE3121A585E0042A74A /* FSViewer.m in Sources */,
+				684D9AFC121A5BA40042A74A /* FSDynamics.m in Sources */,
+				684D9B00121A5BB30042A74A /* FSOverlay.m in Sources */,
+				684D9B04121A5BF10042A74A /* FSInteraction.m in Sources */,
+				684D9B0F121A5DD30042A74A /* FSCustomDataManager.m in Sources */,
+				684D9B19121A604A0042A74A /* FSHistory.m in Sources */,
+				684D9FE8121B98170042A74A /* FSScene.m in Sources */,
+				684D9FEC121B99570042A74A /* FSComplexNumber.m in Sources */,
+				684DA024121C58500042A74A /* FSVariable.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C1660FE840EACC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58280DA1D0D100B32029 /* FSDocument.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58290DA1D0D100B32029 /* English */,
+			);
+			name = FSDocument.xib;
+			sourceTree = "<group>";
+		};
+		1DDD582A0DA1D0D100B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD582B0DA1D0D100B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A37F4BAFDCFA73011CA2CEA /* English */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6877B424121985DC00A084F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Windows";
+				EXECUTABLE_SUFFIX = .exe;
+				FRAMEWORK_SEARCH_PATHS = /Developer/Cocotron/1.0/Windows/i386/Frameworks;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_FAST_OBJC_DISPATCH = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
+				INFOPLIST_FILE = "FractalStream-Info copy.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-mconsole",
+					"-mwindows",
+					"--enable-auto-import",
+					"-Wl",
+				);
+				PRODUCT_NAME = FractalStream;
+				SDKROOT = "";
+				SYMROOT = build/Windows;
+				VALID_ARCHS = i386;
+			};
+			name = Debug;
+		};
+		6877B425121985DC00A084F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
+				INFOPLIST_FILE = "FractalStream-Info copy.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = FractalStream;
+			};
+			name = Release;
+		};
+		C05733C808A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
+				INFOPLIST_FILE = "FractalStream-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = FractalStream;
+			};
+			name = Debug;
+		};
+		C05733C908A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = FractalStream_Prefix.pch;
+				INFOPLIST_FILE = "FractalStream-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = FractalStream;
+			};
+			name = Release;
+		};
+		C05733CC08A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		C05733CD08A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6877B423121985DC00A084F1 /* Build configuration list for PBXNativeTarget "FractalStream-win32" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6877B424121985DC00A084F1 /* Debug */,
+				6877B425121985DC00A084F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "FractalStream" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733C808A9546B00998B17 /* Debug */,
+				C05733C908A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "FractalStream" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733CC08A9546B00998B17 /* Debug */,
+				C05733CD08A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+}
