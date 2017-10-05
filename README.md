@@ -1,6 +1,8 @@
 # fractalstream-1.0
 Import of FractalStream SVN repo from Google Code
 
+![Mandelbrot with external rays](rays.png)
+
 ## Downloading FractalStream for OS X
 
 The original Google Code downloads page is still available [here](https://code.google.com/archive/p/fractalstretam/downloads), but you probably want to use one of these direct links:
